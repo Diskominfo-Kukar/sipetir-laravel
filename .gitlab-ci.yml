@@ -1,0 +1,78 @@
+image: lorisleiva/laravel-docker:8.1
+
+cache:
+  key: l9-base
+  paths:
+    - vendor/
+
+stages:
+  - Preparation
+  - Testing
+  # - Deploy
+
+composer:
+  stage: Preparation
+  script:
+    - composer install
+
+
+phpunit:
+  stage: Testing
+  script:
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+    - cp .env.example .env
+    - php artisan key:generate
+    - phpunit --coverage-text --colors=never
+
+phpcs-checking:
+  stage: Testing
+  script:
+    - composer cs-check
+  when: on_success
+
+phpstan-analysis:
+  stage: Testing
+  script:
+    - php -d memory_limit=4G vendor/bin/phpstan analyze
+  when: on_success
+
+# phpcpd-analysis:
+#   stage: Testing
+#   script:
+#     - composer phpcpd-analysis
+#   when: on_success
+
+# phpcs-analysis:
+#   stage: Testing
+#   script:
+#     - composer phpcs-analysis
+#   when: on_success
+
+
+
+# staging-deployment:
+#   stage: Deploy
+#   script:
+#     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+#     - eval $(ssh-agent -s)
+#     - ssh-add <(echo "$SSH_PRIVATE_KEY")
+#     - mkdir -p ~/.ssh
+#     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+#     - vendor/bin/dep deploy staging -o branch=staging-dev -vv
+#   only:
+#     - staging-dev
+#   when: on_success
+
+# production-deployment:
+#   stage: Deploy
+#   script:
+#     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+#     - eval $(ssh-agent -s)
+#     - ssh-add <(echo "$SSH_PRIVATE_KEY")
+#     - mkdir -p ~/.ssh
+#     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+#     - export GIT_TAG=`git describe --tags`
+#     - vendor/bin/dep deploy production --tag=$GIT_TAG -vv
+#   only:
+#     - tags
+#   when: on_success

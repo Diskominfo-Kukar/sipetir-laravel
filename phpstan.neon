@@ -1,0 +1,28 @@
+includes:
+  - ./vendor/nunomaduro/larastan/extension.neon
+  - ./vendor/spaze/phpstan-disallowed-calls/extension.neon
+
+parameters:
+  checkMissingIterableValueType: false
+  noUnnecessaryCollectionCall: false
+  reportUnmatchedIgnoredErrors: false
+
+  paths:
+    - app
+    - config
+
+  # The level 9 is the highest level
+  level: 5
+  
+  ignoreErrors:
+    - '#PHPDoc tag @var#'
+    - '#Unsafe usage of new static#'
+    - '#Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable::\$[a-zA-Z0-9\\_]+\.#'
+    - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Model::\$[a-zA-Z0-9\\_]+\.#'
+    - '#Access to an undefined property App\\Models\\[a-zA-Z0-9\\_]+::\$[a-zA-Z0-9\\_]+\.#'
+
+  disallowedFunctionCalls:
+    - function: 'env()'
+      message: 'use config() instead'
+      allowIn:
+        - config/*.php

@@ -1,0 +1,8 @@
+grumphp:
+  tasks:
+    phpcsfixer:
+      config: .php-cs-fixer.php
+      verbose: true
+    phpstan:
+      configuration: phpstan.neon
+      use_grumphp_paths: false
