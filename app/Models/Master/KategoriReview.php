@@ -11,6 +11,13 @@ use Illuminate\Support\Str;
 class KategoriReview extends Model
 {
     use HasFactory, SoftDeletes, UsesUuid;
+
+    protected $table = 'kategori_review';
+
+    protected $logName = 'kategori-review';
+
+    protected $logOnly = ['*'];
+
     protected $fillable = ['nama'];
 
     public function setNamaAttribute($value)
