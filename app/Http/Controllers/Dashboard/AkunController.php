@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Rules\MatchPassword;
-use Hash;
 use Illuminate\Http\Request;
-use Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AkunController extends Controller
 {

@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dashboard\AkunController;
 use App\Http\Controllers\Dashboard\IndexController;
 use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\Master\KategoriReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,6 +40,10 @@ Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('mast
         Route::delete('/{user}', 'destroy')->name('destroy');
         Route::get('/get-data', 'getData')->name('get-data');
     });
+
+    //kategori-review
+    Route::resource('kategori-review', KategoriReviewController::class);
+    Route::get('/kategori-review-get-data', [KategoriReviewController::class, 'getData'])->name('kategori-review.get-data');
 });
 
 require __DIR__.'/auth.php';

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class UsersTableSeeder extends Seeder
 {
@@ -15,20 +14,39 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $superAdmin           = new User();
-        $superAdmin->name     = 'Superadmin';
-        $superAdmin->email    = 'vian.ourtiyo@gmail.com';
-        $superAdmin->username = 'super';
-        $superAdmin->password = Hash::make('super');
-        $superAdmin->save();
-        $superAdmin->assignRole('superadmin');
+        $listUser = [
+            [
+                'name'     => 'Superadmin',
+                'username' => 'Superadmin',
+                'email'    => 'Superadmin@admin.com',
+                'password' => bcrypt('super'),
+                'role'     => 'superadmin',
+            ],
+            [
+                'name'     => 'admin',
+                'username' => 'admin',
+                'email'    => 'admin@admin.com',
+                'password' => bcrypt('admin'),
+                'role'     => 'admin',
+            ],
+        ];
 
-        $admin           = new User();
-        $admin->name     = 'Administrator';
-        $admin->email    = 'ourtiyo@gmail.com';
-        $admin->username = 'admin';
-        $admin->password = Hash::make('admin');
-        $admin->save();
-        $admin->assignRole('admin');
+        foreach ($listUser as $key => $user) {
+            $namaUser     = $user['name'];
+            $usernameUser = $user['username'];
+            $emailUser    = $user['email'];
+            $passwordUser = $user['password'];
+            $role         = $user['role'];
+
+            $user[$key] = User::firstOrCreate(
+                [
+                    'name'     => $namaUser,
+                    'email'    => $emailUser,
+                    'username' => $usernameUser,
+                    'password' => $passwordUser,
+                ]
+            );
+            $user[$key]->assignRole($role);
+        }
     }
 }
