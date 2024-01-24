@@ -63,7 +63,10 @@
                             <small class="mb-0">Data Master Aplikasi</small>
                         </div>
                         <a href="{{ route('kategori-review.index') }}" class="list-group-item">
-                            <i class="lni lni-gift-box"></i> Kategori Review
+                            <i class="lni lni-agenda"></i> Kategori Review
+                        </a>
+                        <a href="{{ route('question.index') }}" class="list-group-item">
+                            <i class="lni lni-agenda"></i> Kategori Review
                         </a>
                         <a href="{{ route('user.index') }}" class="list-group-item">
                             <i class="lni lni-users"></i> Users
@@ -82,8 +85,8 @@
                         </div>
                         <small class="mb-0">Menu Utama Aplikasi</small>
                     </div>
-                    <a href="'test'" class="list-group-item">
-                        <i class="lni lni-comments-alt"></i> Test Menu
+                    <a href="#" class="list-group-item">
+                        <i class="lni lni-comments-alt"></i> Paket
                     </a>
 
                 </div>

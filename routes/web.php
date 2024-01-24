@@ -5,6 +5,7 @@ use App\Http\Controllers\Dashboard\AkunController;
 use App\Http\Controllers\Dashboard\IndexController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Master\KategoriReviewController;
+use App\Http\Controllers\Master\QuestionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,6 +45,9 @@ Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('mast
     //kategori-review
     Route::resource('kategori-review', KategoriReviewController::class);
     Route::get('/kategori-review-get-data', [KategoriReviewController::class, 'getData'])->name('kategori-review.get-data');
+    //Question
+    Route::resource('question', QuestionController::class);
+    Route::get('/question-get-data', [QuestionController::class, 'getData'])->name('question.get-data');
 });
 
 require __DIR__.'/auth.php';

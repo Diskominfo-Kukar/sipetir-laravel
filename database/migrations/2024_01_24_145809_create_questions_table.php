@@ -8,15 +8,14 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('kategori_review', function (Blueprint $table) {
+        Schema::create('question', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->char('nama');
             $table->char('slug');
+            $table->string('kategori_id')->references('id')->on('kategori_review');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -24,11 +23,9 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('kategori_review');
+        Schema::dropIfExists('question');
     }
 };

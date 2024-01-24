@@ -10,8 +10,4 @@ use Illuminate\Routing\Controller as DashboardController;
 class Controller extends DashboardController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
-    protected $route;
-
-    protected $title;
 }

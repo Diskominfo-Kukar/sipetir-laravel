@@ -2,42 +2,57 @@
 
 namespace App\Http\Controllers\Master;
 
-use App\Http\Requests\Master\KategoriReviewRequest;
+use App\Http\Requests\Master\QuestionRequest;
 use App\Models\Master\KategoriReview;
+use App\Models\Master\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
-class KategoriReviewController extends Controller
+class QuestionController extends Controller
 {
     public function __construct()
     {
-        $this->route = 'kategori-review';
-        $this->title = 'Kategori Review';
+        $this->route = 'question';
+        $this->title = 'Question';
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $title  = $this->title;
+        // check jika id kategori review tidak ada
+        $kategori = $request->kategori;
+
+        if (! $kategori) {
+            return redirect()->route('kategori-review.index');
+        }
+
+        // check jika kategori review tidak ada
+        $KategoriReview = KategoriReview::whereSlug($kategori)->first();
+
+        if (! isset($KategoriReview)) {
+            return redirect()->route('kategori-review.index');
+        }
+
+        $title  = $this->title.' - '.$KategoriReview->nama;
         $crumbs = [
             'Dashboard'          => route('dashboard'),
-            'Master'             => '',
+            'Kategori Review'    => route('kategori-review.index'),
             "Manajemen {$title}" => '',
         ];
 
         $data = [
-            'pageTitle' => "Data {$title}",
-            'subTitle'  => "Halaman Manajemen {$title}",
-            'icon'      => 'fa fa-building',
-            'route'     => $this->route,
-            'crumbs'    => $crumbs,
-
-            'dataKategoriReview' => KategoriReview::orderBy('nama', 'asc')->get(),
+            'pageTitle'     => "Data {$title}",
+            'subTitle'      => "Halaman Manajemen {$title}",
+            'icon'          => 'fa fa-building',
+            'route'         => $this->route,
+            'crumbs'        => $crumbs,
+            'kategori_id'   => $KategoriReview->id,
+            'kategori_slug' => $KategoriReview->slug,
         ];
 
         return view('dashboard.master.'.$this->route.'.index', $data);
@@ -56,29 +71,45 @@ class KategoriReviewController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\RedirectResponse
      */
-    public function store(KategoriReviewRequest $request)
+    public function store(QuestionRequest $request)
     {
         $validate = $request->validated();
         DB::transaction(function () use ($validate) {
-            KategoriReview::create($validate);
+            Question::create($validate);
         });
 
+        $KategoriReview = KategoriReview::find($request->kategori_id);
         session()->flash('success', $this->title.' Berhasil Ditambahkan');
 
-        return redirect()->route($this->route.'.index');
+        return redirect()->route($this->route.'.index', ['kategori' => $KategoriReview->slug])->with('kategori', $KategoriReview->slug);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit(KategoriReview $kategoriReview)
+    public function edit(Question $question)
     {
+        // check jika id kategori review tidak ada
+        $kategori_id = $question->kategori_id;
+
+        if (! $kategori_id) {
+            return redirect()->route('kategori-review.index');
+        }
+
+        // check jika kategori review tidak ada
+        $KategoriReview = KategoriReview::find($kategori_id);
+
+        if (! isset($KategoriReview)) {
+            return redirect()->route('kategori-review.index');
+        }
+
         $data = [
-            'KategoriReview' => $kategoriReview,
+            'question'    => $question,
+            'kategori_id' => $kategori_id,
         ];
 
         return view('dashboard.master.'.$this->route.'.edit', $data);
@@ -89,12 +120,12 @@ class KategoriReviewController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(KategoriReviewRequest $request, KategoriReview $kategori_review)
+    public function update(QuestionRequest $request, Question $question)
     {
         $validate = $request->validated();
 
-        DB::transaction(function () use ($validate, $kategori_review) {
-            $kategori_review->update($validate);
+        DB::transaction(function () use ($validate, $question) {
+            $question->update($validate);
         });
 
         session()->flash('success', $this->title.'Review Berhasil Diupdate');
@@ -107,9 +138,9 @@ class KategoriReviewController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(KategoriReview $kategoriReview)
+    public function destroy(Question $question)
     {
-        $delete = $kategoriReview->delete();
+        $delete = $question->delete();
 
         // check data deleted or not
         if ($delete) {
@@ -134,15 +165,13 @@ class KategoriReviewController extends Controller
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            $data = KategoriReview::get();
+            $KategoriReview = KategoriReview::whereSlug($request->kategori)->first();
+            $data           = Question::where('kategori_id', $KategoriReview->id)->get();
 
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
                         <div class="btn-group btn-sm">
-                            <a title="Question" href="'.route('question.index').'?kategori='.$row->slug.'" class="btn btn-success btn-sm">
-                                    <i class="bx bx-help-circle"></i>
-                                </a>
                             <a title="edit" href="'.route($this->route.'.edit', $row->id).'" action="'.route($this->route.'.update', $row->id).'" class="btn btn-warning btn-sm remote-modal">
                                 <i class="bx bx-edit"></i>
                             </a>
