@@ -4,7 +4,11 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dashboard\AkunController;
 use App\Http\Controllers\Dashboard\IndexController;
 use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\Master\JabatanController;
 use App\Http\Controllers\Master\KategoriReviewController;
+use App\Http\Controllers\Master\OpdController;
+use App\Http\Controllers\Master\PanitiaController;
+use App\Http\Controllers\Master\PkkController;
 use App\Http\Controllers\Master\QuestionController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,9 +49,26 @@ Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('mast
     //kategori-review
     Route::resource('kategori-review', KategoriReviewController::class);
     Route::get('/kategori-review-get-data', [KategoriReviewController::class, 'getData'])->name('kategori-review.get-data');
+
     //Question
     Route::resource('question', QuestionController::class);
     Route::get('/question-get-data', [QuestionController::class, 'getData'])->name('question.get-data');
+
+    //pkk
+    Route::resource('pkk', PkkController::class);
+    Route::get('/pkk-get-data', [PkkController::class, 'getData'])->name('pkk.get-data');
+
+    //jabatan
+    Route::resource('jabatan', JabatanController::class);
+    Route::get('/jabatan-get-data', [JabatanController::class, 'getData'])->name('jabatan.get-data');
+
+    //opd
+    Route::resource('opd', OpdController::class);
+    Route::get('/opd-get-data', [OpdController::class, 'getData'])->name('opd.get-data');
+
+    //panitia
+    Route::resource('panitia', PanitiaController::class);
+    Route::get('/panitia-get-data', [PanitiaController::class, 'getData'])->name('panitia.get-data');
 });
 
 require __DIR__.'/auth.php';

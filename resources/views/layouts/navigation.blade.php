@@ -66,7 +66,16 @@
                             <i class="lni lni-agenda"></i> Kategori Review
                         </a>
                         <a href="{{ route('question.index') }}" class="list-group-item">
-                            <i class="lni lni-agenda"></i> Kategori Review
+                            <i class="lni lni-agenda"></i> Question
+                        </a>
+                        <a href="{{ route('jabatan.index') }}" class="list-group-item">
+                            <i class="lni lni-certificate"></i> Jabatan
+                        </a>
+                        <a href="{{ route('panitia.index') }}" class="list-group-item">
+                            <i class="lni lni-user"></i> Panitia
+                        </a>
+                        <a href="{{ route('opd.index') }}" class="list-group-item">
+                            <i class="lni lni-apartment"></i> opd
                         </a>
                         <a href="{{ route('user.index') }}" class="list-group-item">
                             <i class="lni lni-users"></i> Users
