@@ -45,7 +45,7 @@ class Panitia extends Model
     }
 
     /**
-     * Get the phone associated with the Jabatan.
+     * Get the phone associated with the Users.
      */
     public function hasUser(): BelongsTo
     {

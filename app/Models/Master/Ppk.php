@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class Pkk extends Model
+class Ppk extends Model
 {
     use HasFactory, SoftDeletes, UsesUuid;
 

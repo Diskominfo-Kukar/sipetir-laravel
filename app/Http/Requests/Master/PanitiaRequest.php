@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests\Master;
 
+use App\Models\Master\Panitia;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PanitiaRequest extends FormRequest
 {
@@ -20,9 +21,9 @@ class PanitiaRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(Request $request): array
+    public function rules(): array
     {
-        if ($request->isMethod('post')) {
+        if (request()->isMethod('post')) {
             return [
                 'nik'        => 'required|min:1|unique:panitia,nik,NULL,id,deleted_at,NULL',
                 'nip'        => 'required|min:1|unique:panitia,nip,NULL,id,deleted_at,NULL',
@@ -34,7 +35,8 @@ class PanitiaRequest extends FormRequest
                 'password'   => 'required|min:6',
             ];
         }
-        $id = $request->panitia->id;
+        $id      = request()->segment(3);
+        $user_id = Panitia::find($id)->value('user_id');
 
         //untuk update
         return [
@@ -43,9 +45,13 @@ class PanitiaRequest extends FormRequest
             'nama'       => 'required',
             'no_hp'      => 'required',
             'jabatan_id' => 'required',
-            'username'   => 'required|max:255|unique:users,username,'.$id.',id,deleted_at,NULL',
-            'email'      => 'required|email|max:255|unique:users,email,'.$id.',id,deleted_at,NULL',
-            // 'password' => 'required|min:6',
+            'username'   => 'required|min:5|unique:users,username,'.$user_id.',id,deleted_at,NULL',
+            'email'      => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore($user_id)->whereNull('deleted_at'),
+            ],
+            'password' => 'nullable',
         ];
     }
 
@@ -55,5 +61,16 @@ class PanitiaRequest extends FormRequest
             'nama.required' => 'Nama Wajib Diisi',
             'nama.unique'   => 'Nama Harus berbeda dengan data yang lain',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        if (request()->isMethod('post')) {
+            $modalId = request()->modal_id;
+
+            if ($validator->fails()) {
+                session()->flash('open-modal', $modalId);
+            }
+        }
     }
 }

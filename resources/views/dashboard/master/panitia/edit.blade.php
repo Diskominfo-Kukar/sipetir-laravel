@@ -22,7 +22,7 @@
 <x-ui.input label="NO HP" id="no_hp" name="no_hp" required placeholder="no_hp"
     value="{{ old('no_hp', $panitia->no_hp) }}" />
 <x-ui.input label="Email" id="email" name="email" required placeholder="email" type="email"
-    value="{{ old('email', $panitia->no_hp) }}" />
+    value="{{ old('email', $panitia->email) }}" />
 
 <x-ui.input label="Username" id="username" name="username" required placeholder="username"
     value="{{ old('username', $panitia->username) }}" />

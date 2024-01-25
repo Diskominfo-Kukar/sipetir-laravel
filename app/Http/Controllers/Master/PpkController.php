@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Master;
 
-use App\Models\Master\Pkk;
+use App\Models\Master\Ppk;
 use Illuminate\Http\Request;
 
-class PkkController extends Controller
+class PpkController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class PkkController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Pkk $pkk)
+    public function show(Ppk $ppk)
     {
         //
     }
@@ -42,7 +42,7 @@ class PkkController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Pkk $pkk)
+    public function edit(Ppk $ppk)
     {
         //
     }
@@ -50,7 +50,7 @@ class PkkController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pkk $pkk)
+    public function update(Request $request, Ppk $ppk)
     {
         //
     }
@@ -58,7 +58,7 @@ class PkkController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pkk $pkk)
+    public function destroy(Ppk $ppk)
     {
         //
     }

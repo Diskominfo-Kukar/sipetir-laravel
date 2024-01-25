@@ -8,7 +8,7 @@ use App\Http\Controllers\Master\JabatanController;
 use App\Http\Controllers\Master\KategoriReviewController;
 use App\Http\Controllers\Master\OpdController;
 use App\Http\Controllers\Master\PanitiaController;
-use App\Http\Controllers\Master\PkkController;
+use App\Http\Controllers\Master\PpkController;
 use App\Http\Controllers\Master\QuestionController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,8 +55,8 @@ Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('mast
     Route::get('/question-get-data', [QuestionController::class, 'getData'])->name('question.get-data');
 
     //pkk
-    Route::resource('pkk', PkkController::class);
-    Route::get('/pkk-get-data', [PkkController::class, 'getData'])->name('pkk.get-data');
+    Route::resource('ppk', PpkController::class);
+    Route::get('/ppk-get-data', [PpkController::class, 'getData'])->name('ppk.get-data');
 
     //jabatan
     Route::resource('jabatan', JabatanController::class);

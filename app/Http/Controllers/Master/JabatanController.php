@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Requests\Master\JabatanRequest;
 use App\Models\Master\Jabatan;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
@@ -59,7 +60,19 @@ class JabatanController extends Controller
     public function store(JabatanRequest $request)
     {
         $validate = $request->validated();
-        DB::transaction(function () use ($validate) {
+        DB::transaction(function () use ($validate, $request) {
+            $nama = $request->nama;
+
+            if (
+                $nama != 'Superamdin' ||
+                $nama != 'superamdin'
+            ) {
+                $role = Role::firstOrCreate(
+                    ['name' => request('nama')]
+                );
+                $validate['role_id'] = $role->id;
+            }
+
             Jabatan::create($validate);
         });
 
@@ -91,7 +104,18 @@ class JabatanController extends Controller
     {
         $validate = $request->validated();
 
-        DB::transaction(function () use ($validate, $jabatan) {
+        DB::transaction(function () use ($validate, $jabatan, $request) {
+            $nama = $request->nama;
+
+            if (
+                $nama != 'Superamdin' ||
+                $nama != 'superamdin'
+            ) {
+                Role::updateOrCreate(
+                    ['id' => $jabatan->role_id],
+                    ['name' => request('nama')]
+                );
+            }
             $jabatan->update($validate);
         });
 

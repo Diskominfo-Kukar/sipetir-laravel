@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Master\Jabatan;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 class RoleSeed extends Seeder
 {
@@ -16,16 +17,26 @@ class RoleSeed extends Seeder
     {
         $roles = [
             'superadmin',
-            'admin',
-            'panitia',
-            'pkk',
+            'Admin',
+            'Panitia',
+            'PKK',
             'Kepala BPBJ',
         ];
 
-        foreach ($roles as $role) {
-            Role::create([
-                'name' => $role,
+        foreach ($roles as $value) {
+            $role = Role::create([
+                'name' => $value,
             ]);
+
+            if (
+                $value != 'superadmin' &&
+                $value != 'PKK'
+            ) {
+                Jabatan::updateOrCreate(
+                    ['role_id' => $role->id],
+                    ['nama' => $value]
+                );
+            }
         }
     }
 }

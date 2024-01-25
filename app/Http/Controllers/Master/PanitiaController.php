@@ -61,17 +61,19 @@ class PanitiaController extends Controller
      */
     public function store(PanitiaRequest $request)
     {
-        $validate     = $request->validated();
-        $validateUser = [
-            'name'     => $validate['nama'],
-            'username' => $validate['username'],
-            'email'    => $validate['email'],
-            'password' => $validate['password'],
-        ];
+        $validate = $request->validated();
 
-        DB::transaction(function () use ($validateUser, $validate) {
-            $user = User::create($validateUser);
-
+        DB::transaction(function () use ($validate) {
+            $jabatan_id   = $validate['jabatan_id'];
+            $validateUser = [
+                'name'     => $validate['nama'],
+                'username' => $validate['username'],
+                'email'    => $validate['email'],
+                'password' => bcrypt($validate['password']),
+            ];
+            $jabatan = Jabatan::find($jabatan_id);
+            $user    = User::create($validateUser);
+            $user->assignRole($jabatan->nama);
             $validatePanitia = [
                 'nik'        => $validate['nik'],
                 'nip'        => $validate['nip'],
@@ -109,13 +111,35 @@ class PanitiaController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(PanitiaRequest $request, Panitia $panitia)
+    public function update(PanitiaRequest $request, Panitia $panitium)
     {
-        $validate = $request->validated();
+        // return $panitium;
+        // $panitias = Panitia::find($panitia);
+        $validate   = $request->validated();
+        $jabatan_id = $validate['jabatan_id'];
 
-        DB::transaction(function () use ($validate, $panitia) {
-            $panitia->update($validate);
-        });
+        $user_id      = $panitium->user_id;
+        $validateUser = [
+            'name'     => $validate['nama'],
+            'username' => $validate['username'],
+            'email'    => $validate['email'],
+            'password' => bcrypt($validate['password']),
+        ];
+
+        $jabatan = Jabatan::find($jabatan_id);
+        $user    = User::find($user_id);
+        $user->update($validateUser);
+        $user->assignRole($jabatan->nama);
+
+        $validatePanitia = [
+            'nik'        => $validate['nik'],
+            'nip'        => $validate['nip'],
+            'nama'       => $validate['nama'],
+            'no_hp'      => $validate['no_hp'],
+            'jabatan_id' => $validate['jabatan_id'],
+            'user_id'    => $user->id,
+        ];
+        $panitium->update($validatePanitia);
 
         session()->flash('success', $this->title.'Review Berhasil Diupdate');
 
@@ -127,9 +151,9 @@ class PanitiaController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Panitia $panitia)
+    public function destroy(Panitia $panitium)
     {
-        $delete = $panitia->delete();
+        $delete = $panitium->delete();
 
         // check data deleted or not
         if ($delete) {

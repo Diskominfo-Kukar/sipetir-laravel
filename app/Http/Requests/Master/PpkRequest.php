@@ -3,9 +3,8 @@
 namespace App\Http\Requests\Master;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
 
-class PkkRequest extends FormRequest
+class PpkRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
