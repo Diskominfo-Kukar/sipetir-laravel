@@ -39,7 +39,7 @@ class JabatanController extends Controller
             'crumbs'    => $crumbs,
         ];
 
-        return view('dashboard.master.'.$this->route.'.index', $data);
+        return view('dashboard.master.' . $this->route . '.index', $data);
     }
 
     /**
@@ -76,9 +76,9 @@ class JabatanController extends Controller
             Jabatan::create($validate);
         });
 
-        session()->flash('success', $this->title.' Berhasil Ditambahkan');
+        session()->flash('success', $this->title . ' Berhasil Ditambahkan');
 
-        return redirect()->route($this->route.'.index');
+        return redirect()->route($this->route . '.index');
     }
 
     /**
@@ -89,10 +89,10 @@ class JabatanController extends Controller
     public function edit(Jabatan $Jabatan)
     {
         $data = [
-            'Jabatan' => $Jabatan,
+            'jabatan' => $Jabatan,
         ];
 
-        return view('dashboard.master.'.$this->route.'.edit', $data);
+        return view('dashboard.master.' . $this->route . '.edit', $data);
     }
 
     /**
@@ -119,7 +119,7 @@ class JabatanController extends Controller
             $jabatan->update($validate);
         });
 
-        session()->flash('success', $this->title.'Review Berhasil Diupdate');
+        session()->flash('success', $this->title . 'Review Berhasil Diupdate');
 
         return redirect()->back();
     }
@@ -162,10 +162,10 @@ class JabatanController extends Controller
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
                         <div class="btn-group btn-sm">
-                            <a title="edit" href="'.route($this->route.'.edit', $row->id).'" action="'.route($this->route.'.update', $row->id).'" class="btn btn-warning btn-sm remote-modal">
+                            <a title="edit" href="' . route($this->route . '.edit', $row->id) . '" action="' . route($this->route . '.update', $row->id) . '" class="btn btn-warning btn-sm remote-modal">
                                 <i class="bx bx-edit"></i>
                             </a>
-                            <button title="Hapus" type="button" class="btn btn-danger btn-sm deleteConfirmation" data-target="'.route($this->route.'.destroy', [$row->id]).'">
+                            <button title="Hapus" type="button" class="btn btn-danger btn-sm deleteConfirmation" data-target="' . route($this->route . '.destroy', [$row->id]) . '">
                                 <i class="bx bx-trash "></i>
                             </button>
                         </div>

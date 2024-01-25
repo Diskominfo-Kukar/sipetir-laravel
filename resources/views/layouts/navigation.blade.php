@@ -19,13 +19,13 @@
                     </button>
                 </li>
             @endrole
-            @role('superadmin|admin')
-                <li class="nav-item" data-bs-toggle="tooltip" data-bs-placement="right" title="Menu Utama">
-                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-data-main" type="button">
-                        <i class="bi bi-blockquote-right"></i>
-                    </button>
-                </li>
-            @endrole
+
+            <li class="nav-item" data-bs-toggle="tooltip" data-bs-placement="right" title="Menu Utama">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-data-main" type="button">
+                    <i class="bi bi-blockquote-right"></i>
+                </button>
+            </li>
+
 
             <li class="nav-item" data-bs-toggle="tooltip" data-bs-placement="right" title="Akun">
                 <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-akun" type="button">
