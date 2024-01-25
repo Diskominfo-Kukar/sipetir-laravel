@@ -4,33 +4,33 @@
         <main class="authentication-content">
             <div class="container-fluid">
                 <div class="authentication-card">
-                    <div class="card shadow rounded-0 overflow-hidden">
+                    <div class="overflow-hidden shadow card rounded-0">
                         <div class="row g-0">
                             <div class="col-lg-6 bg-login d-flex align-items-center justify-content-center">
                                 <img src="{{ asset('assets/images/error/login-img.jpg') }}" class="img-fluid"
                                     alt="">
                             </div>
                             <div class="col-lg-6">
-                                <div class="card-body p-4 p-sm-5">
-                                    <h5 class="card-title text-center">
+                                <div class="p-4 card-body p-sm-5">
+                                    <h5 class="text-center card-title">
                                         <a href="https://sipetir.kukarkab.go.id/"><b>SIPETIR</b> BPBJ</a>
                                     </h5>
 
-                                    <p class="card-text text-center">
+                                    <p class="text-center card-text">
                                         <strong>© 2024 <a href="https://ukpbj.kukarkab.go.id">BPBJ</a> Dikembangkan
                                             bersama <a href="https://diskominfo.kukarkab.go.id">Diskominfo</a> Didukung
                                             oleh Balai Sertifikasi Elektronik (<a
                                                 href="https://bsre.bssn.go.id">BSrE</a>), BSSN</strong>
                                     </p>
 
-                                    <div class="login-separater text-center mb-4"> <span>Silahkan Masukkan Username &
+                                    <div class="mb-4 text-center login-separater"> <span>Silahkan Masukkan Username &
                                             Password Anda</span>
                                         <hr>
                                     </div>
 
                                     @if ($errors->any())
                                         <div class="alert alert-danger">
-                                            <ul class=" mb-0 mt-0 list-unstyled list-inside text-sm text-red-600">
+                                            <ul class="mt-0 mb-0 text-sm text-red-600 list-inside list-unstyled">
                                                 @foreach ($errors->all() as $error)
                                                     <li><i class="fa fa-info-circle fa-fw"></i>{{ $error }}</li>
                                                 @endforeach
@@ -45,7 +45,7 @@
                                                 <label for="" class="form-label">Enter Username</label>
                                                 <div class="ms-auto position-relative">
                                                     <div
-                                                        class="position-absolute top-50 translate-middle-y search-icon px-3">
+                                                        class="px-3 position-absolute top-50 translate-middle-y search-icon">
                                                         <i class="bi bi-person-circle"></i>
                                                     </div>
                                                     <input name="username" type="text" placeholder="Username here..."
@@ -58,10 +58,10 @@
                                                     Password</label>
                                                 <div class="ms-auto position-relative">
                                                     <div
-                                                        class="position-absolute top-50 translate-middle-y search-icon px-3">
-                                                        <i class="bi bi-lock-fill"></i>
+                                                        class="px-3 position-absolute top-50 translate-middle-y search-icon">
+                                                        <i class="bi bi-lock-fill" id="passwordShow"></i>
                                                     </div>
-                                                    <input name="password" type="password" placeholder="Password.."
+                                                    <input name="password" type="password" id="password" placeholder="Password.."
                                                         class="form-control radius-30 ps-5 " required />
                                                 </div>
                                             </div>
@@ -103,4 +103,18 @@
 
     </div>
 
+    @push('scripts')
+    <script>
+        $('#passwordShow').click(function(){
+            // lock-open
+            if ($(this).hasClass('bi bi-lock-fill')) {
+                $("#passwordShow").attr('class', 'bi bi-unlock-fill');
+                $("#password").attr('type', 'text');
+            }else{
+                $("#passwordShow").attr('class', 'bi bi-lock-fill');
+                $("#password").attr('type', 'password');
+            }
+        });
+    </script>
+    @endpush
 </x-auth-layout>

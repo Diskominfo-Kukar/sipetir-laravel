@@ -17,7 +17,7 @@
     <body>
 
         {{ $slot }}
-        
+
         <script src="{{ asset('assets/js/bootstrap.bundle.min.js')}}"></script>
         <!--plugins-->
         <script src="{{ asset('assets/js/jquery.min.js')}}"></script>
@@ -41,5 +41,6 @@
                 return true;
             });
         </script>
+        @stack('scripts')
     </body>
 </html>
