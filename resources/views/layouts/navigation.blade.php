@@ -75,7 +75,10 @@
                             <i class="lni lni-user"></i> Panitia
                         </a>
                         <a href="{{ route('opd.index') }}" class="list-group-item">
-                            <i class="lni lni-apartment"></i> opd
+                            <i class="lni lni-apartment"></i> OPD
+                        </a>
+                        <a href="{{ route('ppk.index') }}" class="list-group-item">
+                            <i class="lni lni-consulting"></i> PPK
                         </a>
                         <a href="{{ route('user.index') }}" class="list-group-item">
                             <i class="lni lni-users"></i> Users

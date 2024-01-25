@@ -72,7 +72,14 @@ class PanitiaController extends Controller
                 'password' => bcrypt($validate['password']),
             ];
             $jabatan = Jabatan::find($jabatan_id);
-            $user    = User::create($validateUser);
+
+            $user = User::withTrashed()->where('username', $validate['username'])->first();
+
+            if ($user) {
+                $user->restore();
+            } else {
+                $user = User::create($validateUser);
+            }
             $user->assignRole($jabatan->nama);
             $validatePanitia = [
                 'nik'        => $validate['nik'],
@@ -82,7 +89,13 @@ class PanitiaController extends Controller
                 'jabatan_id' => $validate['jabatan_id'],
                 'user_id'    => $user->id,
             ];
-            Panitia::create($validatePanitia);
+            $panitia = Panitia::withTrashed()->where('nik', $validatePanitia['nik'])->first();
+
+            if ($panitia) {
+                $panitia->restore();
+            } else {
+                Panitia::create($validatePanitia);
+            }
         });
 
         session()->flash('success', $this->title.' Berhasil Ditambahkan');
@@ -165,6 +178,9 @@ class PanitiaController extends Controller
             $success = false;
             $message = 'Data tidak ditemukan';
         }
+
+        $user = User::find($panitium->user_id);
+        $user->delete();
 
         session()->flash($class, $message);
 

@@ -16,8 +16,9 @@ return new class extends Migration {
             $table->char('nip')->nullable();
             $table->char('slug');
             $table->char('nama');
+            $table->string('no_hp')->nullable();
             $table->string('user_id')->references('id')->on('users');
-            $table->string('jabatan_id')->references('id')->on('jabatan');
+            $table->string('opd_id')->references('id')->on('opd');
             $table->softDeletes();
             $table->timestamps();
         });

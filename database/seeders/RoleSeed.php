@@ -19,7 +19,7 @@ class RoleSeed extends Seeder
             'superadmin',
             'Admin',
             'Panitia',
-            'PKK',
+            'ppk',
             'Kepala BPBJ',
         ];
 
