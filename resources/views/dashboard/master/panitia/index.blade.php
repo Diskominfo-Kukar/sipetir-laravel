@@ -1,9 +1,9 @@
 <x-app-layout :title=$pageTitle :sub-title=$subTitle :icon=$icon :crumbs=$crumbs>
 
-    <div class=" card  shadow-sm radius-10 border-0 mb-3">
+    <div class="mb-3 border-0 shadow-sm card radius-10">
         <div class="card-header ">
             <button class="btn btn-primary btn-md " data-bs-toggle="modal" data-bs-target="#addModal"><i
-                    class="bx bx-plus-circle pb-1 me-0"></i> Tambah</button>
+                    class="pb-1 bx bx-plus-circle me-0"></i> Tambah</button>
         </div>
         <div class="card-body">
             <div class="table-responsive-sm">
@@ -32,7 +32,7 @@
             value="{{ old('nip') }}" />
         <x-ui.input label="Nama " id="nama" name="nama" required placeholder="Nama"
             value="{{ old('nama') }}" />
-        <div class="form-group mb-3">
+        <div class="mb-3 form-group">
             <label for="jabatan_id" class="form-label">Pilih Jabatan</label>
             <select required name="jabatan_id" class="form-control" id="jabatan_id">
                 <option></option>
@@ -42,7 +42,7 @@
                 @endforeach
             </select>
         </div>
-        <x-ui.input label="NO HP" id="no_hp" name="no_hp" required placeholder="no_hp"
+        <x-ui.input label="NO HP" id="no_hp" name="no_hp" required placeholder="No HP"
             value="{{ old('no_hp') }}" />
         <x-ui.input label="Email" id="email" name="email" required placeholder="email" type="email"
             value="{{ old('email') }}" />
