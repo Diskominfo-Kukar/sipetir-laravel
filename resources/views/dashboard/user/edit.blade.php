@@ -1,12 +1,12 @@
 @method('patch')
 
 
-<div class="form-group mb-3">
-    <label for="roles" class="form-label">Role User</label>
+<div class="mb-3 form-group">
+    <label for="roles" class="form-label">Role Use</label>
     <select required name="role" class="form-control" id="roles-edit">
         <option></option>
         @foreach ($dataRole as $item)
-            <option {{ old('role', $user->roles->first()->id) == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ ucwords($item->name) }}</option>
+            <option {{ old('role', $user->roles->value('name')) == $item->name ? 'selected' : '' }} value="{{ $item->name }}">{{ ucwords($item->name) }}</option>
         @endforeach
 
     </select>
