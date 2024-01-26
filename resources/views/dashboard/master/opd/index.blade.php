@@ -12,7 +12,7 @@
                         <tr>
                             <th>No</th>
                             <th>Kode</th>
-                            <th>Kode Satker Str</th>
+                            <th>Kode Satker</th>
                             <th>Nama</th>
                             <th width="100px">Action</th>
                         </tr>
