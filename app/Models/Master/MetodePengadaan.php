@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class JenisDokument extends Model
+class MetodePengadaan extends Model
 {
     use HasFactory, SoftDeletes, UsesUuid;
 
-    protected $table = 'jenis_dokument';
+    protected $table = 'metode_pengadaan';
 
-    protected $logName = 'jenis_dokument';
+    protected $logName = 'metode_pengadaan';
 
     protected $logOnly = ['*'];
 

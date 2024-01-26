@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Master;
 
-use App\Models\Master\JenisDokument;
+use App\Models\Master\JenisPengadaan;
 use Illuminate\Http\Request;
 
-class JenisDokumentController extends Controller
+class JenisPengadaanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class JenisDokumentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(JenisDokument $jenisDokument)
+    public function show(JenisPengadaan $jenisPengadaan)
     {
         //
     }
@@ -42,7 +42,7 @@ class JenisDokumentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(JenisDokument $jenisDokument)
+    public function edit(JenisPengadaan $jenisPengadaan)
     {
         //
     }
@@ -50,7 +50,7 @@ class JenisDokumentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, JenisDokument $jenisDokument)
+    public function update(Request $request, JenisPengadaan $jenisPengadaan)
     {
         //
     }
@@ -58,7 +58,7 @@ class JenisDokumentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(JenisDokument $jenisDokument)
+    public function destroy(JenisPengadaan $jenisPengadaan)
     {
         //
     }

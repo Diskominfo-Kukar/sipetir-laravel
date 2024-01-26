@@ -30,7 +30,7 @@ class Ppk extends Model
     }
 
     /**
-     * Get the phone associated with the Jabatan.
+     * Get the phone associated with the Opd.
      */
     public function hasOpd(): BelongsTo
     {

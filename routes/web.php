@@ -5,6 +5,7 @@ use App\Http\Controllers\Dashboard\AkunController;
 use App\Http\Controllers\Dashboard\IndexController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Master\JabatanController;
+use App\Http\Controllers\Master\JenisDokumenController;
 use App\Http\Controllers\Master\KategoriReviewController;
 use App\Http\Controllers\Master\OpdController;
 use App\Http\Controllers\Master\PanitiaController;
@@ -49,6 +50,10 @@ Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('mast
     //kategori-review
     Route::resource('kategori-review', KategoriReviewController::class);
     Route::get('/kategori-review-get-data', [KategoriReviewController::class, 'getData'])->name('kategori-review.get-data');
+
+    //jenis-dokumen
+    Route::resource('jenis-dokumen', JenisDokumenController::class);
+    Route::get('/jenis-dokumen-get-data', [JenisDokumenController::class, 'getData'])->name('jenis-dokumen.get-data');
 
     //Question
     Route::resource('question', QuestionController::class);

@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('panitia', function (Blueprint $table) {
+        Schema::create('jenis_pengadaan', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->char('kode');
             $table->char('nama');
-            $table->char('nik')->nullable();
-            $table->char('nip')->nullable();
             $table->char('slug');
-            $table->string('no_hp')->nullable();
-            $table->string('user_id')->references('id')->on('users');
-            $table->string('jabatan_id')->references('id')->on('jabatan');
+            $table->char('keterangan');
+            $table->enum('status', ['aktif', 'tidak'])->default('aktif');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('panitia');
+        Schema::dropIfExists('jenis_pengadaan');
     }
 };

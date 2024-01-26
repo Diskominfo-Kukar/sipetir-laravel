@@ -65,6 +65,9 @@
                         <a href="{{ route('kategori-review.index') }}" class="list-group-item">
                             <i class="lni lni-agenda"></i> Kategori Review
                         </a>
+                        <a href="{{ route('jenis-dokumen.index') }}" class="list-group-item">
+                            <i class="lni lni-files"></i> Jenis Dokumen
+                        </a>
                         <a href="{{ route('question.index') }}" class="list-group-item">
                             <i class="lni lni-agenda"></i> Question
                         </a>
