@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
-use Yajra\DataTables\DataTables;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -149,10 +149,10 @@ class UserController extends Controller
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
                         <div class="btn-group btn-sm">
-                            <a title="edit" href="' . route('user.edit', $row->id) . '" action="' . route('user.update', $row->id) . '" class="btn btn-warning btn-sm remote-modal">
+                            <a title="edit" href="'.route('user.edit', $row->id).'" action="'.route('user.update', $row->id).'" class="btn btn-warning btn-sm remote-modal">
                                 <i class="bx bx-edit"></i>
                             </a>
-                            <button title="Hapus" type="button" class="btn btn-danger btn-sm deleteConfirmation" data-target="' . route('user.destroy', [$row->id]) . '">
+                            <button title="Hapus" type="button" class="btn btn-danger btn-sm deleteConfirmation" data-target="'.route('user.destroy', [$row->id]).'">
                                 <i class="bx bx-trash "></i>
                             </button>
                         </div>

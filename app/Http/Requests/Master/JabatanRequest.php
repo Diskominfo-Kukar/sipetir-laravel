@@ -36,11 +36,14 @@ class JabatanRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function withValidator($validator)
     {
-        return [
-            'nama.required' => 'Nama Wajib Diisi',
-            'nama.unique'   => 'Nama Harus berbeda dengan data yang lain',
-        ];
+        if (request()->isMethod('post')) {
+            $modalId = request()->modal_id;
+
+            if ($validator->fails()) {
+                session()->flash('open-modal', $modalId);
+            }
+        }
     }
 }

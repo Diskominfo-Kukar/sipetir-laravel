@@ -1,9 +1,9 @@
 <x-app-layout :title=$pageTitle :sub-title=$subTitle :icon=$icon :crumbs=$crumbs>
 
-    <div class=" card  shadow-sm radius-10 border-0 mb-3">
+    <div class="mb-3 border-0 shadow-sm card radius-10">
         <div class="card-header ">
             <button class="btn btn-primary btn-md " data-bs-toggle="modal" data-bs-target="#addModal"><i
-                    class="bx bx-plus-circle pb-1 me-0"></i> Tambah</button>
+                    class="pb-1 bx bx-plus-circle me-0"></i> Tambah</button>
         </div>
         <div class="card-body">
             <div class="table-responsive-sm">
@@ -11,6 +11,8 @@
                     <thead class="table-dark">
                         <tr>
                             <th>No</th>
+                            <th>Kode</th>
+                            <th>Kode Satker Str</th>
                             <th>Nama</th>
                             <th width="100px">Action</th>
                         </tr>
@@ -55,6 +57,14 @@
                         name: 'DT_RowIndex',
                         orderable: true,
                         searchable: false
+                    },
+                    {
+                        data: 'kode',
+                        name: 'kode'
+                    },
+                    {
+                        data: 'kode_str',
+                        name: 'kode_str'
                     },
                     {
                         data: 'nama',

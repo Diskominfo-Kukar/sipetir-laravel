@@ -25,6 +25,7 @@ class OpdRequest extends FormRequest
         if ($request->isMethod('post')) {
             return [
 
+                'kode' => 'required|min:1|unique:opd,kode,NULL,id,deleted_at,NULL',
                 'nama' => 'required|min:1|unique:opd,nama,NULL,id,deleted_at,NULL',
             ];
         }
@@ -32,15 +33,8 @@ class OpdRequest extends FormRequest
 
         //untuk update
         return [
+            'kode' => 'required|max:255|unique:opd,kode,'.$id.',id,deleted_at,NULL',
             'nama' => 'required|max:255|unique:opd,nama,'.$id.',id,deleted_at,NULL',
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'nama.required' => 'Nama Wajib Diisi',
-            'nama.unique'   => 'Nama Harus berbeda dengan data yang lain',
         ];
     }
 }

@@ -132,7 +132,7 @@ class OpdController extends Controller
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            $data = Opd::get();
+            $data = Opd::orderBy('nama')->get();
 
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {

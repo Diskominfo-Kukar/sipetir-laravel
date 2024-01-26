@@ -36,4 +36,15 @@ class QuestionRequest extends FormRequest
             'kategori_id' => 'required',
         ];
     }
+
+    public function withValidator($validator)
+    {
+        if (request()->isMethod('post')) {
+            $modalId = request()->modal_id;
+
+            if ($validator->fails()) {
+                session()->flash('open-modal', $modalId);
+            }
+        }
+    }
 }

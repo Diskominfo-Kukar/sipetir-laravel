@@ -43,4 +43,15 @@ class KategoriReviewRequest extends FormRequest
             'nama.unique'   => 'Kategori Harus berbeda dengan data yang lain',
         ];
     }
+
+    public function withValidator($validator)
+    {
+        if (request()->isMethod('post')) {
+            $modalId = request()->modal_id;
+
+            if ($validator->fails()) {
+                session()->flash('open-modal', $modalId);
+            }
+        }
+    }
 }

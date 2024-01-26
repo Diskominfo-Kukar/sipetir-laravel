@@ -10,14 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('opd', function (Blueprint $table) {
+        Schema::create('jenis_opd', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('kode');
-            $table->char('kode_str');
             $table->char('nama');
             $table->char('slug');
+            $table->char('keterangan');
             $table->enum('status', ['aktif', 'tidak'])->default('aktif');
-            $table->string('jenis_opd_id')->references('id')->on('jenis_opd');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -28,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('opd');
+        Schema::dropIfExists('jenis_opd');
     }
 };

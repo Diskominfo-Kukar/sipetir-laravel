@@ -8,21 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class Opd extends Model
+class JenisDokument extends Model
 {
     use HasFactory, SoftDeletes, UsesUuid;
 
-    protected $table = 'opd';
+    protected $table = 'jenis_dokument';
 
-    protected $logName = 'opd';
+    protected $logName = 'jenis_dokument';
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['nama', 'kode'];
+    protected $fillable = ['nama'];
 
-    public function setKodeAttribute($value)
+    public function setNamaAttribute($value)
     {
-        $this->attributes['kode'] = $value;
+        $this->attributes['nama'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
 }
