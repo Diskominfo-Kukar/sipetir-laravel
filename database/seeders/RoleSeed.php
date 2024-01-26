@@ -30,11 +30,11 @@ class RoleSeed extends Seeder
 
             if (
                 $value != 'superadmin' &&
-                $value != 'PKK'
+                $value != 'ppk'
             ) {
                 Jabatan::updateOrCreate(
                     ['role_id' => $role->id],
-                    ['nama' => $value]
+                    ['nama' => ucfirst($value)]
                 );
             }
         }
