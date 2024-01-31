@@ -40,7 +40,7 @@ class KategoriReviewController extends Controller
             'dataKategoriReview' => KategoriReview::orderBy('nama', 'asc')->get(),
         ];
 
-        return view('dashboard.master.'.$this->route.'.index', $data);
+        return view('dashboard.master.' . $this->route . '.index', $data);
     }
 
     /**
@@ -65,9 +65,9 @@ class KategoriReviewController extends Controller
             KategoriReview::create($validate);
         });
 
-        session()->flash('success', $this->title.' Berhasil Ditambahkan');
+        session()->flash('success', $this->title . ' Berhasil Ditambahkan');
 
-        return redirect()->route($this->route.'.index');
+        return redirect()->route($this->route . '.index');
     }
 
     /**
@@ -81,7 +81,7 @@ class KategoriReviewController extends Controller
             'KategoriReview' => $kategoriReview,
         ];
 
-        return view('dashboard.master.'.$this->route.'.edit', $data);
+        return view('dashboard.master.' . $this->route . '.edit', $data);
     }
 
     /**
@@ -97,7 +97,7 @@ class KategoriReviewController extends Controller
             $kategori_review->update($validate);
         });
 
-        session()->flash('success', $this->title.'Review Berhasil Diupdate');
+        session()->flash('success', $this->title . 'Review Berhasil Diupdate');
 
         return redirect()->back();
     }
@@ -134,19 +134,19 @@ class KategoriReviewController extends Controller
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            $data = KategoriReview::get();
+            $data = KategoriReview::orderBy('no_urut')->get();
 
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
                         <div class="btn-group btn-sm">
-                            <a title="Question" href="'.route('question.index').'?kategori='.$row->slug.'" class="btn btn-success btn-sm">
+                            <a title="Question" href="' . route('question.index') . '?kategori=' . $row->slug . '" class="btn btn-success btn-sm">
                                     <i class="bx bx-help-circle"></i>
                                 </a>
-                            <a title="edit" href="'.route($this->route.'.edit', $row->id).'" action="'.route($this->route.'.update', $row->id).'" class="btn btn-warning btn-sm remote-modal">
+                            <a title="edit" href="' . route($this->route . '.edit', $row->id) . '" action="' . route($this->route . '.update', $row->id) . '" class="btn btn-warning btn-sm remote-modal">
                                 <i class="bx bx-edit"></i>
                             </a>
-                            <button title="Hapus" type="button" class="btn btn-danger btn-sm deleteConfirmation" data-target="'.route($this->route.'.destroy', [$row->id]).'">
+                            <button title="Hapus" type="button" class="btn btn-danger btn-sm deleteConfirmation" data-target="' . route($this->route . '.destroy', [$row->id]) . '">
                                 <i class="bx bx-trash "></i>
                             </button>
                         </div>
