@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->char('nama');
             $table->char('slug');
             $table->year('tahun');
-            $table->integer('pagu');
+            $table->integer('pagu')->default(0);
             $table->text('urarian_pekerjaan')->nullable();
             $table->text('spesifikasi_pekerjaan')->nullable();
             $table->string('metode_pengadaan_id')->references('id')->on('metode_pengadaan');
