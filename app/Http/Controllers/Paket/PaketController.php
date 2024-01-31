@@ -37,7 +37,7 @@ class PaketController extends Controller
             'crumbs'    => $crumbs,
         ];
 
-        return view('dashboard.paket.' . $this->route . '.index', $data);
+        return view('dashboard.paket.'.$this->route.'.index', $data);
     }
 
     /**
@@ -71,7 +71,7 @@ class PaketController extends Controller
             'jenis_dokumen' => $jenis_dokuman,
         ];
 
-        return view('dashboard.paket.' . $this->route . '.edit', $data);
+        return view('dashboard.paket.'.$this->route.'.edit', $data);
     }
 
     /**
@@ -97,7 +97,7 @@ class PaketController extends Controller
             'jenis_dokuman' => $jenis_dokuman,
         ];
 
-        return view('dashboard.paket.' . $this->route . '.show', $data);
+        return view('dashboard.paket.'.$this->route.'.show', $data);
     }
 
     /**
@@ -151,7 +151,7 @@ class PaketController extends Controller
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
                         <div class="btn-group btn-sm">
-                            <a title="prosses" href="' . route($this->route . '.show', $row->id) . '" action="' . route($this->route . '.update', $row->id) . '" class="btn btn-warning btn-sm ">
+                            <a title="prosses" href="'.route($this->route.'.show', $row->id).'" action="'.route($this->route.'.update', $row->id).'" class="btn btn-warning btn-sm ">
                                 <i class="bx bx-edit"></i> Proses
                             </a>
 

@@ -81,4 +81,4 @@ Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('mast
     Route::get('/paket-get-data', [PaketController::class, 'getData'])->name('paket.get-data');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
