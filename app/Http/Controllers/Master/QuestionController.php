@@ -27,18 +27,18 @@ class QuestionController extends Controller
         // check jika id kategori review tidak ada
         $kategori = $request->kategori;
 
-        if (! $kategori) {
+        if (!$kategori) {
             return redirect()->route('kategori-review.index');
         }
 
         // check jika kategori review tidak ada
         $KategoriReview = KategoriReview::whereSlug($kategori)->first();
 
-        if (! isset($KategoriReview)) {
+        if (!isset($KategoriReview)) {
             return redirect()->route('kategori-review.index');
         }
 
-        $title  = $this->title.' - '.$KategoriReview->nama;
+        $title  = $this->title . ' - ' . $KategoriReview->nama;
         $crumbs = [
             'Dashboard'          => route('dashboard'),
             'Kategori Review'    => route('kategori-review.index'),
@@ -55,7 +55,7 @@ class QuestionController extends Controller
             'kategori_slug' => $KategoriReview->slug,
         ];
 
-        return view('dashboard.master.'.$this->route.'.index', $data);
+        return view('dashboard.master.' . $this->route . '.index', $data);
     }
 
     /**
@@ -81,9 +81,9 @@ class QuestionController extends Controller
         });
 
         $KategoriReview = KategoriReview::find($request->kategori_id);
-        session()->flash('success', $this->title.' Berhasil Ditambahkan');
+        session()->flash('success', $this->title . ' Berhasil Ditambahkan');
 
-        return redirect()->route($this->route.'.index', ['kategori' => $KategoriReview->slug])->with('kategori', $KategoriReview->slug);
+        return redirect()->route($this->route . '.index', ['kategori' => $KategoriReview->slug])->with('kategori', $KategoriReview->slug);
     }
 
     /**
@@ -96,14 +96,14 @@ class QuestionController extends Controller
         // check jika id kategori review tidak ada
         $kategori_id = $question->kategori_id;
 
-        if (! $kategori_id) {
+        if (!$kategori_id) {
             return redirect()->route('kategori-review.index');
         }
 
         // check jika kategori review tidak ada
         $KategoriReview = KategoriReview::find($kategori_id);
 
-        if (! isset($KategoriReview)) {
+        if (!isset($KategoriReview)) {
             return redirect()->route('kategori-review.index');
         }
 
@@ -112,7 +112,7 @@ class QuestionController extends Controller
             'kategori_id' => $kategori_id,
         ];
 
-        return view('dashboard.master.'.$this->route.'.edit', $data);
+        return view('dashboard.master.' . $this->route . '.edit', $data);
     }
 
     /**
@@ -128,7 +128,7 @@ class QuestionController extends Controller
             $question->update($validate);
         });
 
-        session()->flash('success', $this->title.'Review Berhasil Diupdate');
+        session()->flash('success', $this->title . 'Review Berhasil Diupdate');
 
         return redirect()->back();
     }
@@ -166,16 +166,16 @@ class QuestionController extends Controller
     {
         if ($request->ajax()) {
             $KategoriReview = KategoriReview::whereSlug($request->kategori)->first();
-            $data           = Question::where('kategori_id', $KategoriReview->id)->get();
+            $data           = Question::where('kategori_id', $KategoriReview->id)->orderBy('no_urut')->get();
 
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
                         <div class="btn-group btn-sm">
-                            <a title="edit" href="'.route($this->route.'.edit', $row->id).'" action="'.route($this->route.'.update', $row->id).'" class="btn btn-warning btn-sm remote-modal">
+                            <a title="edit" href="' . route($this->route . '.edit', $row->id) . '" action="' . route($this->route . '.update', $row->id) . '" class="btn btn-warning btn-sm remote-modal">
                                 <i class="bx bx-edit"></i>
                             </a>
-                            <button title="Hapus" type="button" class="btn btn-danger btn-sm deleteConfirmation" data-target="'.route($this->route.'.destroy', [$row->id]).'">
+                            <button title="Hapus" type="button" class="btn btn-danger btn-sm deleteConfirmation" data-target="' . route($this->route . '.destroy', [$row->id]) . '">
                                 <i class="bx bx-trash "></i>
                             </button>
                         </div>

@@ -17,9 +17,9 @@ class Paket extends Model
 {
     use HasFactory, SoftDeletes, UsesUuid;
 
-    protected $table = 'ppk';
+    protected $table = 'paket';
 
-    protected $logName = 'ppk';
+    protected $logName = 'paket';
 
     protected $logOnly = ['*'];
 

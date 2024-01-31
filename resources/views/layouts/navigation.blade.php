@@ -100,7 +100,7 @@
                         </div>
                         <small class="mb-0">Menu Utama Aplikasi</small>
                     </div>
-                    <a href="#" class="list-group-item">
+                    <a href="{{route('paket.index')}}" class="list-group-item">
                         <i class="lni lni-comments-alt"></i> Paket
                     </a>
 

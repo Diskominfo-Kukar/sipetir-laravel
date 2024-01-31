@@ -11,6 +11,7 @@ use App\Http\Controllers\Master\OpdController;
 use App\Http\Controllers\Master\PanitiaController;
 use App\Http\Controllers\Master\PpkController;
 use App\Http\Controllers\Master\QuestionController;
+use App\Http\Controllers\Paket\PaketController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -74,6 +75,10 @@ Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('mast
     //panitia
     Route::resource('panitia', PanitiaController::class);
     Route::get('/panitia-get-data', [PanitiaController::class, 'getData'])->name('panitia.get-data');
+
+    //Paket
+    Route::resource('paket', PaketController::class);
+    Route::get('/paket-get-data', [PaketController::class, 'getData'])->name('paket.get-data');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
