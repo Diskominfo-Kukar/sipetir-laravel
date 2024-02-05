@@ -1,10 +1,6 @@
 <x-app-layout :title=$pageTitle :sub-title=$subTitle :icon=$icon :crumbs=$crumbs>
 
     <div class="mb-3 border-0 shadow-sm card radius-10">
-        <div class="card-header ">
-            <button class="btn btn-primary btn-md " data-bs-toggle="modal" data-bs-target="#addModal"><i
-                    class="pb-1 bx bx-plus-circle me-0"></i> Tambah</button>
-        </div>
         <div class="card-body">
             <div class="table-responsive-sm">
                 <table class="table table-hover table-striped table-bordered" id="data-table" width="100%">
