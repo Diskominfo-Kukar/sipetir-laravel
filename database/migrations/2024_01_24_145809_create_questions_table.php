@@ -12,8 +12,10 @@ return new class extends Migration {
     {
         Schema::create('question', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('nama');
-            $table->char('slug');
+            $table->text('nama');
+            $table->text('slug');
+            $table->char('no_urut');
+
             $table->string('kategori_id')->references('id')->on('kategori_review');
             $table->softDeletes();
             $table->timestamps();

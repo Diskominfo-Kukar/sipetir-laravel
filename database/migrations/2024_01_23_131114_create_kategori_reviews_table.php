@@ -14,8 +14,9 @@ return new class extends Migration {
     {
         Schema::create('kategori_review', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('nama');
-            $table->char('slug');
+            $table->string('nama');
+            $table->string('slug');
+            $table->char('no_urut');
             $table->softDeletes();
             $table->timestamps();
         });
