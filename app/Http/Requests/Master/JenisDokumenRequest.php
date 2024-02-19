@@ -37,12 +37,20 @@ class JenisDokumenRequest extends FormRequest
 
     public function withValidator($validator)
     {
+        $modalId = request()->modal_id;
         if (request()->isMethod('post')) {
-            $modalId = request()->modal_id;
 
             if ($validator->fails()) {
                 session()->flash('open-modal', $modalId);
             }
+        }else{
+
+            if ($validator->fails()) {
+                session()->put('open-modal', $modalId);
+                session()->put('open-tab', $modalId);
+            }
         }
+
+        // return back()->flash('open-modal');
     }
 }
