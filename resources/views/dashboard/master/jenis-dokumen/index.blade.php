@@ -2,7 +2,7 @@
 
     <div class=" card  shadow-sm radius-10 border-0 mb-3">
         <div class="card-header ">
-            <button class="btn btn-primary btn-md " data-bs-toggle="modal" data-bs-target="#addModal"><i
+            <button class="btn btn-primary btn-md " id="addBtnModal" data-bs-toggle="modal" data-bs-target="#addModal"><i
                     class="bx bx-plus-circle pb-1 me-0"></i> Tambah</button>
         </div>
         <div class="card-body">
@@ -21,17 +21,10 @@
         </div>
     </div>
 
-    {{-- create user --}}
+    {{-- Form Modal --}}
     <x-ui.modal id="addModal" title="Tambah {{ $pageTitle }}" :action="route($route . '.store')" :fallback="true">
         <x-ui.input label="Nama " id="nama" name="nama" required placeholder="Nama"
             value="{{ old('nama') }}" />
-    </x-ui.modal>
-
-    {{-- create user --}}
-    <x-ui.modal id="editModal" title="Edit {{ $pageTitle }}">
-        <x-slot:button>
-            <button type="submit" class="btn btn-dark submit"><i class="bx bx-refresh"></i> Update</button>
-        </x-slot:button>
     </x-ui.modal>
 
 
@@ -79,12 +72,23 @@
                 theme: 'bootstrap-5'
             });
 
+            $('#addBtnModal').on('click', function(e) {
+                console.log("oke");
+                $('#nama').val('');
+                $('#nama').removeClass('is-invalid');
+            })
+
             //edit modal trigger
             $(document).on('click', '.remote-modal', function(e) {
                 e.preventDefault();
                 // $('#modal-loading').show();
-                $('#editModal').modal('show').find('form').attr('action', $(this).attr('action'));
-                $('#editModal').modal('show').find('.modal-body').load($(this).attr('href'), function() {});
+                let action =$(this).attr('action');
+                let load_url =$(this).attr('href');
+                $('#addModal').modal('show').find('form').attr('action', action);
+                $('#addModal').modal('show').find('.modal-body').load(load_url, function() {});
+                $('#addModal').find('#action_url').val(action);
+                $('#addModal').find('#load_url').val(load_url);
+
             });
         </script>
     @endpush

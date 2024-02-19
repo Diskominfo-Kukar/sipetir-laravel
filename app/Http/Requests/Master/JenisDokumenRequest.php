@@ -37,20 +37,20 @@ class JenisDokumenRequest extends FormRequest
 
     public function withValidator($validator)
     {
-        $modalId = request()->modal_id;
+        $modalId    = request()->modal_id;
+        $action_url = request()->action_url;
+        $load_url   = request()->load_url;
         if (request()->isMethod('post')) {
-
             if ($validator->fails()) {
                 session()->flash('open-modal', $modalId);
             }
-        }else{
-
+        } else {
+            // dd(request());
             if ($validator->fails()) {
-                session()->put('open-modal', $modalId);
-                session()->put('open-tab', $modalId);
+                session()->flash('edit-modal', $modalId);
+                session()->flash('action-modal', $action_url);
+                session()->flash('load_url', $load_url);
             }
         }
-
-        // return back()->flash('open-modal');
     }
 }

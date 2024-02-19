@@ -244,6 +244,21 @@
                 // console.log("test");
             });
         @endif
+        @if (session()->get('edit-modal'))
+            $(document).ready(function() {
+
+                $('#{{ session()->get('edit-modal') }}').modal('show');
+                let action =  "{{ session()->get('action-modal') }}";
+                let load_url = "{{ session()->get('load_url') }}";
+                $('#form')[0].reset();
+                $('#editModal').find('#action_url').val(action);
+                $('#editModal').find('#load_url').val(load_url);
+                $('#editModal').modal('show').find('form').attr('action', action);
+                $('#editModal').modal('show').find('.modal-body').load(load_url, function() {});
+
+                console.log("{{ $errors }}");
+            });
+        @endif
     </script>
 
     @stack('scripts')

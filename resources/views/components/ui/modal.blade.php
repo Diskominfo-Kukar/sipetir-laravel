@@ -3,7 +3,7 @@
     'title'    => 'Modal',
     'form'     => true, //bool
     'action'   => null, //url
-    'formData' => false, //enctype 
+    'formData' => false, //enctype
     'button'   => null, // custom button
     'fallback' => false //reopen modal
 ])
@@ -15,16 +15,18 @@
   <div  {!! $attributes->merge(['class' => 'modal-dialog']) !!}>
     <div class="modal-content">
       @if($form)
-        <form method="POST" action="{{ $action }}" @if($formData) enctype="multipart/form-data" @endif>
+        <form method="POST" id="form" action="{{ $action }}" @if($formData) enctype="multipart/form-data" @endif>
           @csrf
           @if($fallback)
             <input type="hidden" name="modal_id" value="{{ $id }}">
+            <input type="hidden" name="action_url" id="action_url" value="">
+            <input type="hidden" name="load_url" id="load_url" value="">
           @endif
       @endif
       <div class="modal-header">
         <h5 class="modal-title" id="staticBackdropLabel">{!! $title !!}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-         
+
         </button>
       </div>
       <div class="modal-body">
