@@ -60,8 +60,8 @@
                         name: 'tahun'
                     },
                     {
-                        data: 'nama_tahun',
-                        name: 'nama_tahun'
+                        data: 'nama',
+                        name: 'nama'
                     },
                     {
                         data: 'urarian_pekerjaan',

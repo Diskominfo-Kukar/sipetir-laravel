@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Paket;
 
 use App\Models\Master\JenisDokumen;
 use App\Models\Paket\Paket;
+use App\Models\Paket\PaketDokumen;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
 
 class PaketController extends Controller
@@ -79,13 +81,15 @@ class PaketController extends Controller
      */
     public function show(Paket $paket)
     {
-        $title         = $paket->nama_tahun;
-        $jenis_dokuman = JenisDokumen::orderBy('nama')->get();
+        $title         = $paket->nama;
+        $jenis_dokumen = JenisDokumen::orderBy('nama')->get();
         $crumbs        = [
             'Dashboard'       => route('dashboard'),
             'Paket'           => route('paket.index'),
             "Proses {$title}" => '',
         ];
+        $paket_dokumen = PaketDokumen::where('paket_id', $paket->id)->get();
+        $file_dokumen  = $paket_dokumen->pluck('file', 'jenis_dokumen_id')->toArray();
 
         $data = [
             'pageTitle'     => "Paket {$title}",
@@ -94,7 +98,9 @@ class PaketController extends Controller
             'route'         => $this->route,
             'crumbs'        => $crumbs,
             'paket'         => $paket,
-            'jenis_dokuman' => $jenis_dokuman,
+            'jenis_dokumen' => $jenis_dokumen,
+            'paket_dokumen' => $paket_dokumen,
+            'file_dokumen'  => $file_dokumen,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -166,5 +172,44 @@ class PaketController extends Controller
         }
 
         return abort(404);
+    }
+
+    public function uploadBerkas(Request $request)
+    {
+        $file      = $request->file('dokumen');
+        $dokumenId = $request->dokumen_id;
+        $check     = PaketDokumen::where('paket_id', $request->paket_id)
+            ->where('jenis_dokumen_id', $dokumenId)
+            ->first();
+
+        if ($file && $file->isValid()) {
+            $filename = time().'_'.$file->getClientOriginalName();
+            $file->storeAs('public/uploads', $filename);
+            //Tambah berkas
+            if ($check == null) {
+                PaketDokumen::create([
+                    'paket_id'         => $request->paket_id,
+                    'jenis_dokumen_id' => $dokumenId,
+                    'file'             => 'uploads/'.$filename,
+                ]);
+                session()->flash('success', 'Dokumen Berhasil di-upload');
+
+                return redirect()->back();
+            }
+            //Edit berkas
+            elseif ($check) {
+                Storage::delete('public/'.$check->file);
+                $check->update([
+                    'file' => 'uploads/'.$filename,
+                ]);
+                session()->flash('success', 'Dokumen Berhasil diubah');
+
+                return redirect()->back();
+            }
+        }
+
+        session()->flash('error', 'Dokumen Gagal di-upload');
+
+        return redirect()->back();
     }
 }
