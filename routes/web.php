@@ -79,6 +79,7 @@ Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('mast
     //Paket
     Route::resource('paket', PaketController::class);
     Route::get('/paket-get-data', [PaketController::class, 'getData'])->name('paket.get-data');
+    Route::post('/upload-berkas', [PaketController::class, 'uploadBerkas'])->name('paket.uploadBerkas');
 });
 
 require __DIR__.'/auth.php';
