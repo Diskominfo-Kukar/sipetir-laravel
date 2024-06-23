@@ -185,6 +185,7 @@ class PaketController extends Controller
         if ($file && $file->isValid()) {
             $filename = time().'_'.$file->getClientOriginalName();
             $file->storeAs('public/uploads', $filename);
+
             //Tambah berkas
             if ($check == null) {
                 PaketDokumen::create([

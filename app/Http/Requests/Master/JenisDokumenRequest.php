@@ -40,6 +40,7 @@ class JenisDokumenRequest extends FormRequest
         $modalId    = request()->modal_id;
         $action_url = request()->action_url;
         $load_url   = request()->load_url;
+
         if (request()->isMethod('post')) {
             if ($validator->fails()) {
                 session()->flash('open-modal', $modalId);
