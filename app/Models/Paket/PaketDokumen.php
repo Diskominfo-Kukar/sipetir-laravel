@@ -18,4 +18,14 @@ class PaketDokumen extends Model
     protected $logOnly = ['*'];
 
     protected $fillable = ['paket_id', 'jenis_dokumen_id', 'file'];
+
+    /**
+     * Get kegiatan for Kegiatan.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function komens()
+    {
+        return $this->belongsToMany(Komen::class, 'dokumen_komen', 'paket_dokumen_id', 'komen_id');
+    }
 }

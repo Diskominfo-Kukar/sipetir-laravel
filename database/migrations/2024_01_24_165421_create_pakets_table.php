@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->string('jenis_pengadaan_id')->references('id')->on('jenis_pengadaan');
             $table->string('ppk_id')->references('id')->on('ppk');
             $table->string('opd_id')->references('id')->on('opd');
-            $table->char('status', 1)->nullable()->comment('0: draft, 1: selesai, 2: review, 3: dibikin ulang');
+            $table->char('status', 1)->nullable()->comment('0: selesai, 1: upload, 2:verif , 3: pilihpokmil, 4: TTE1, 5: Review, 6: TTE2, 7: TTE3');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Paket;
 
 use App\Models\Master\JenisDokumen;
+use App\Models\Paket\Komen;
 use App\Models\Paket\Paket;
 use App\Models\Paket\PaketDokumen;
 use Illuminate\Http\Request;
@@ -88,8 +89,8 @@ class PaketController extends Controller
             'Paket'           => route('paket.index'),
             "Proses {$title}" => '',
         ];
-        $paket_dokumen = PaketDokumen::where('paket_id', $paket->id)->get();
-        $file_dokumen  = $paket_dokumen->pluck('file', 'jenis_dokumen_id')->toArray();
+        $paket_dokumen = PaketDokumen::where('paket_id', $paket->id)->with('komens')->get();
+        $file_dokumen  = $paket_dokumen->pluck('file', 'jenis_dokumen_id');
 
         $data = [
             'pageTitle'     => "Paket {$title}",
@@ -210,6 +211,58 @@ class PaketController extends Controller
         }
 
         session()->flash('error', 'Dokumen Gagal di-upload');
+
+        return redirect()->back();
+    }
+
+    public function uploadAllBerkas(Request $request)
+    {
+        $paket = Paket::where('id', $request->paket_id)->first();
+        $paket->update([
+            'status' => '2',
+        ]);
+        session()->flash('success', 'Dokumen Berhasil dikirim');
+
+        return redirect()->back();
+    }
+
+    public function VerifBerkas(Request $request)
+    {
+        $action = $request->input('action');
+
+        if ($action == 'decline') {
+            $paketId       = $request->input('paket_id');
+            $paket_dokumen = PaketDokumen::where('paket_id', $paketId)->get();
+            $catatan       = [];
+
+            foreach ($paket_dokumen as $dokumen) {
+                $catatan[$dokumen->id] = $request->input('catatan_'.$dokumen->jenis_dokumen_id);
+
+                if ($catatan[$dokumen->id] !== null) {
+                    $komen = Komen::create([
+                        'isi'    => $catatan[$dokumen->id],
+                        'active' => '1',
+                    ]);
+                    $dokumen->komens()->attach($komen->id);
+                }
+            }
+
+            $paket = Paket::where('id', $request->paket_id)->first();
+            $paket->update([
+                'status' => '11',
+            ]);
+            session()->flash('success', 'Dokumen Berhasil dikembalikan');
+
+            return redirect()->back();
+        } elseif ($action == 'accept') {
+            $paket = Paket::where('id', $request->paket_id)->first();
+            $paket->update([
+                'status' => '3',
+            ]);
+            session()->flash('success', 'Dokumen Berhasil diverifikasi');
+
+            return redirect()->back();
+        }
 
         return redirect()->back();
     }

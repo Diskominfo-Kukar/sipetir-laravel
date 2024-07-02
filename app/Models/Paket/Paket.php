@@ -23,7 +23,7 @@ class Paket extends Model
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['nama', 'nik', 'nip', 'no_hp', 'user_id', 'opd_id'];
+    protected $fillable = ['nama', 'nik', 'nip', 'no_hp', 'user_id', 'opd_id', 'status'];
 
     public function setNikAttribute($value)
     {
