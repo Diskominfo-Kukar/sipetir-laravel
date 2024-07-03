@@ -65,4 +65,9 @@ class Panitia extends Model
             get: fn () => isset($this->hasUser) ? $this->hasUser->email : ''
         );
     }
+
+    public function pokmil()
+    {
+        return $this->belongsTo(Pokmil::class);
+    }
 }

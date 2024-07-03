@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('dokumen_komen', function (Blueprint $table) {
             $table->uuid('paket_dokumen_id');
             $table->unsignedBigInteger('komen_id');
-            $table->foreign('paket_dokumen_id')->references('id')->on('paket_dokumen')->onDelete('cascade');
-            $table->foreign('komen_id')->references('id')->on('komens')->onDelete('cascade');
+            $table->foreign('paket_dokumen_id')->references('id')->on('paket_dokumen');
+            $table->foreign('komen_id')->references('id')->on('komens');
         });
     }
 

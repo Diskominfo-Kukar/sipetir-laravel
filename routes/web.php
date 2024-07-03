@@ -82,7 +82,8 @@ Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('mast
     Route::post('/upload-berkas', [PaketController::class, 'uploadBerkas'])->name('paket.uploadBerkas');
     Route::post('/upload-berkas-submit', [PaketController::class, 'uploadAllBerkas'])->name('paket.uploadAllBerkas');
     Route::post('/upload-berkas-verif', [PaketController::class, 'VerifBerkas'])->name('paket.VerifBerkas');
-    Route::get('/roll/{paket}', [PaketController::class, 'roll'])->name('paket.roll');
+    Route::get('/roll', [PaketController::class, 'roll'])->name('paket.roll');
+    Route::post('/TTE_SuratTugas', [PaketController::class, 'TTE_SuratTugas'])->name('paket.TTE_SuratTugas');
 });
 
 require __DIR__.'/auth.php';

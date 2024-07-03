@@ -302,25 +302,40 @@
                 {{-- Kaji Ulang --}}
                 @elseif($paket->status==3)
                     <div class="col-12">
-                    <div class="border-0 shadow-sm card">
-                        <div class="card-body">
-                            <h5 class="mb-0">Pemilihan Pokja</h5>
-                            <hr>
-                            <div class="border shadow-none card">
-                                <div class="card-body">
-                                    <div class="card-body">
-                                    <span id="randomNumber" class="display-1 text-center">0</span>
-                                    <button id="saveChangesBtn" type="button" class="btn btn-primary mx-auto d-block">Acak</button>
-                                </div>
+                        <div class="border-0 shadow-sm card">
+                            <div class="card-body">
+                                <h5 class="mb-0">Pemilihan Pokmil</h5>
+                                <hr>
+                                <div class="border shadow-none card">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <span id="number-display" class="display-1 text-center">0</span> &nbsp;
+                                        <div class="d-flex justify-content-center">
+                                            <button id="toggle-button" type="button" class="btn btn-primary mx-2">Acak</button>
+                                            <form action="{{ route('paket.TTE_SuratTugas') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                <button id="process-button" type="submit" class="btn btn-success mx-2 d-none">Proses</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="text-start">
-                                <!--button type="button" class="btn btn-primary mx-auto d-block">Save Changes</!--button-->
-                            </div>
-
                         </div>
                     </div>
-                </div>
+                @elseif($paket->status==4)
+                    <div class="col-12">
+                        <div class="border-0 shadow-sm card">
+                            <div class="card-body">
+                                <h5 class="mb-0">Surat Tugas</h5>
+                                <hr>
+                                <div class="border shadow-none card">
+                                    <div class="card-body">
+                                        Belum jadi
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>
@@ -409,46 +424,46 @@
 
     @push('scripts')
         <script>
-            var numbers = [128964, 544521, 324578, 451154, 212349, 697846, 201245];
-            var animationTimer = null;
-            var isAnimating = false;
+        let isAnimating = false;
+        let intervalId;
+        let numbers = [];
 
-            function toggleRandomNumber() {
-                var output = $('#randomNumber');
-
-                if (isAnimating) {
-                    clearInterval(animationTimer); // Stop the animation
-                    isAnimating = false;
-                } else {
-                    isAnimating = true;
-                    startRandomNumber(output); // Pass 'output' to startRandomNumber
-                }
+        async function fetchNumbers() {
+            try {
+                const response = await fetch('/master/roll');
+                const data = await response.json();
+                numbers = data;
+            } catch (error) {
+                console.error('Error fetching numbers:', error);
             }
+        }
 
-            function startRandomNumber(output) {
-                var randomIndex = Math.floor(Math.random() * numbers.length);
-                var desiredNumber = numbers[randomIndex];
+        document.addEventListener('DOMContentLoaded', fetchNumbers);
 
-                animationTimer = setInterval(function() {
-                    var currentNumber = parseInt(output.text().trim());
+        function startAnimation() {
+            const display = document.getElementById('number-display');
+            intervalId = setInterval(() => {
+                const randomIndex = Math.floor(Math.random() * numbers.length);
+                display.textContent = numbers[randomIndex];
+            }, 50);
+        }
 
-                    if (currentNumber === desiredNumber) {
-                        clearInterval(animationTimer); // Stop the loop
-                        output.text(desiredNumber); // Display the desired number
-                        isAnimating = false;
-                    } else {
-                        // Generate a random number close to the desiredNumber for animation effect
-                        var randomNumber = Math.floor(Math.random() * (desiredNumber + 1));
-                        output.text(randomNumber);
-                    }
-                }, 100);
+        function stopAnimation() {
+            clearInterval(intervalId);
+        }
+
+        document.getElementById('toggle-button').addEventListener('click', () => {
+            if (isAnimating) {
+                stopAnimation();
+                isAnimating = false;
+                document.getElementById('toggle-button').textContent = 'Acak';
+                document.getElementById('process-button').classList.remove('d-none');
+            } else {
+                startAnimation();
+                isAnimating = true;
+                document.getElementById('toggle-button').textContent = 'Berhenti';
             }
-
-            $(document).ready(function() {
-                $('#saveChangesBtn').click(function() {
-                    toggleRandomNumber();
-                });
-            });
+        });
         </script>
     @endpush
 </x-app-layout>

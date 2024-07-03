@@ -15,7 +15,7 @@ class Komen extends Model
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['isi', 'active'];
+    protected $fillable = ['isi'];
 
     public function paketDokumens()
     {

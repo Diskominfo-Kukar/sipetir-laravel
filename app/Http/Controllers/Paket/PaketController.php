@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Paket;
 
 use App\Models\Master\JenisDokumen;
+use App\Models\Master\Pokmil;
 use App\Models\Paket\Komen;
 use App\Models\Paket\Paket;
 use App\Models\Paket\PaketDokumen;
@@ -263,6 +264,24 @@ class PaketController extends Controller
 
             return redirect()->back();
         }
+
+        return redirect()->back();
+    }
+
+    public function roll()
+    {
+        $id = Pokmil::pluck('id');
+
+        return response()->json($id);
+    }
+
+    public function TTE_SuratTugas(Request $request)
+    {
+        $paket = Paket::where('id', $request->paket_id)->first();
+        $paket->update([
+            'status' => '4',
+        ]);
+        session()->flash('success', 'Pokmil berhasil dipilih untuk paket ini');
 
         return redirect()->back();
     }
