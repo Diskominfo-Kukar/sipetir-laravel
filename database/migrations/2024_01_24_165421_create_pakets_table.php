@@ -12,17 +12,18 @@ return new class extends Migration {
     {
         Schema::create('paket', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('kode');
-            $table->char('nama');
-            $table->char('slug');
-            $table->year('tahun');
-            $table->integer('pagu')->default(0);
+            $table->string('pkt_id');
+            $table->char('kode')->nullable();
+            $table->text('nama');
+            $table->char('slug')->nullable();
+            $table->year('tahun')->nullable();
+            $table->decimal('pagu', 30, 2)->default(0);
             $table->text('urarian_pekerjaan')->nullable();
             $table->text('spesifikasi_pekerjaan')->nullable();
-            $table->string('metode_pengadaan_id')->references('id')->on('metode_pengadaan');
-            $table->string('jenis_pengadaan_id')->references('id')->on('jenis_pengadaan');
-            $table->string('ppk_id')->references('id')->on('ppk');
-            $table->string('opd_id')->references('id')->on('opd');
+            $table->string('metode_pengadaan_id')->nullable()->references('id')->on('metode_pengadaan');
+            $table->string('jenis_pengadaan_id')->nullable()->references('id')->on('jenis_pengadaan');
+            $table->string('ppk_id')->nullable()->references('id')->on('ppk');
+            $table->string('opd_id')->nullable()->references('id')->on('opd');
             $table->char('status', 1)->nullable()->comment('0: draft, 1: selesai, 2: review, 3: dibikin ulang');
             $table->softDeletes();
             $table->timestamps();
