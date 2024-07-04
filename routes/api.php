@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/test-postgres', function () {
-    return PaketExternal::limit(10)->get();
+    return PaketExternal::with(['panitia', 'ppk'])->find(13977198);
 });
 
 Route::get('/test-mysql', function () {

@@ -12,12 +12,14 @@ class Paket extends Model
 
     protected $primaryKey = 'pkt_id';
 
-    protected $with = [
-        'panitia',
-    ];
-
     public function panitia()
     {
         return $this->hasOne(Panitia::class, 'pnt_id', 'pnt_id');
+    }
+
+    public function ppk()
+    {
+        return $this->belongsToMany(PPK::class, 'paket_ppk', 'pkt_id', 'ppk_id')
+            ->withPivot('audittype', 'audituser', 'auditupdate', 'ppk_jabatan', 'is_active', 'alasan_ganti');
     }
 }

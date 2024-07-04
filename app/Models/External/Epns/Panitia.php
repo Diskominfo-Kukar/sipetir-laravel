@@ -12,8 +12,18 @@ class Panitia extends Model
 
     protected $primaryKey = 'pnt_id';
 
-    public function paket()
+    protected $with = [
+        'anggota', 'satker',
+    ];
+
+    public function anggota()
     {
-        return $this->belongsTo(Paket::class, 'pnt_id', 'pnt_id');
+        return $this->belongsToMany(Pegawai::class, 'anggota_panitia', 'pnt_id', 'peg_id')
+            ->withPivot('audittype', 'audituser', 'auditupdate', 'agp_jabatan');
+    }
+
+    public function satker()
+    {
+        return $this->belongsTo(Satker::class, 'stk_id', 'stk_id');
     }
 }
