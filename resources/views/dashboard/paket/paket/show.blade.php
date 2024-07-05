@@ -357,7 +357,23 @@
                                 <hr>
                                 <div class="border shadow-none card">
                                     <div class="card-body">
-                                        A
+                                        <ul class="nav nav-tabs" id="reviewTab" role="tablist">
+                                            @foreach ($kategori_reviews as $index => $kategori)
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link {{ $index == 0 ? 'active' : '' }}" id="tab{{ $kategori->id }}-tab" data-bs-toggle="tab" href="#tab{{ $kategori->id }}" role="tab" aria-controls="tab{{ $kategori->id }}" aria-selected="{{ $index == 0 ? 'true' : 'false' }}">
+                                                        {{ $kategori->nama }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                        &nbsp;
+                                        <div class="tab-content" id="reviewTabContent">
+                                            @foreach ($kategori_reviews as $index => $kategori)
+                                                <div class="tab-pane fade {{ $index == 0 ? 'show active' : '' }}" id="tab{{ $kategori->id }}" role="tabpanel" aria-labelledby="tab{{ $kategori->id }}-tab">
+                                                    <p>Isi {{ $kategori->nama }}.</p>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
                             </div>

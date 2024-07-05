@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Paket;
 
 use App\Models\Master\JenisDokumen;
+use App\Models\Master\KategoriReview;
 use App\Models\Master\Opd;
 use App\Models\Master\Pokmil;
 use App\Models\Paket\Komen;
@@ -96,16 +97,19 @@ class PaketController extends Controller
         $paket_dokumen = PaketDokumen::where('paket_id', $paket->id)->with('komens')->get();
         $file_dokumen  = $paket_dokumen->pluck('file', 'jenis_dokumen_id');
 
+        $kategoriReviews = KategoriReview::orderBy('no_urut')->get();
+
         $data = [
-            'pageTitle'     => "Paket {$title}",
-            'subTitle'      => "Proses {$title}",
-            'icon'          => 'fa fa-building',
-            'route'         => $this->route,
-            'crumbs'        => $crumbs,
-            'paket'         => $paket,
-            'jenis_dokumen' => $jenis_dokumen,
-            'paket_dokumen' => $paket_dokumen,
-            'file_dokumen'  => $file_dokumen,
+            'pageTitle'        => "Paket {$title}",
+            'subTitle'         => "Proses {$title}",
+            'icon'             => 'fa fa-building',
+            'route'            => $this->route,
+            'crumbs'           => $crumbs,
+            'paket'            => $paket,
+            'jenis_dokumen'    => $jenis_dokumen,
+            'paket_dokumen'    => $paket_dokumen,
+            'file_dokumen'     => $file_dokumen,
+            'kategori_reviews' => $kategoriReviews,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
