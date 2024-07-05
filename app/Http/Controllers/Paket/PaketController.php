@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Paket;
 
 use App\Models\Master\JenisDokumen;
+use App\Models\Master\KategoriReview;
+use App\Models\Master\Opd;
 use App\Models\Master\Pokmil;
 use App\Models\Paket\Komen;
 use App\Models\Paket\Paket;
 use App\Models\Paket\PaketDokumen;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
@@ -93,16 +97,19 @@ class PaketController extends Controller
         $paket_dokumen = PaketDokumen::where('paket_id', $paket->id)->with('komens')->get();
         $file_dokumen  = $paket_dokumen->pluck('file', 'jenis_dokumen_id');
 
+        $kategoriReviews = KategoriReview::orderBy('no_urut')->get();
+
         $data = [
-            'pageTitle'     => "Paket {$title}",
-            'subTitle'      => "Proses {$title}",
-            'icon'          => 'fa fa-building',
-            'route'         => $this->route,
-            'crumbs'        => $crumbs,
-            'paket'         => $paket,
-            'jenis_dokumen' => $jenis_dokumen,
-            'paket_dokumen' => $paket_dokumen,
-            'file_dokumen'  => $file_dokumen,
+            'pageTitle'        => "Paket {$title}",
+            'subTitle'         => "Proses {$title}",
+            'icon'             => 'fa fa-building',
+            'route'            => $this->route,
+            'crumbs'           => $crumbs,
+            'paket'            => $paket,
+            'jenis_dokumen'    => $jenis_dokumen,
+            'paket_dokumen'    => $paket_dokumen,
+            'file_dokumen'     => $file_dokumen,
+            'kategori_reviews' => $kategoriReviews,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -275,13 +282,46 @@ class PaketController extends Controller
         return response()->json($id);
     }
 
-    public function TTE_SuratTugas(Request $request)
+    public function progres_surat_tugas(Request $request)
     {
         $paket = Paket::where('id', $request->paket_id)->first();
         $paket->update([
+            'ppk_id' => $request->pokmil_number,
             'status' => '4',
         ]);
         session()->flash('success', 'Pokmil berhasil dipilih untuk paket ini');
+
+        return redirect()->back();
+    }
+
+    public function generate_surat_tugas(Request $request)
+    {
+        $tgl     = Carbon::now();
+        $tanggal = $tgl->locale('id')->translatedFormat('j F Y');
+        $tglkop  = $tgl->format('m/Y');
+
+        $paket = Paket::where('id', $request->paket_id)->first();
+        $opd   = Opd::where('id', $paket->opd_id)->first();
+
+        $data = [
+            'tanggal' => $tanggal,
+            'tglkop'  => $tglkop,
+            'paket'   => $paket,
+            'opd'     => $opd,
+        ];
+
+        $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_tugas', $data);
+
+        return $pdf->download('surat_tugas.pdf');
+    }
+
+    public function review(Request $request)
+    {
+        $paket = Paket::where('id', $request->paket_id)->first();
+        $paket->update([
+            'status' => '5',
+        ]);
+        session()->flash('success', '-');
 
         return redirect()->back();
     }

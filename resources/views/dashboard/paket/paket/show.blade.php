@@ -258,7 +258,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 @php
-                                                    $dokumenComments = $paket_dokumen->firstWhere('jenis_dokumen_id', $dokumen->id);
+                                                    $dokumen_Komen = $paket_dokumen->firstWhere('jenis_dokumen_id', $dokumen->id);
                                                 @endphp
                                                 <div class="accordion-item">
                                                     <h2 class="accordion-header" id="heading-{{ $dokumen->id }}">
@@ -269,8 +269,8 @@
                                                     <div id="collapse-{{ $dokumen->id }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ $dokumen->id }}" data-bs-parent="#accordionExample">
                                                         <div class="accordion-body">
                                                             <ul class="text-body">
-                                                                @if ($dokumenComments && $dokumenComments->komens->isNotEmpty())
-                                                                    @foreach ($dokumenComments->komens as $komen)
+                                                                @if ($dokumen_Komen && $dokumen_Komen->komens->isNotEmpty())
+                                                                    @foreach ($dokumen_Komen->komens as $komen)
                                                                         <li>{{ $komen->isi }}</li>
                                                                     @endforeach
                                                                 @else
@@ -311,8 +311,9 @@
                                         <span id="number-display" class="display-1 text-center">0</span> &nbsp;
                                         <div class="d-flex justify-content-center">
                                             <button id="toggle-button" type="button" class="btn btn-primary mx-2">Acak</button>
-                                            <form action="{{ route('paket.TTE_SuratTugas') }}" method="POST">
+                                            <form action="{{ route('paket.progres_surat_tugas') }}" method="POST">
                                                 @csrf
+                                                <input id="pokmil-number-input" type="hidden" name="pokmil_number" value="">
                                                 <input type="hidden" name="paket_id" value="{{ $paket->id }}">
                                                 <button id="process-button" type="submit" class="btn btn-success mx-2 d-none">Proses</button>
                                             </form>
@@ -329,8 +330,50 @@
                                 <h5 class="mb-0">Surat Tugas</h5>
                                 <hr>
                                 <div class="border shadow-none card">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <div class="d-flex justify-content-center">
+                                            <form action="{{ route('paket.generate_surat_tugas') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                <button type="submit" class="btn btn-primary mx-2">Generate PDF</button>
+                                            </form>
+                                            <a href="#" class="btn btn-secondary">TTE</a>
+                                            <form action="{{ route('paket.review') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                <button type="submit" class="btn btn-success mx-2">Proses Review</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif($paket->status==5)
+                    <div class="col-12">
+                        <div class="border-0 shadow-sm card">
+                            <div class="card-body">
+                                <h5 class="mb-0">Review</h5>
+                                <hr>
+                                <div class="border shadow-none card">
                                     <div class="card-body">
-                                        Belum jadi
+                                        <ul class="nav nav-tabs" id="reviewTab" role="tablist">
+                                            @foreach ($kategori_reviews as $index => $kategori)
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link {{ $index == 0 ? 'active' : '' }}" id="tab{{ $kategori->id }}-tab" data-bs-toggle="tab" href="#tab{{ $kategori->id }}" role="tab" aria-controls="tab{{ $kategori->id }}" aria-selected="{{ $index == 0 ? 'true' : 'false' }}">
+                                                        {{ $kategori->nama }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                        &nbsp;
+                                        <div class="tab-content" id="reviewTabContent">
+                                            @foreach ($kategori_reviews as $index => $kategori)
+                                                <div class="tab-pane fade {{ $index == 0 ? 'show active' : '' }}" id="tab{{ $kategori->id }}" role="tabpanel" aria-labelledby="tab{{ $kategori->id }}-tab">
+                                                    <p>Isi {{ $kategori->nama }}.</p>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -458,6 +501,9 @@
                 isAnimating = false;
                 document.getElementById('toggle-button').textContent = 'Acak';
                 document.getElementById('process-button').classList.remove('d-none');
+                var number = document.getElementById('number-display').textContent;
+                var inputHidden = document.getElementById('pokmil-number-input');
+                inputHidden.value = number;
             } else {
                 startAnimation();
                 isAnimating = true;
