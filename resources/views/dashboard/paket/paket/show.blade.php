@@ -313,6 +313,7 @@
                                             <button id="toggle-button" type="button" class="btn btn-primary mx-2">Acak</button>
                                             <form action="{{ route('paket.progres_surat_tugas') }}" method="POST">
                                                 @csrf
+                                                <input id="pokmil-number-input" type="hidden" name="pokmil_number" value="">
                                                 <input type="hidden" name="paket_id" value="{{ $paket->id }}">
                                                 <button id="process-button" type="submit" class="btn btn-success mx-2 d-none">Proses</button>
                                             </form>
@@ -343,6 +344,20 @@
                                                 <button type="submit" class="btn btn-success mx-2">Proses Review</button>
                                             </form>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif($paket->status==5)
+                    <div class="col-12">
+                        <div class="border-0 shadow-sm card">
+                            <div class="card-body">
+                                <h5 class="mb-0">Review</h5>
+                                <hr>
+                                <div class="border shadow-none card">
+                                    <div class="card-body">
+                                        A
                                     </div>
                                 </div>
                             </div>
@@ -470,6 +485,9 @@
                 isAnimating = false;
                 document.getElementById('toggle-button').textContent = 'Acak';
                 document.getElementById('process-button').classList.remove('d-none');
+                var number = document.getElementById('number-display').textContent;
+                var inputHidden = document.getElementById('pokmil-number-input');
+                inputHidden.value = number;
             } else {
                 startAnimation();
                 isAnimating = true;

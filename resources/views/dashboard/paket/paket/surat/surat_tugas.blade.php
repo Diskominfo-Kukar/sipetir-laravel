@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Surat Pernyataan</title>
+  <title>Surat Tugas</title>
   <style>
     @page { margin: 0px; }
     *{
@@ -148,7 +148,7 @@
   <tr>
     <td style="padding: 8px; vertical-align: top;">Kepada</td>
     <td style="padding: 8px; vertical-align: top;">:</td>
-    <td style="padding: 8px; vertical-align: top;">Pokmil 09</td>
+    <td style="padding: 8px; vertical-align: top;">Pokmil {{ $paket->ppk_id }}</td>
   </tr>
   <tr>
     <td colspan="2"></td>

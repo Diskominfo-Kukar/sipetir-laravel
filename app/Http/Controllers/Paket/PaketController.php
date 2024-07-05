@@ -282,6 +282,7 @@ class PaketController extends Controller
     {
         $paket = Paket::where('id', $request->paket_id)->first();
         $paket->update([
+            'ppk_id' => $request->pokmil_number,
             'status' => '4',
         ]);
         session()->flash('success', 'Pokmil berhasil dipilih untuk paket ini');
