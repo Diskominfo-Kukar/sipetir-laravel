@@ -16,6 +16,12 @@ class Pegawai extends Model
         'satker',
     ];
 
+    protected $hidden = [
+        'audittype',
+        'audituser',
+        'auditupdate',
+    ];
+
     public function panitia()
     {
         return $this->belongsToMany(Panitia::class, 'anggota_panitia', 'peg_id', 'pnt_id')
