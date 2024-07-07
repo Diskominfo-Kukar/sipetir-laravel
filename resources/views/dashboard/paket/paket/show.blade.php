@@ -370,9 +370,88 @@
                                         <div class="tab-content" id="reviewTabContent">
                                             @foreach ($kategori_reviews as $index => $kategori)
                                                 <div class="tab-pane fade {{ $index == 0 ? 'show active' : '' }}" id="tab{{ $kategori->id }}" role="tabpanel" aria-labelledby="tab{{ $kategori->id }}-tab">
-                                                    <p>Isi {{ $kategori->nama }}.</p>
+                                                    <ul>
+                                                        @foreach ($kategori->questions as $question)
+                                                            @php
+                                                                $answer = $question->answers->firstWhere('paket_id', $paket->id);
+                                                            @endphp
+                                                            <li>
+                                                                <div>
+                                                                    {{ $question->nama }} <br>
+                                                                    {!! $answer ? 'Jawaban: '.$answer->review : '&nbsp;<br>[ Belum ada jawaban ]' !!}
+                                                                </div>
+                                                                <div>
+                                                                    <form method="POST" action="{{ route('paket.answer_question') }}" class="d-flex flex-row align-items-center">
+                                                                        @csrf
+                                                                        <input type="hidden" name="question_id" value="{{ $question->id }}">
+                                                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                                        <input type="text" name="review" class="form-control me-2" placeholder="User A, S.Kom Menjawab">
+                                                                        <button type="submit" class="btn btn-danger">Kirim</button>
+                                                                    </form>
+                                                                </div>
+                                                                @if (!$loop->last)
+                                                                    &nbsp;<hr>
+                                                                @endif
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
                                                 </div>
                                             @endforeach
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <form action="{{ route('paket.progres_berita_acara') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                        <button type="submit" class="btn btn-success mx-2">Selesai Review</button>
+                                    </form>
+                                </div><br>
+                            </div>
+                        </div>
+                    </div>
+                @elseif($paket->status==6)
+                    <div class="col-12">
+                        <div class="border-0 shadow-sm card">
+                            <div class="card-body">
+                                <h5 class="mb-0">Berita Acara</h5>
+                                <hr>
+                                <div class="border shadow-none card">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <div class="d-flex justify-content-center">
+                                            <form action="#" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                <button type="submit" class="btn btn-primary mx-2">Generate PDF</button>
+                                            </form>
+                                            <a href="#" class="btn btn-secondary">TTE</a>
+                                            <form action="{{ route('paket.berita_acara_PPK') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                <button type="submit" class="btn btn-success mx-2">Kirim ke PPK</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif($paket->status==7)
+                    <div class="col-12">
+                        <div class="border-0 shadow-sm card">
+                            <div class="card-body">
+                                <h5 class="mb-0">Berita Acara</h5>
+                                <hr>
+                                <div class="border shadow-none card">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <div class="d-flex justify-content-center">
+                                            <form action="#" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                <button type="submit" class="btn btn-primary mx-2">Generate PDF</button>
+                                            </form>
+                                            <a href="#" class="btn btn-secondary">TTE</a>
                                         </div>
                                     </div>
                                 </div>
@@ -380,6 +459,7 @@
                         </div>
                     </div>
                 @endif
+
             </div>
         </div>
 
@@ -415,6 +495,10 @@
 
             ul:nth-child(1){
             color: #4caf50;
+            }
+
+            .tab-pane ul {
+                color: #555555;
             }
 
             .timeline li:before{
@@ -508,6 +592,7 @@
                 startAnimation();
                 isAnimating = true;
                 document.getElementById('toggle-button').textContent = 'Berhenti';
+                document.getElementById('process-button').classList.add('d-none');
             }
         });
         </script>

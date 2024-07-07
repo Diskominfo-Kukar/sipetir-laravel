@@ -25,4 +25,9 @@ class KategoriReview extends Model
         $this->attributes['nama'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class, 'kategori_id');
+    }
 }
