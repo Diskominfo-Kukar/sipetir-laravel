@@ -78,22 +78,27 @@
             <div class="row">
                 <div class="col-12">
                     <div class="text-white card-body bg-dark"
-                        <h5>Progress</h5>
-                        <div class="gap-3">
 
-                            <ul class="timeline">
-                                <li class="@if ($paket->status == 1 || $paket->status == 11) active-tl @endif">Upload</li>
-                                <li class="@if ($paket->status == 2) active-tl @endif">Verif Berkas</li>
-                                <li class="@if ($paket->status == 3) active-tl @endif">Pemilihan Pokmil</li>
-                                <li class="@if ($paket->status == 4) active-tl @endif">TTE Surat Tugas</li>
-                                <li class="@if ($paket->status == 5) active-tl @endif">Review</li>
-                                <li class="@if ($paket->status == 6) active-tl @endif">TTE Berita Acara Panitia</li>
-                                <li class="@if ($paket->status == 7) active-tl @endif">TTE Berita Acara PPK</li>
-                            </ul>
+                        {{-- <ul class="timeline">
+                            <li class="@if ($paket->status == 1 || $paket->status == 11) active-tl @endif">Upload</li>
+                            <li class="@if ($paket->status == 2) active-tl @endif">Verif Berkas</li>
+                            <li class="@if ($paket->status == 3) active-tl @endif">Pemilihan Pokmil</li>
+                            <li class="@if ($paket->status == 4) active-tl @endif">TTE Surat Tugas</li>
+                            <li class="@if ($paket->status == 5) active-tl @endif">Review</li>
+                            <li class="@if ($paket->status == 6) active-tl @endif">TTE Berita Acara Panitia</li>
+                            <li class="@if ($paket->status == 7) active-tl @endif">TTE Berita Acara PPK</li>
+                        </ul> --}}
+
+                        <div class="container">                      
+                            <div class="row text-center justify-content-center mb-5">
+                                <div class="col-xl-6 col-lg-8">
+                                    <h2 class="font-weight-bold">Progress Timeline</h2>
+                                    {{-- <p class="text-muted">We’re very proud of the path we’ve taken. Explore the history that made us the company we are today.</p> --}}
+                                </div>
+                            </div>
+                        
+                            <x-fragments.timeline :timelines=$timelines :paket=$paket />
                         </div>
-                        <p  style="line-height: 200px">
-                            {{-- Upload --}} &nbsp;
-                        </p>
                     </div>
                 </div>
                 {{-- selesai --}}
@@ -460,7 +465,6 @@
             .timeline li.active-tl + li:after{
             background: #4caf50;
             }
-
 
         </style>
     @endpush

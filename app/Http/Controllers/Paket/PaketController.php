@@ -99,6 +99,16 @@ class PaketController extends Controller
 
         $kategoriReviews = KategoriReview::orderBy('no_urut')->get();
 
+        $timelines = [
+            1 => 'Upload',
+            2 => 'Verif BerkasVerif Berkas',
+            3 => 'Pemilihan Pokmil',
+            4 => 'TTE Surat Tugas',
+            5 => 'Review',
+            6 => 'TTE Berita Acara Panitia',
+            7 => 'TTE Berita Acara PPK'
+        ];
+
         $data = [
             'pageTitle'        => "Paket {$title}",
             'subTitle'         => "Proses {$title}",
@@ -110,6 +120,7 @@ class PaketController extends Controller
             'paket_dokumen'    => $paket_dokumen,
             'file_dokumen'     => $file_dokumen,
             'kategori_reviews' => $kategoriReviews,
+            'timelines'        => collect($timelines),
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
