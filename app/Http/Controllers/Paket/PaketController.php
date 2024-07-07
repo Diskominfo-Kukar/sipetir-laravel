@@ -106,7 +106,7 @@ class PaketController extends Controller
             4 => 'TTE Surat Tugas',
             5 => 'Review',
             6 => 'TTE Berita Acara Panitia',
-            7 => 'TTE Berita Acara PPK'
+            7 => 'TTE Berita Acara PPK',
         ];
 
         $data = [
