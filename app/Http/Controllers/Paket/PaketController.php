@@ -315,7 +315,7 @@ class PaketController extends Controller
 
         $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_tugas', $data);
 
-        return $pdf->download('surat_tugas.pdf');
+        return $pdf->stream('surat_tugas.pdf');
     }
 
     public function review(Request $request)
