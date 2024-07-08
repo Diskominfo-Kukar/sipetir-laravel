@@ -97,8 +97,11 @@ class PaketController extends Controller
             'Paket'           => route('paket.index'),
             "Proses {$title}" => '',
         ];
-        $paket_dokumen = PaketDokumen::where('paket_id', $paket->id)->with('komens')->get();
+        $paket_dokumen = PaketDokumen::with('jenisDokumen')->where('paket_id', $paket->id)->with('komens')->get();
         $file_dokumen  = $paket_dokumen->pluck('file', 'jenis_dokumen_id');
+
+        // Dump
+        // dump($paket_dokumen, $jenis_dokumen);
 
         $kategoriReviews = KategoriReview::orderBy('no_urut')->get();
         $kategoriReviews->load(['questions.answers.user.panitia']);
@@ -112,6 +115,16 @@ class PaketController extends Controller
             $panitia_nama = $panitia ? $panitia->nama : 'Tidak diketahui';
         }
 
+        $timelines = [
+            1 => 'Upload',
+            2 => 'Verif BerkasVerif Berkas',
+            3 => 'Pemilihan Pokmil',
+            4 => 'TTE Surat Tugas',
+            5 => 'Review',
+            6 => 'TTE Berita Acara Panitia',
+            7 => 'TTE Berita Acara PPK',
+        ];
+
         $data = [
             'pageTitle'        => "Paket {$title}",
             'subTitle'         => "Proses {$title}",
@@ -123,6 +136,7 @@ class PaketController extends Controller
             'paket_dokumen'    => $paket_dokumen,
             'file_dokumen'     => $file_dokumen,
             'kategori_reviews' => $kategoriReviews,
+            'timelines'        => collect($timelines),
             'panitia'          => $panitia_nama,
         ];
 

@@ -2,9 +2,11 @@
 
 namespace App\Models\Paket;
 
+use App\Models\Master\JenisDokumen;
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PaketDokumen extends Model
@@ -27,5 +29,15 @@ class PaketDokumen extends Model
     public function komens()
     {
         return $this->belongsToMany(Komen::class, 'dokumen_komen', 'paket_dokumen_id', 'komen_id');
+    }
+
+    /**
+     * Get jenisDokumen for JenisDokumen.
+     *
+     * @return BelongsTo
+     */
+    public function jenisDokumen(): BelongsTo
+    {
+        return $this->belongsTo(JenisDokumen::class);
     }
 }
