@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Paket;
 
+use App\Models\Master\Answer;
 use App\Models\Master\JenisDokumen;
 use App\Models\Master\KategoriReview;
 use App\Models\Master\Opd;
+use App\Models\Master\Panitia;
 use App\Models\Master\Pokmil;
 use App\Models\Paket\Komen;
 use App\Models\Paket\Paket;
@@ -12,6 +14,7 @@ use App\Models\Paket\PaketDokumen;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
 
@@ -101,6 +104,16 @@ class PaketController extends Controller
         // dump($paket_dokumen, $jenis_dokumen);
 
         $kategoriReviews = KategoriReview::orderBy('no_urut')->get();
+        $kategoriReviews->load(['questions.answers.user.panitia']);
+
+        $user = Auth::user();
+
+        if ($user->username == 'Superadmin') {
+            $panitia_nama = 'Superadmin';
+        } else {
+            $panitia      = Panitia::where('user_id', $user->id)->first();
+            $panitia_nama = $panitia ? $panitia->nama : 'Tidak diketahui';
+        }
 
         $timelines = [
             1 => 'Upload',
@@ -124,6 +137,7 @@ class PaketController extends Controller
             'file_dokumen'     => $file_dokumen,
             'kategori_reviews' => $kategoriReviews,
             'timelines'        => collect($timelines),
+            'panitia'          => $panitia_nama,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -243,7 +257,7 @@ class PaketController extends Controller
         $paket->update([
             'status' => '2',
         ]);
-        session()->flash('success', 'Dokumen Berhasil dikirim');
+        session()->flash('success', 'Semua Dokumen Berhasil dikirim');
 
         return redirect()->back();
     }
@@ -326,7 +340,7 @@ class PaketController extends Controller
 
         $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_tugas', $data);
 
-        return $pdf->download('surat_tugas.pdf');
+        return $pdf->stream('surat_tugas.pdf');
     }
 
     public function review(Request $request)
@@ -335,7 +349,46 @@ class PaketController extends Controller
         $paket->update([
             'status' => '5',
         ]);
-        session()->flash('success', '-');
+        //session()->flash('success', '');
+
+        return redirect()->back();
+    }
+
+    public function answer_question(Request $request)
+    {
+        if ($request->review !== null) {
+            Answer::create([
+                'user_id'     => Auth::id(),
+                'paket_id'    => $request->paket_id,
+                'question_id' => $request->question_id,
+                'review'      => $request->review,
+            ]);
+            session()->flash('success', 'Sukses menambahkan jawaban');
+        } else {
+            //session()->flash('success', 'Gagal menambahkan jawaban');
+        }
+
+        return redirect()->back();
+    }
+
+    public function progres_berita_acara(Request $request)
+    {
+        $paket = Paket::where('id', $request->paket_id)->first();
+        $paket->update([
+            'status' => '6',
+        ]);
+        session()->flash('success', 'Semua review berhasil ditambahkan');
+
+        return redirect()->back();
+    }
+
+    public function berita_acara_PPK(Request $request)
+    {
+        $paket = Paket::where('id', $request->paket_id)->first();
+        $paket->update([
+            'status' => '7',
+        ]);
+        session()->flash('success', 'Berhasil di kirim ke PPK');
 
         return redirect()->back();
     }

@@ -356,58 +356,143 @@
                             </div>
                         </div>
 
-                    @elseif($paket->status==4)
-                        <div class="col-12">
-                            <div class="border-0 shadow-sm card">
-                                <div class="card-body">
-                                    <h5 class="mb-0">Surat Tugas</h5>
-                                    <hr>
-                                    <div class="border shadow-none card">
-                                        <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                                            <div class="d-flex justify-content-center">
-                                                <form action="{{ route('paket.generate_surat_tugas') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                    <button type="submit" class="btn btn-primary mx-2">Generate PDF</button>
-                                                </form>
-                                                <a href="#" class="btn btn-secondary">TTE</a>
-                                                <form action="{{ route('paket.review') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                    <button type="submit" class="btn btn-success mx-2">Proses Review</button>
-                                                </form>
-                                            </div>
+                    </div>
+                @elseif($paket->status==4)
+                    <div class="col-12">
+                        <div class="border-0 shadow-sm card">
+                            <div class="card-body">
+                                <h5 class="mb-0">Surat Tugas</h5>
+                                <hr>
+                                <div class="border shadow-none card">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <div class="d-flex justify-content-center">
+                                            <form action="{{ route('paket.generate_surat_tugas') }}" target="_blank" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                <button type="submit" class="btn btn-primary mx-2">Generate PDF</button>
+                                            </form>
+                                            <a href="#" class="btn btn-secondary">TTE</a>
+                                            <form action="{{ route('paket.review') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                <button type="submit" class="btn btn-success mx-2">Proses Review</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                @elseif($paket->status==5)
+                    <div class="col-12">
+                        <div class="border-0 shadow-sm card">
+                            <div class="card-body">
+                                <h5 class="mb-0">Review</h5>
+                                <hr>
+                                <div class="border shadow-none card">
+                                    <div class="card-body">
+                                        <ul class="nav nav-tabs" id="reviewTab" role="tablist">
+                                            @foreach ($kategori_reviews as $index => $kategori)
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link {{ $index == 0 ? 'active' : '' }}" id="tab{{ $kategori->id }}-tab" data-bs-toggle="tab" href="#tab{{ $kategori->id }}" role="tab" aria-controls="tab{{ $kategori->id }}" aria-selected="{{ $index == 0 ? 'true' : 'false' }}">
+                                                        {{ $kategori->nama }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                        &nbsp;
+                                        <div class="tab-content" id="reviewTabContent">
+                                            @foreach ($kategori_reviews as $index => $kategori)
+                                                <div class="tab-pane fade {{ $index == 0 ? 'show active' : '' }}" id="tab{{ $kategori->id }}" role="tabpanel" aria-labelledby="tab{{ $kategori->id }}-tab">
+                                                    <ul>
+                                                        @foreach ($kategori->questions as $question)
+                                                            @php
+                                                                $answer = $question->answers->firstWhere('paket_id', $paket->id);
+                                                            @endphp
+                                                            <li>
+                                                                <div>
+                                                                    {{ $question->nama }} <br>
+                                                                    @if ($answer)
+                                                                        Jawaban: {{ $answer->review }}
+                                                                        @if ($answer->user->panitia)
+                                                                            (Dijawab oleh {{ $answer->user->panitia->nama }})
+                                                                        @endif
+                                                                    @else
+                                                                        &nbsp;<br>[ Belum ada jawaban ]
+                                                                    @endif
+                                                                </div>
+                                                                <div>
+                                                                    <form method="POST" action="{{ route('paket.answer_question') }}" class="d-flex flex-row align-items-center">
+                                                                        @csrf
+                                                                        <input type="hidden" name="question_id" value="{{ $question->id }}">
+                                                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                                        <input type="text" name="review" class="form-control me-2" placeholder="{{ $panitia }} menjawab">
+                                                                        <button type="submit" class="btn btn-danger">Kirim</button>
+                                                                    </form>
+                                                                </div>
+                                                                @if (!$loop->last)
+                                                                    &nbsp;<hr>
+                                                                @endif
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endforeach
 
-                    @elseif($paket->status==5)
-                        <div class="col-12">
-                            <div class="border-0 shadow-sm card">
-                                <div class="card-body">
-                                    <h5 class="mb-0">Review</h5>
-                                    <hr>
-                                    <div class="border shadow-none card">
-                                        <div class="card-body">
-                                            <ul class="nav nav-tabs" id="reviewTab" role="tablist">
-                                                @foreach ($kategori_reviews as $index => $kategori)
-                                                    <li class="nav-item" role="presentation">
-                                                        <a class="nav-link {{ $index == 0 ? 'active' : '' }}" id="tab{{ $kategori->id }}-tab" data-bs-toggle="tab" href="#tab{{ $kategori->id }}" role="tab" aria-controls="tab{{ $kategori->id }}" aria-selected="{{ $index == 0 ? 'true' : 'false' }}">
-                                                            {{ $kategori->nama }}
-                                                        </a>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                            &nbsp;
-                                            <div class="tab-content" id="reviewTabContent">
-                                                @foreach ($kategori_reviews as $index => $kategori)
-                                                    <div class="tab-pane fade {{ $index == 0 ? 'show active' : '' }}" id="tab{{ $kategori->id }}" role="tabpanel" aria-labelledby="tab{{ $kategori->id }}-tab">
-                                                        <p>Isi {{ $kategori->nama }}.</p>
-                                                    </div>
-                                                @endforeach
-                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <form action="{{ route('paket.progres_berita_acara') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                        <button type="submit" class="btn btn-success mx-2">Selesai Review</button>
+                                    </form>
+                                </div><br>
+                            </div>
+                        </div>
+                    </div>
+                @elseif($paket->status==6)
+                    <div class="col-12">
+                        <div class="border-0 shadow-sm card">
+                            <div class="card-body">
+                                <h5 class="mb-0">Berita Acara</h5>
+                                <hr>
+                                <div class="border shadow-none card">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <div class="d-flex justify-content-center">
+                                            <form action="#" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                <button type="submit" class="btn btn-primary mx-2">Generate PDF</button>
+                                            </form>
+                                            <a href="#" class="btn btn-secondary">TTE</a>
+                                            <form action="{{ route('paket.berita_acara_PPK') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                <button type="submit" class="btn btn-success mx-2">Kirim ke PPK</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif($paket->status==7)
+                    <div class="col-12">
+                        <div class="border-0 shadow-sm card">
+                            <div class="card-body">
+                                <h5 class="mb-0">Berita Acara</h5>
+                                <hr>
+                                <div class="border shadow-none card">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <div class="d-flex justify-content-center">
+                                            <form action="#" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                <button type="submit" class="btn btn-primary mx-2">Generate PDF</button>
+                                            </form>
+                                            <a href="#" class="btn btn-secondary">TTE</a>
                                         </div>
                                     </div>
                                 </div>
@@ -416,6 +501,9 @@
 
                     @endif
                 </div>
+                    </div>
+                @endif
+
             </div>
         </div>
     </div>
@@ -451,6 +539,10 @@
 
             ul:nth-child(1){
             color: #4caf50;
+            }
+
+            .tab-pane ul {
+                color: #555555;
             }
 
             .timeline li:before{
@@ -543,6 +635,7 @@
                 startAnimation();
                 isAnimating = true;
                 document.getElementById('toggle-button').textContent = 'Berhenti';
+                document.getElementById('process-button').classList.add('d-none');
             }
         });
         </script>

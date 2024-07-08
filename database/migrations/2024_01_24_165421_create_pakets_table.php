@@ -12,11 +12,10 @@ return new class extends Migration {
     {
         Schema::create('paket', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('kode');
-            $table->char('nama');
-            $table->char('slug');
-            $table->year('tahun');
-            $table->integer('pagu')->default(0);
+            $table->char('kode')->nullable();
+            $table->text('nama');
+            $table->char('slug')->nullable();
+            $table->year('tahun')->nullable();
             $table->text('urarian_pekerjaan')->nullable();
             $table->text('spesifikasi_pekerjaan')->nullable();
             $table->string('metode_pengadaan_id')->references('id')->on('metode_pengadaan');

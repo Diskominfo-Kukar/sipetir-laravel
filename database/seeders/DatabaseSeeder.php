@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,8 +16,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RoleSeed::class);
         $this->call(UsersTableSeeder::class);
-        // $this->call(DataOpdSeedeer::class);
-        // $this->call(DataKategoriSeedeer::class);
-        // $this->call(JenisDokumenSeeder::class);
+        $this->call(DataOpdSeedeer::class);
+        $this->call(DataKategoriSeedeer::class);
+        $this->call(JenisDokumenSeeder::class);
+
+        Artisan::call('sipetir:sync');
     }
 }
