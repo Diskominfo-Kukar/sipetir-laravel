@@ -24,6 +24,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'peg_id',
+        'nip',
         'name',
         'email',
         'password',

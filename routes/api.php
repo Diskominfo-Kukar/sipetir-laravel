@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\External\Epns\Panitia;
+use App\Models\Paket\Paket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +18,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('/test-postgres', function () {
+    return Panitia::limit(10)->get();
+});
+
+Route::get('/test-mysql', function () {
+    return Paket::limit(10)->get();
 });
