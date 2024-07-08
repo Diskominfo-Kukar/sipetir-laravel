@@ -378,14 +378,21 @@
                                                             <li>
                                                                 <div>
                                                                     {{ $question->nama }} <br>
-                                                                    {!! $answer ? 'Jawaban: '.$answer->review : '&nbsp;<br>[ Belum ada jawaban ]' !!}
+                                                                    @if ($answer)
+                                                                        Jawaban: {{ $answer->review }}
+                                                                        @if ($answer->user->panitia)
+                                                                            (Dijawab oleh {{ $answer->user->panitia->nama }})
+                                                                        @endif
+                                                                    @else
+                                                                        &nbsp;<br>[ Belum ada jawaban ]
+                                                                    @endif
                                                                 </div>
                                                                 <div>
                                                                     <form method="POST" action="{{ route('paket.answer_question') }}" class="d-flex flex-row align-items-center">
                                                                         @csrf
                                                                         <input type="hidden" name="question_id" value="{{ $question->id }}">
                                                                         <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                                        <input type="text" name="review" class="form-control me-2" placeholder="User A, S.Kom Menjawab">
+                                                                        <input type="text" name="review" class="form-control me-2" placeholder="{{ $panitia }} menjawab">
                                                                         <button type="submit" class="btn btn-danger">Kirim</button>
                                                                     </form>
                                                                 </div>

@@ -6,6 +6,7 @@ use App\Models\Master\Answer;
 use App\Models\Master\JenisDokumen;
 use App\Models\Master\KategoriReview;
 use App\Models\Master\Opd;
+use App\Models\Master\Panitia;
 use App\Models\Master\Pokmil;
 use App\Models\Paket\Komen;
 use App\Models\Paket\Paket;
@@ -100,7 +101,16 @@ class PaketController extends Controller
         $file_dokumen  = $paket_dokumen->pluck('file', 'jenis_dokumen_id');
 
         $kategoriReviews = KategoriReview::orderBy('no_urut')->get();
-        $kategoriReviews->load('questions.answers');
+        $kategoriReviews->load(['questions.answers.user.panitia']);
+
+        $user = Auth::user();
+
+        if ($user->username == 'Superadmin') {
+            $panitia_nama = 'Superadmin';
+        } else {
+            $panitia      = Panitia::where('user_id', $user->id)->first();
+            $panitia_nama = $panitia ? $panitia->nama : 'Tidak diketahui';
+        }
 
         $data = [
             'pageTitle'        => "Paket {$title}",
@@ -113,6 +123,7 @@ class PaketController extends Controller
             'paket_dokumen'    => $paket_dokumen,
             'file_dokumen'     => $file_dokumen,
             'kategori_reviews' => $kategoriReviews,
+            'panitia'          => $panitia_nama,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
