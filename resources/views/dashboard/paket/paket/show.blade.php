@@ -85,14 +85,20 @@
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
-                        {{-- @dump($paket_dokumen[0]->jenisDokumen) --}}
-                        @foreach ($paket_dokumen as $dokumen)
-                            <div class="col-12">
+                        @forelse ($paket_dokumen as $dokumen)
+                        <div class="col-12">
+                            {{-- Download File (Tinggal masukin path nya) --}}
+                            <a href="#">
                                 <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                                     <label class="form-label"><i class="bi bi-download"></i>&nbsp;{{$dokumen->jenisDokumen->nama}}</label>
                                 </li>
-                            </div>
-                        @endforeach
+                            </a>
+                        </div>
+                        @empty
+                        <div class="col-md-12 mt-3">
+                            <p class="text-center fw-bold">File kosong</p>
+                        </div>
+                        @endforelse
                     </ul>
                 </div>
             </div>
