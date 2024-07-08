@@ -5,33 +5,33 @@
         <div class="row mb-5">
             <div class="col-md-12">
                 <div class="text-white card-body bg-dark"
-                    <div class="container">                      
+                    <div class="container">
                         <div class="row text-center justify-content-center mb-5">
                             <div class="col-xl-6 col-lg-8">
                                 <h2 class="font-weight-bold">Progress Timeline</h2>
                                 {{-- <p class="text-muted">We’re very proud of the path we’ve taken. Explore the history that made us the company we are today.</p> --}}
                             </div>
                         </div>
-                    
+
                         <x-fragments.timeline :timelines=$timelines :paket=$paket />
                     </div>
                 </div>
             </div>
         </div>
         @endif
-        
+
         <div class="row justify-content-evenly">
             <div class="col-md-3">
                 <div class="overflow-hidden border-0 shadow-sm card">
                     <div class="card-body" style="background-color: #dad9d8">
-    
+
                         <div class="mt-4 text-center">
-    
+
                             <h4 class="mb-1">Kode Paket : {{$paket->kode}}</h4>
                             <p class="mb-0 text-secondary">
                                 {{$paket->opd}}
                             </p>
-    
+
                             <div class="mt-4"></div>
                             <h6 class="mb-1">{{$paket->nama}}</h6>
                         </div>
@@ -105,26 +105,26 @@
 
             <div class="col-md-8">
                 <div class="row">
-    
+
                     {{-- Akses Tampilan --}}
                     @can('viewPpk', $paket)
                     {{-- Isi --}}
                     @endcan
-    
+
                     @can('viewAdmin', $paket)
                     {{-- Isis --}}
                     @endcan
-    
+
                     @can('viewBpbj', $paket)
                     {{-- Isi --}}
                     @endcan
-    
+
                     @can('viewPanitia', $paket)
                     {{-- Isi --}}
                     @endcan
                     {{-- End Akses Tampilan --}}
-    
-    
+
+
                     {{-- selesai --}}
                     @if($paket->status==0)
                     <div class="col-12">
@@ -134,12 +134,12 @@
                                 <hr>
                                 <div class="border shadow-none card">
                                     <div class="card-header">
-    
+
                                     </div>
                                     <div class="card-body">
                                         <form class="row g-3">
-    
-    
+
+
                                         </form>
                                     </div>
                                 </div>
@@ -156,7 +156,7 @@
                                 <hr>
                                 <div class="border shadow-none card">
                                     <div class="card-header">
-    
+
                                     </div>
                                     <div class="card-body">
                                         <div class="row g-3">
@@ -196,7 +196,7 @@
                                         </form>
                                     @endif
                                 </div>
-    
+
                             </div>
                         </div>
                     </div>
@@ -321,16 +321,16 @@
                                             <button type="submit" class="btn btn-primary" name="action" value="accept">Setujui</button>
                                         </div>
                                     </form>
-    
+
                                     </div>
                                 </div>
-    
+
                                 </div>
                             </div>
                         </div>
                     </div>
                     {{-- Upload ulang --}}
-    
+
                     {{-- Kaji Ulang --}}
                     @elseif($paket->status==3)
                         <div class="col-12">
@@ -498,8 +498,6 @@
                                 </div>
                             </div>
                         </div>
-
-                    @endif
                 </div>
                     </div>
                 @endif
@@ -507,7 +505,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <!--end row-->
     @push('styles')

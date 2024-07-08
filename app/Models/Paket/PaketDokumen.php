@@ -33,8 +33,6 @@ class PaketDokumen extends Model
 
     /**
      * Get jenisDokumen for JenisDokumen.
-     *
-     * @return BelongsTo
      */
     public function jenisDokumen(): BelongsTo
     {
