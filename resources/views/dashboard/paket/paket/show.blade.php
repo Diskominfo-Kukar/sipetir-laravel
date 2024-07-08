@@ -85,10 +85,11 @@
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
-                        @foreach ($jenis_dokumen as $dokumen)
+                        {{-- @dump($paket_dokumen[0]->jenisDokumen) --}}
+                        @foreach ($paket_dokumen as $dokumen)
                             <div class="col-12">
                                 <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;{{$dokumen->nama}}</label>
+                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;{{$dokumen->jenisDokumen->nama}}</label>
                                 </li>
                             </div>
                         @endforeach

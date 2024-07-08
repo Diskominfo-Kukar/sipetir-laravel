@@ -94,8 +94,11 @@ class PaketController extends Controller
             'Paket'           => route('paket.index'),
             "Proses {$title}" => '',
         ];
-        $paket_dokumen = PaketDokumen::where('paket_id', $paket->id)->with('komens')->get();
+        $paket_dokumen = PaketDokumen::with('jenisDokumen')->where('paket_id', $paket->id)->with('komens')->get();
         $file_dokumen  = $paket_dokumen->pluck('file', 'jenis_dokumen_id');
+
+        // Dump
+        // dump($paket_dokumen, $jenis_dokumen);
 
         $kategoriReviews = KategoriReview::orderBy('no_urut')->get();
 
