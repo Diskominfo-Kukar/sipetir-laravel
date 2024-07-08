@@ -1,8 +1,7 @@
-@foreach ($timelines->chunk(4) as $chunk)
 <div class="row">
     <div class="col">
         <div class="timeline-steps">
-            @foreach ($chunk as $key => $timeline)
+            @foreach ($timelines as $key => $timeline)
             @php
                 $isActive = $paket->status == $key;
                 $isBeforeActive = $paket->status - 1 == $key;
@@ -18,7 +17,6 @@
         </div>
     </div>
 </div>
-@endforeach
 
 @push('styles')
     <style>
