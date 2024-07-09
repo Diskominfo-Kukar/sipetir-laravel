@@ -12,10 +12,18 @@ return new class extends Migration {
     {
         Schema::create('panitia', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->unsignedInteger('pnt_id')->unique();
+            $table->uuid('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->char('nip')->nullable();
             $table->char('nama');
-            $table->year('tahun')->nullable();
+            $table->text('alamat')->nullable();
+            $table->string('golongan')->nullable();
+            $table->string('pangkat')->nullable();
+            $table->string('jabatan')->nullable();
+            $table->string('telepon')->nullable();
             $table->string('no_sk')->nullable();
+            $table->string('masa_berlaku')->nullable();
+            $table->string('nik')->nullable();
             $table->char('slug')->nullable();
             $table->softDeletes();
             $table->timestamps();

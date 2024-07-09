@@ -4,7 +4,7 @@ namespace App\Models\External\Epns;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Opd extends Model
+class Instansi extends Model
 {
     protected $connection = 'pgsql';
 

@@ -21,7 +21,7 @@ class Panitia extends Model
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['nama', 'nik', 'nip', 'no_hp', 'user_id', 'jabatan_id'];
+    protected $fillable = ['user_id', 'nip', 'nama', 'alamat', 'golongan', 'pangkat', 'jabatan', 'telepon', 'no_sk', 'masa_berlaku', 'nik'];
 
     public function setNikAttribute($value)
     {
@@ -30,39 +30,17 @@ class Panitia extends Model
     }
 
     /**
-     * Get the phone associated with the Jabatan.
-     */
-    public function hasJabatan(): BelongsTo
-    {
-        return $this->belongsTo(Jabatan::class, 'jabatan_id');
-    }
-
-    public function jabatan(): Attribute
-    {
-        return new Attribute(
-            get: fn () => isset($this->hasJabatan) ? $this->hasJabatan->nama : ''
-        );
-    }
-
-    /**
      * Get the phone associated with the Users.
      */
-    public function hasUser(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function username(): Attribute
-    {
-        return new Attribute(
-            get: fn () => isset($this->hasUser) ? $this->hasUser->username : ''
-        );
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function email(): Attribute
     {
         return new Attribute(
-            get: fn () => isset($this->hasUser) ? $this->hasUser->email : ''
+            get: fn () => isset($this->user) ? $this->user->email : ''
         );
     }
 

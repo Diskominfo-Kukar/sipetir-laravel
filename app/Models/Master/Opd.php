@@ -18,7 +18,7 @@ class Opd extends Model
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['nama', 'kode'];
+    protected $fillable = ['kode', 'kode_str', 'nama', 'alamat', 'jenis_opd_id'];
 
     public function setNamaAttribute($value)
     {

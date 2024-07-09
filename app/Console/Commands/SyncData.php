@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\External\Epns\Opd as OpdExternal;
+use App\Models\External\Epns\Instansi as InstansiExternal;
 use App\Models\External\Epns\Panitia as PanitiaExternal;
 use App\Models\External\Epns\Pegawai;
 use App\Models\Master\JenisOpd;
@@ -35,13 +35,13 @@ class SyncData extends Command
     public function handle()
     {
         $this->syncOpd();
-        // $this->syncPegawaiMaster();
+        $this->syncPegawaiMaster();
         // $this->syncAnggotaPanitiaMaster();
     }
 
     public function syncOpd()
     {
-        $jenisOpdExternal = OpdExternal::select('jenis')->distinct()->pluck('jenis');
+        $jenisOpdExternal = InstansiExternal::select('jenis')->distinct()->pluck('jenis');
 
         foreach ($jenisOpdExternal as $jenisOpd) {
             JenisOpd::create([
@@ -49,7 +49,7 @@ class SyncData extends Command
             ]);
         }
 
-        $opdExternal = OpdExternal::select('id', 'nama', 'alamat', 'jenis')->get();
+        $opdExternal = InstansiExternal::select('id', 'nama', 'alamat', 'jenis')->get();
 
         foreach ($opdExternal as $opd) {
             $jenisOpd = JenisOpd::select('id')->where('nama', $opd->jenis)->pluck('id')->first();
@@ -61,6 +61,52 @@ class SyncData extends Command
                 'jenis_opd_id' => $jenisOpd,
             ]);
         }
+    }
+
+    public function syncPegawaiMaster()
+    {
+        // $dataPegawaiExternal = Pegawai::all();
+        $dataPegawaiExternal = Pegawai::limit(10)->get();
+
+        $dataPegawaiExternalTotalRecords = $dataPegawaiExternal->count();
+        $barPegawai                      = $this->output->createProgressBar($dataPegawaiExternalTotalRecords);
+
+        $this->info('Memulai Sinkronisasi Data Pegawai Sipetir.');
+        $barPegawai->start();
+
+        foreach ($dataPegawaiExternal as $external) {
+            try {
+                $userCreated = User::updateOrCreate([
+                    'pegawai_id' => (int) $external->peg_id,
+                ], [
+                    'nama'     => (string) $external->peg_nama,
+                    'username' => (string) $external->peg_namauser,
+                    'password' => Hash::make((string) $external->peg_namauser),
+                ]);
+
+                $userCreated->panitia()->updateOrCreate([
+                    'user_id' => (string) $userCreated->id,
+                ], [
+                    'nip'          => (string) $external->peg_nip,
+                    'nama'         => (string) $external->peg_nama,
+                    'alamat'       => (string) $external->peg_alamat,
+                    'golongan'     => (string) $external->peg_golongan,
+                    'pangkat'      => (string) $external->peg_pangkat,
+                    'jabatan'      => (string) $external->peg_jabatan,
+                    'telepon'      => (string) $external->peg_telepon,
+                    'no_sk'        => (string) $external->peg_no_sk,
+                    'masa_berlaku' => (string) $external->peg_masa_berlaku,
+                    'nik'          => (string) $external->nik,
+                ]);
+
+                $barPegawai->advance();
+            } catch (\Exception $e) {
+                $this->error('Failed to sync record '.$external->pegawai_id.': '.$e->getMessage());
+            }
+        }
+        $barPegawai->finish();
+        $this->line('');
+        $this->info('Sinkronisasi Data Pegawai Sipetir Berhasil.');
     }
 
     public function syncAnggotaPanitiaMaster()
@@ -98,43 +144,5 @@ class SyncData extends Command
         $barPegawai->finish();
         $this->line('');
         $this->info('Sinkronisasi Data Panitia Sipetir Berhasil.');
-    }
-
-    public function syncPegawaiMaster()
-    {
-        // $dataPegawaiExternal = Pegawai::all();
-        $dataPegawaiExternal = Pegawai::limit(10)->get();
-
-        $dataPegawaiExternalTotalRecords = $dataPegawaiExternal->count();
-        $barPegawai                      = $this->output->createProgressBar($dataPegawaiExternalTotalRecords);
-
-        $this->info('Memulai Sinkronisasi Data Pegawai Sipetir.');
-        $barPegawai->start();
-
-        foreach ($dataPegawaiExternal as $external) {
-            try {
-                $existingUser = User::where('peg_id', (int) $external->peg_id)->first();
-
-                if ($existingUser) {
-                    continue;
-                }
-
-                User::updateOrCreate([
-                    'peg_id' => (int) $external->peg_id,
-                ], [
-                    'nip'      => (string) $external->peg_nip,
-                    'name'     => (string) $external->peg_nama,
-                    'username' => (string) $external->peg_namauser,
-                    'password' => Hash::make((string) $external->peg_namauser),
-                ]);
-
-                $barPegawai->advance();
-            } catch (\Exception $e) {
-                $this->error('Failed to sync record with peg_id '.$external->peg_id.': '.$e->getMessage());
-            }
-        }
-        $barPegawai->finish();
-        $this->line('');
-        $this->info('Sinkronisasi Data Pegawai Sipetir Berhasil.');
     }
 }
