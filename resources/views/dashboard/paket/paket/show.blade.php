@@ -379,11 +379,6 @@
                                                     <i class="bi bi-pen"></i>TTE
                                                 </a>
                                             @endif
-                                            <form action="{{ route('paket.review') }}" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                <button type="submit" class="btn btn-success mx-2">Proses Review</button>
-                                            </form>
                                         </div>
                                         @if ($surat_tugas)
                                             <br>
@@ -523,7 +518,7 @@
     <div class="modal fade" id="modal-tte" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form method="POST" action="#">
+            <form method="POST" action="{{ route('paket.review') }}">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">
@@ -579,7 +574,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-danger submit"><i class="pe-7s-pen me-1"></i> Proses TTE</button>
+                    <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                    <button type="submit" class="btn btn-success mx-2">Proses TTE</button>
                 </div>
             </form>
         </div>
