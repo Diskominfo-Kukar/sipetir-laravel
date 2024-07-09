@@ -366,18 +366,31 @@
                                 <div class="border shadow-none card">
                                     <div class="card-body d-flex flex-column justify-content-center align-items-center">
                                         <div class="d-flex justify-content-center">
-                                            <form action="{{ route('paket.generate_surat_tugas') }}" target="_blank" method="POST">
+                                            <form action="{{ route('paket.generate_surat_tugas') }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                <button type="submit" class="btn btn-primary mx-2">Generate PDF</button>
+                                                <button type="submit" class="btn btn-danger mx-2">
+                                                    <i class="fa fa-file-pdf"></i>
+                                                    Buat Surat Tugas
+                                                </button>
                                             </form>
-                                            <a href="#" class="btn btn-secondary">TTE</a>
+                                            @if ($surat_tugas)
+                                                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
+                                                    <i class="bi bi-pen"></i>TTE
+                                                </a>
+                                            @endif
                                             <form action="{{ route('paket.review') }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="paket_id" value="{{ $paket->id }}">
                                                 <button type="submit" class="btn btn-success mx-2">Proses Review</button>
                                             </form>
                                         </div>
+                                        @if ($surat_tugas)
+                                            <br>
+                                            <div class="mt-4 w-100">
+                                                <iframe src="{{ $surat_tugas }}" width="100%" height="800px"></iframe>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -464,7 +477,7 @@
                                             <form action="#" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                <button type="submit" class="btn btn-primary mx-2">Generate PDF</button>
+                                                <button type="submit" class="btn btn-primary mx-2">Buat Berita Acara</button>
                                             </form>
                                             <a href="#" class="btn btn-secondary">TTE</a>
                                             <form action="{{ route('paket.berita_acara_PPK') }}" method="POST">
@@ -490,7 +503,7 @@
                                             <form action="#" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                <button type="submit" class="btn btn-primary mx-2">Generate PDF</button>
+                                                <button type="submit" class="btn btn-primary mx-2">Buat Berita Acara</button>
                                             </form>
                                             <a href="#" class="btn btn-secondary">TTE</a>
                                         </div>
@@ -506,6 +519,72 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="modal-tte" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="POST" action="#">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        <i class="bx bx-file"></i> <span id="judul">Tandatangan Secara Elektronik</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-primary">
+                        <i class="fa fa-info-circle"></i> Info
+                        <br>
+                        Setelah berhasil menandatangani dokumen, Permohonan akan dilanjutkan ke tahap selanjutnya.
+                    </div>
+                    <x-ui.input
+                        label="Nama"
+                        id="nama"
+                        name="nama"
+                        required
+                        placeholder=""
+                        value="{{ $panitia }}"
+                        type="text"
+                        readonly
+                    />
+                    <x-ui.input
+                        label="Jabatan"
+                        id="jabatan"
+                        name="jabatan"
+                        required
+                        placeholder=""
+                        value=""
+                        type="text"
+                        readonly
+                    />
+                    <x-ui.input
+                        label="NIK"
+                        id="nik"
+                        name="nik"
+                        required
+                        placeholder=""
+                        value=""
+                        type="text"
+                        readonly
+                    />
+                    <x-ui.input
+                        label="Passphrase"
+                        id="passphrase"
+                        name="passphrase"
+                        required
+                        placeholder="Passphrase Anda.."
+                        type="password"
+                        autocomplete="false"
+                    />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-danger submit"><i class="pe-7s-pen me-1"></i> Proses TTE</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
 
     <!--end row-->
     @push('styles')

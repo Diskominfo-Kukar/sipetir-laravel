@@ -138,6 +138,7 @@ class PaketController extends Controller
             'kategori_reviews' => $kategoriReviews,
             'timelines'        => collect($timelines),
             'panitia'          => $panitia_nama,
+            'surat_tugas'      => session('surat_tugas'),
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -328,8 +329,8 @@ class PaketController extends Controller
         $tanggal = $tgl->locale('id')->translatedFormat('j F Y');
         $tglkop  = $tgl->format('m/Y');
 
-        $paket = Paket::where('id', $request->paket_id)->first();
-        $opd   = Opd::where('id', $paket->opd_id)->first();
+        $paket = Paket::find($request->paket_id);
+        $opd   = Opd::find($paket->opd_id);
 
         $data = [
             'tanggal' => $tanggal,
@@ -340,7 +341,11 @@ class PaketController extends Controller
 
         $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_tugas', $data);
 
-        return $pdf->stream('surat_tugas.pdf');
+        $filePath = 'pdf/surat_tugas_'.$paket->id.'.pdf';
+        Storage::disk('public')->put($filePath, $pdf->output());
+        $pdfUrl = url('storage/'.$filePath);
+
+        return redirect()->back()->with('surat_tugas', $pdfUrl);
     }
 
     public function review(Request $request)
