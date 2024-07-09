@@ -3,11 +3,13 @@
 namespace App\Console\Commands;
 
 use App\Models\External\Epns\Instansi as InstansiExternal;
-use App\Models\External\Epns\Panitia as PanitiaExternal;
-use App\Models\External\Epns\Pegawai;
-use App\Models\Master\JenisOpd;
-use App\Models\Master\Opd;
-use App\Models\Master\Panitia;
+use App\Models\External\Epns\Panitia as PokmilExternal;
+use App\Models\External\Epns\Pegawai as PegawaiExternal;
+use App\Models\External\Epns\Satker as SatkerExternal;
+use App\Models\Master\JenisOpd as JenisOpdInternal;
+use App\Models\Master\Opd as OpdInternal;
+use App\Models\Master\Pokmil as PokmilInternal;
+use App\Models\Master\Satker as SatkerInternal;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
@@ -36,6 +38,8 @@ class SyncData extends Command
     {
         $this->syncOpd();
         $this->syncPegawaiMaster();
+        $this->syncSatker();
+        $this->syncPokmil();
         // $this->syncAnggotaPanitiaMaster();
     }
 
@@ -44,7 +48,7 @@ class SyncData extends Command
         $jenisOpdExternal = InstansiExternal::select('jenis')->distinct()->pluck('jenis');
 
         foreach ($jenisOpdExternal as $jenisOpd) {
-            JenisOpd::create([
+            JenisOpdInternal::create([
                 'nama' => Str::upper($jenisOpd),
             ]);
         }
@@ -52,9 +56,9 @@ class SyncData extends Command
         $opdExternal = InstansiExternal::select('id', 'nama', 'alamat', 'jenis')->get();
 
         foreach ($opdExternal as $opd) {
-            $jenisOpd = JenisOpd::select('id')->where('nama', $opd->jenis)->pluck('id')->first();
+            $jenisOpd = JenisOpdInternal::select('id')->where('nama', $opd->jenis)->pluck('id')->first();
 
-            Opd::create([
+            OpdInternal::create([
                 'kode'         => $opd->id,
                 'nama'         => Str::title($opd->nama),
                 'alamat'       => $opd->alamat,
@@ -66,7 +70,7 @@ class SyncData extends Command
     public function syncPegawaiMaster()
     {
         // $dataPegawaiExternal = Pegawai::all();
-        $dataPegawaiExternal = Pegawai::limit(10)->get();
+        $dataPegawaiExternal = PegawaiExternal::limit(10)->get();
 
         $dataPegawaiExternalTotalRecords = $dataPegawaiExternal->count();
         $barPegawai                      = $this->output->createProgressBar($dataPegawaiExternalTotalRecords);
@@ -109,40 +113,42 @@ class SyncData extends Command
         $this->info('Sinkronisasi Data Pegawai Sipetir Berhasil.');
     }
 
-    public function syncAnggotaPanitiaMaster()
+    public function syncSatker()
     {
-        // $dataPanitiaExternal = PanitiaExternal::all();
-        $dataPanitiaExternal = PanitiaExternal::limit(10)->get();
+        $dataSatkerExternal = SatkerExternal::all();
 
-        $dataPanitiaExternalTotalRecords = $dataPanitiaExternal->count();
-        $barPegawai                      = $this->output->createProgressBar($dataPanitiaExternalTotalRecords);
-
-        $this->info('Memulai Sinkronisasi Data Panitia Sipetir.');
-        $barPegawai->start();
-
-        foreach ($dataPanitiaExternal as $external) {
-            try {
-                $existingPanitia = Panitia::where('pnt_id', (int) $external->pnt_id)->first();
-
-                if ($existingPanitia) {
-                    continue;
-                }
-
-                Panitia::updateOrCreate([
-                    'pnt_id' => (int) $external->pnt_id,
+        foreach ($dataSatkerExternal as $satker) {
+            $opd = OpdInternal::whereKode($satker->instansi_id)->first();
+            if (! is_null($opd)) {
+                SatkerInternal::updateOrCreate([
+                    'stk_id' => $satker->stk_id,
                 ], [
-                    'nama'  => (string) $external->pnt_nama,
-                    'tahun' => (string) $external->pnt_tahun,
-                    'no_sk' => (string) $external->pnt_no_sk,
+                    'nama'    => (string) Str::title($satker->stk_nama),
+                    'opd_id'  => $opd->id,
+                    'alamat'  => $satker->stk_alamat,
+                    'telepon' => $satker->stk_telepon,
                 ]);
-
-                $barPegawai->advance();
-            } catch (\Exception $e) {
-                $this->error('Failed to sync record with pnt_id '.$external->pnt_id.': '.$e->getMessage());
             }
         }
-        $barPegawai->finish();
-        $this->line('');
-        $this->info('Sinkronisasi Data Panitia Sipetir Berhasil.');
+    }
+
+    public function syncPokmil()
+    {
+        $dataPokmilExternal = PokmilExternal::all();
+
+        foreach ($dataPokmilExternal as $panitia) {
+            $satker = SatkerInternal::where('stk_id', $panitia->stk_id)->first();
+            if (! is_null($satker)) {
+                PokmilInternal::updateOrCreate([
+                    'pokmil_id' => $panitia->pnt_id,
+                ], [
+                    'satker_id' => $satker->id,
+                    'nama'      => $panitia->pnt_nama,
+                    'tahun'     => $panitia->pnt_tahun,
+                    'no_sk'     => $panitia->pnt_no_sk,
+                    'alamat'    => $panitia->pnt_alamat,
+                ]);
+            }
+        }
     }
 }

@@ -11,7 +11,14 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('pokmil', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->unsignedInteger('pokmil_id')->unique();
+            $table->string('nama');
+            $table->year('tahun');
+            $table->string('no_sk')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('satker_id')->references('id')->on('satuan_kerja');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

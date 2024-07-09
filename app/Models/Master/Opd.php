@@ -30,4 +30,9 @@ class Opd extends Model
     {
         return $this->belongsTo(JenisOpd::class, 'jenis_opd_id', 'id');
     }
+
+    public function satuan_kerja()
+    {
+        return $this->hasMany(Satker::class, 'opd_id', 'id');
+    }
 }

@@ -10,15 +10,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('opd', function (Blueprint $table) {
+        Schema::create('satuan_kerja', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('kode');
-            $table->string('kode_str')->nullable();
-            $table->char('nama');
-            $table->char('slug');
+            $table->unsignedInteger('stk_id');
+            $table->string('nama');
+            $table->string('opd_id')->references('id')->on('opd');
             $table->text('alamat')->nullable();
-            $table->enum('status', ['aktif', 'tidak'])->default('aktif');
-            $table->string('jenis_opd_id')->references('id')->on('jenis_opd');
+            $table->text('telepon')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -29,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('opd');
+        Schema::dropIfExists('satuan_kerja');
     }
 };
