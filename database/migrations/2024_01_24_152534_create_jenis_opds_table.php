@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->char('nama');
             $table->char('slug');
-            $table->char('keterangan');
+            $table->char('keterangan')->nullable();
             $table->enum('status', ['aktif', 'tidak'])->default('aktif');
             $table->softDeletes();
             $table->timestamps();

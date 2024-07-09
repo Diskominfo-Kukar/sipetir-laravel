@@ -2,12 +2,16 @@
 
 namespace App\Console\Commands;
 
+use App\Models\External\Epns\Opd as OpdExternal;
 use App\Models\External\Epns\Panitia as PanitiaExternal;
 use App\Models\External\Epns\Pegawai;
+use App\Models\Master\JenisOpd;
+use App\Models\Master\Opd;
 use App\Models\Master\Panitia;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class SyncData extends Command
 {
@@ -30,8 +34,33 @@ class SyncData extends Command
      */
     public function handle()
     {
-        $this->syncPegawaiMaster();
-        $this->syncAnggotaPanitiaMaster();
+        $this->syncOpd();
+        // $this->syncPegawaiMaster();
+        // $this->syncAnggotaPanitiaMaster();
+    }
+
+    public function syncOpd()
+    {
+        $jenisOpdExternal = OpdExternal::select('jenis')->distinct()->pluck('jenis');
+
+        foreach ($jenisOpdExternal as $jenisOpd) {
+            JenisOpd::create([
+                'nama' => Str::upper($jenisOpd),
+            ]);
+        }
+
+        $opdExternal = OpdExternal::select('id', 'nama', 'alamat', 'jenis')->get();
+
+        foreach ($opdExternal as $opd) {
+            $jenisOpd = JenisOpd::select('id')->where('nama', $opd->jenis)->pluck('id')->first();
+
+            Opd::create([
+                'kode'         => $opd->id,
+                'nama'         => Str::title($opd->nama),
+                'alamat'       => $opd->alamat,
+                'jenis_opd_id' => $jenisOpd,
+            ]);
+        }
     }
 
     public function syncAnggotaPanitiaMaster()

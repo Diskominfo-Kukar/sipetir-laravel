@@ -25,4 +25,9 @@ class JenisOpd extends Model
         $this->attributes['nama'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
+
+    public function opd()
+    {
+        return $this->hasMany(Opd::class, 'jenis_opd_id', 'id');
+    }
 }

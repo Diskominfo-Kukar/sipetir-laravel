@@ -20,9 +20,14 @@ class Opd extends Model
 
     protected $fillable = ['nama', 'kode'];
 
-    public function setKodeAttribute($value)
+    public function setNamaAttribute($value)
     {
-        $this->attributes['kode'] = $value;
+        $this->attributes['nama'] = $value;
         $this->attributes['slug'] = Str::slug($value);
+    }
+
+    public function jenis()
+    {
+        return $this->belongsTo(JenisOpd::class, 'jenis_opd_id', 'id');
     }
 }
