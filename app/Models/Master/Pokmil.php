@@ -2,15 +2,15 @@
 
 namespace App\Models\Master;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Pokmil extends Model
 {
-    use HasFactory;
+    protected $table = 'pokmil';
 
-    public function panitias()
-    {
-        return $this->hasMany(Panitia::class);
-    }
+    protected $logName = 'pokmil';
+
+    protected $logOnly = ['*'];
+
+    protected $fillable = ['*'];
 }
