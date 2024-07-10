@@ -40,6 +40,7 @@ class SyncData extends Command
         $this->syncPegawaiMaster();
         $this->syncSatker();
         $this->syncPokmil();
+        $this->syncPanitiaPokmil();
         // $this->syncAnggotaPanitiaMaster();
     }
 
@@ -69,8 +70,8 @@ class SyncData extends Command
 
     public function syncPegawaiMaster()
     {
-        // $dataPegawaiExternal = Pegawai::all();
-        $dataPegawaiExternal = PegawaiExternal::limit(10)->get();
+        // $dataPegawaiExternal = PegawaiExternal::all();
+        $dataPegawaiExternal = PegawaiExternal::limit(100)->get();
 
         $dataPegawaiExternalTotalRecords = $dataPegawaiExternal->count();
         $barPegawai                      = $this->output->createProgressBar($dataPegawaiExternalTotalRecords);
@@ -148,6 +149,27 @@ class SyncData extends Command
                     'no_sk'     => $panitia->pnt_no_sk,
                     'alamat'    => $panitia->pnt_alamat,
                 ]);
+            }
+        }
+    }
+
+    public function syncPanitiaPokmil()
+    {
+        $pokmilExternal = PokmilExternal::all();
+        $pokmilInternal = PokmilInternal::all();
+
+        foreach ($pokmilExternal as $external) {
+            foreach ($pokmilInternal as $internal) {
+                if ($external->pnt_id === $internal->pokmil_id) {
+                    $pokmilPivot = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
+
+                    foreach ($external->anggota as $anggota) {
+                        $anggotaFind = User::where('pegawai_id', $anggota->peg_id)->first();
+                        if (! is_null($anggotaFind)) {
+                            $pokmilPivot->panitia()->sync($anggotaFind->panitia->id);
+                        }
+                    }
+                }
             }
         }
     }
