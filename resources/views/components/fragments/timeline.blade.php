@@ -71,8 +71,8 @@
 
         .timeline-steps .timeline-content .inner-circle {
             border-radius: 1.5rem;
-            height: 1rem;
-            width: 1rem;
+            height: 10px;
+            width: 10px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -83,9 +83,9 @@
             content: "";
             background-color: #3b82f6;
             display: inline-block;
-            height: 3rem;
-            width: 3rem;
-            min-width: 3rem;
+            height: 30px;
+            width: 30px;
+            min-width: 30px;
             border-radius: 6.25rem;
             opacity: .5
         }
