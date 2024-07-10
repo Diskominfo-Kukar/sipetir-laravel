@@ -158,16 +158,14 @@ class SyncData extends Command
         $pokmilExternal = PokmilExternal::all();
         $pokmilInternal = PokmilInternal::all();
 
+        $pokmilInternalMap = $pokmilInternal->keyBy('pokmil_id');
         foreach ($pokmilExternal as $external) {
-            foreach ($pokmilInternal as $internal) {
-                if ($external->pnt_id === $internal->pokmil_id) {
-                    $pokmilPivot = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
-
-                    foreach ($external->anggota as $anggota) {
-                        $anggotaFind = User::where('pegawai_id', $anggota->peg_id)->first();
-                        if (! is_null($anggotaFind)) {
-                            $pokmilPivot->panitia()->sync($anggotaFind->panitia->id);
-                        }
+            if ($pokmilInternalMap->has($external->pnt_id)) {
+                $pokmilPivot = $pokmilInternalMap->get($external->pnt_id);
+                foreach ($external->anggota as $anggota) {
+                    $anggotaFind = User::where('pegawai_id', $anggota->peg_id)->first();
+                    if (! is_null($anggotaFind)) {
+                        $pokmilPivot->panitia()->sync($anggotaFind->panitia->id);
                     }
                 }
             }
