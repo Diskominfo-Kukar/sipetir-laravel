@@ -41,7 +41,6 @@ class SyncData extends Command
         $this->syncSatker();
         $this->syncPokmil();
         $this->syncPanitiaPokmil();
-        // $this->syncAnggotaPanitiaMaster();
     }
 
     public function syncOpd()
@@ -70,8 +69,8 @@ class SyncData extends Command
 
     public function syncPegawaiMaster()
     {
-        // $dataPegawaiExternal = PegawaiExternal::all();
-        $dataPegawaiExternal = PegawaiExternal::limit(100)->get();
+        $dataPegawaiExternal = PegawaiExternal::all();
+        // $dataPegawaiExternal = PegawaiExternal::limit(100)->get();
 
         $dataPegawaiExternalTotalRecords = $dataPegawaiExternal->count();
         $barPegawai                      = $this->output->createProgressBar($dataPegawaiExternalTotalRecords);
@@ -155,18 +154,22 @@ class SyncData extends Command
 
     public function syncPanitiaPokmil()
     {
-        $pokmilExternal = PokmilExternal::all();
+        $pokmilExternal = PokmilExternal::with('anggota')->get();
         $pokmilInternal = PokmilInternal::all();
 
         $pokmilInternalMap = $pokmilInternal->keyBy('pokmil_id');
         foreach ($pokmilExternal as $external) {
             if ($pokmilInternalMap->has($external->pnt_id)) {
-                $pokmilPivot = $pokmilInternalMap->get($external->pnt_id);
+                $pokmilPivot      = $pokmilInternalMap->get($external->pnt_id);
+                $anggotaPerPokmil = null;
                 foreach ($external->anggota as $anggota) {
-                    $anggotaFind = User::where('pegawai_id', $anggota->peg_id)->first();
+                    $anggotaFind = User::where('pegawai_id', $anggota->peg_id)->with('panitia')->first();
                     if (! is_null($anggotaFind)) {
-                        $pokmilPivot->panitia()->sync($anggotaFind->panitia->id);
+                        $anggotaPerPokmil[] = $anggotaFind->panitia->id;
                     }
+                }
+                if (! is_null($anggotaPerPokmil)) {
+                    $pokmilPivot->panitia()->sync($anggotaPerPokmil);
                 }
             }
         }

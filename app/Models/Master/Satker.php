@@ -4,6 +4,8 @@ namespace App\Models\Master;
 
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Satker extends Model
@@ -18,12 +20,12 @@ class Satker extends Model
 
     protected $fillable = ['*'];
 
-    public function opd()
+    public function opd(): BelongsTo
     {
         return $this->belongsTo(Opd::class, 'opd_id', 'id');
     }
 
-    public function pokmil()
+    public function pokmil(): HasMany
     {
         return $this->hasMany(Pokmil::class, 'satker_id', 'id');
     }

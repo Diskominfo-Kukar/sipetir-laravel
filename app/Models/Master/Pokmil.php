@@ -4,6 +4,8 @@ namespace App\Models\Master;
 
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pokmil extends Model
@@ -18,13 +20,13 @@ class Pokmil extends Model
 
     protected $fillable = ['*'];
 
-    public function satuan_kerja()
+    public function satuan_kerja(): BelongsTo
     {
         return $this->belongsTo(Satker::class, 'satker_id', 'id');
     }
 
-    public function panitia()
+    public function panitia(): BelongsToMany
     {
-        return $this->belongsToMany(Panitia::class, 'panitia_pokmil_pivot', 'pokmil_id', 'panitia_id')->withTimestamps();
+        return $this->belongsToMany(Panitia::class, 'panitia_pokmil_pivot', 'pokmil_id', 'panitia_id', 'id', 'id')->withTimestamps();
     }
 }

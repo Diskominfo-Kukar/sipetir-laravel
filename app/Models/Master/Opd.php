@@ -5,6 +5,8 @@ namespace App\Models\Master;
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -26,12 +28,12 @@ class Opd extends Model
         $this->attributes['slug'] = Str::slug($value);
     }
 
-    public function jenis()
+    public function jenis(): BelongsTo
     {
         return $this->belongsTo(JenisOpd::class, 'jenis_opd_id', 'id');
     }
 
-    public function satuan_kerja()
+    public function satuan_kerja(): HasMany
     {
         return $this->hasMany(Satker::class, 'opd_id', 'id');
     }

@@ -8,6 +8,7 @@ use App\Models\Master\Panitia;
 use App\Notifications\CustomResetPasswordNotification;
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -56,7 +57,7 @@ class User extends Authenticatable
         $this->notify(new CustomResetPasswordNotification($token));
     }
 
-    public function panitia()
+    public function panitia(): HasOne
     {
         return $this->hasOne(Panitia::class, 'user_id', 'id');
     }
