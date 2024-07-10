@@ -62,7 +62,11 @@
             },
             xaxis: {
                 categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-                }
+            },
+            yaxis: {
+                min: 0,
+                max: 160
+            }
             };
 
         var chart = new ApexCharts(document.querySelector("#chart"), options);
