@@ -24,6 +24,8 @@
 
     <link rel="stylesheet" href="{{ asset('assets/css/import.css') }}" />
     @stack('styles')
+
+    @vite('resources/js/app.js')
 </head>
 
 <body>

@@ -86,6 +86,9 @@ Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('mast
     Route::post('/progres-surat_tugas', [PaketController::class, 'progres_surat_tugas'])->name('paket.progres_surat_tugas');
     Route::post('/generate-surat_tugas', [PaketController::class, 'generate_surat_tugas'])->name('paket.generate_surat_tugas');
     Route::post('/review', [PaketController::class, 'review'])->name('paket.review');
+    Route::post('/answer_question', [PaketController::class, 'answer_question'])->name('paket.answer_question');
+    Route::post('/progres-berita_acara', [PaketController::class, 'progres_berita_acara'])->name('paket.progres_berita_acara');
+    Route::post('/berita_acara_PPK', [PaketController::class, 'berita_acara_PPK'])->name('paket.berita_acara_PPK');
 });
 
 require __DIR__.'/auth.php';

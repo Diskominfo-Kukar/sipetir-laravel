@@ -25,4 +25,14 @@ class Question extends Model
         $this->attributes['nama'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
+
+    public function kategoriReview()
+    {
+        return $this->belongsTo(KategoriReview::class, 'kategori_id');
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class, 'question_id');
+    }
 }
