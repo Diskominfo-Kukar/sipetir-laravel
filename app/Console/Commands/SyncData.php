@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\External\Epns\Instansi as InstansiExternal;
+use App\Models\External\Epns\Paket as PaketExternal;
 use App\Models\External\Epns\Panitia as PokmilExternal;
 use App\Models\External\Epns\Pegawai as PegawaiExternal;
 use App\Models\External\Epns\PPK as PPKExternal;
@@ -12,6 +13,7 @@ use App\Models\Master\Opd as OpdInternal;
 use App\Models\Master\Pokmil as PokmilInternal;
 use App\Models\Master\Ppk as PPKInternal;
 use App\Models\Master\Satker as SatkerInternal;
+use App\Models\Paket\Paket as PaketInternal;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
@@ -44,6 +46,7 @@ class SyncData extends Command
         $this->syncPokmil();
         $this->syncPanitiaPokmil();
         $this->syncPpk();
+        $this->syncPaket();
     }
 
     public function syncOpd()
@@ -158,8 +161,8 @@ class SyncData extends Command
     public function syncPanitiaPokmil()
     {
         $pokmilExternal = PokmilExternal::with('anggota')->get();
-        // $pokmilInternal = PokmilInternal::all();
-        $pokmilInternal = PokmilInternal::limit(50)->get();
+        $pokmilInternal = PokmilInternal::all();
+        // $pokmilInternal = PokmilInternal::limit(50)->get();
 
         $pokmilInternalMap = $pokmilInternal->keyBy('pokmil_id');
         foreach ($pokmilExternal as $external) {
@@ -182,6 +185,7 @@ class SyncData extends Command
     public function syncPpk()
     {
         $ppkExternal = PPKExternal::all();
+        // $ppkExternal = PPKExternal::limit(20)->get();
 
         foreach ($ppkExternal as $external) {
             $user = User::with('panitia')->where('pegawai_id', $external->peg_id)->first();
@@ -191,6 +195,24 @@ class SyncData extends Command
                     'panitia_id' => $user->panitia->id,
                 ]);
             }
+        }
+    }
+
+    public function syncPaket()
+    {
+        $paketExternal = PaketExternal::all();
+        // $paketExternal = PaketExternal::limit(10)->get();
+
+        foreach ($paketExternal as $external) {
+            $findPokmil = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
+            $findPpk    = PPKInternal::where('ppk_id', $external->ppk_id)->first();
+            PaketInternal::create([
+                'pokmil_id' => $findPokmil->id ?? null,
+                'ppk_id'    => $findPpk->id ?? null,
+                'nama'      => $external->pkt_nama,
+                'pagu'      => (float) $external->pkt_pagu,
+                'hps'       => (float) $external->pkt_hps,
+            ]);
         }
     }
 }
