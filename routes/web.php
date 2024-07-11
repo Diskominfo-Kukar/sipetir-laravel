@@ -38,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/akun/password', [AkunController::class, 'passwordUpdate'])->name('akun.password.update');
 });
 
-Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('master')->group(function () {
+Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Kepala BPBJ'])->prefix('master')->group(function () {
     Route::controller(UserController::class)->prefix('user')->name('user.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
