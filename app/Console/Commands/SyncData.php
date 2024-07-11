@@ -5,10 +5,12 @@ namespace App\Console\Commands;
 use App\Models\External\Epns\Instansi as InstansiExternal;
 use App\Models\External\Epns\Panitia as PokmilExternal;
 use App\Models\External\Epns\Pegawai as PegawaiExternal;
+use App\Models\External\Epns\PPK as PPKExternal;
 use App\Models\External\Epns\Satker as SatkerExternal;
 use App\Models\Master\JenisOpd as JenisOpdInternal;
 use App\Models\Master\Opd as OpdInternal;
 use App\Models\Master\Pokmil as PokmilInternal;
+use App\Models\Master\Ppk as PPKInternal;
 use App\Models\Master\Satker as SatkerInternal;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -41,6 +43,7 @@ class SyncData extends Command
         $this->syncSatker();
         $this->syncPokmil();
         $this->syncPanitiaPokmil();
+        $this->syncPpk();
     }
 
     public function syncOpd()
@@ -155,7 +158,8 @@ class SyncData extends Command
     public function syncPanitiaPokmil()
     {
         $pokmilExternal = PokmilExternal::with('anggota')->get();
-        $pokmilInternal = PokmilInternal::all();
+        // $pokmilInternal = PokmilInternal::all();
+        $pokmilInternal = PokmilInternal::limit(50)->get();
 
         $pokmilInternalMap = $pokmilInternal->keyBy('pokmil_id');
         foreach ($pokmilExternal as $external) {
@@ -171,6 +175,21 @@ class SyncData extends Command
                 if (! is_null($anggotaPerPokmil)) {
                     $pokmilPivot->panitia()->sync($anggotaPerPokmil);
                 }
+            }
+        }
+    }
+
+    public function syncPpk()
+    {
+        $ppkExternal = PPKExternal::all();
+
+        foreach ($ppkExternal as $external) {
+            $user = User::with('panitia')->where('pegawai_id', $external->peg_id)->first();
+            if (! is_null($user)) {
+                PPKInternal::create([
+                    'ppk_id'     => $external->ppk_id,
+                    'panitia_id' => $user->panitia->id,
+                ]);
             }
         }
     }

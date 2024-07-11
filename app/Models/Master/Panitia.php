@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -48,5 +49,10 @@ class Panitia extends Model
     public function pokmil(): BelongsToMany
     {
         return $this->belongsToMany(Pokmil::class, 'panitia_pokmil_pivot', 'panitia_id', 'pokmil_id', 'id', 'id')->withTimestamps();
+    }
+
+    public function ppk(): HasOne
+    {
+        return $this->hasOne(Ppk::class, 'panitia_id', 'id');
     }
 }

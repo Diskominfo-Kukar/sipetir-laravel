@@ -12,13 +12,9 @@ return new class extends Migration {
     {
         Schema::create('ppk', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('nik')->nullable();
-            $table->char('nip')->nullable();
-            $table->char('slug');
-            $table->char('nama');
-            $table->string('no_hp')->nullable();
-            $table->string('user_id')->references('id')->on('users');
-            $table->string('opd_id')->references('id')->on('opd');
+            $table->unsignedInteger('ppk_id');
+            $table->string('panitia_id')->references('id')->on('panitia');
+            $table->string('no_sk')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
