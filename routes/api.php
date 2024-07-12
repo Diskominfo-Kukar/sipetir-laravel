@@ -24,9 +24,10 @@ Route::get('/test-postgres', function () {
 });
 
 Route::get('/test-mysql', function () {
-    return Paket::with('pokmil.panitia.user', 'pokmil.satuan_kerja', 'ppk')
+    return Paket::with('ppk', 'satuan_kerja', 'pokmil.panitia.user', 'pokmil.satuan_kerja')
         ->where('ppk_id', '!=', null)
         ->where('pokmil_id', '!=', null)
+        ->where('satker_id', '!=', null)
         ->limit(10)
         ->get();
 });

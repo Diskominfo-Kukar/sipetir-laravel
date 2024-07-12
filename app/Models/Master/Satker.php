@@ -2,6 +2,7 @@
 
 namespace App\Models\Master;
 
+use App\Models\Paket\Paket;
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,5 +29,10 @@ class Satker extends Model
     public function pokmil(): HasMany
     {
         return $this->hasMany(Pokmil::class, 'satker_id', 'id');
+    }
+
+    public function paket(): HasMany
+    {
+        return $this->hasMany(Paket::class, 'satker_id', 'id');
     }
 }

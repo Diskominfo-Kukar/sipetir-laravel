@@ -204,11 +204,13 @@ class SyncData extends Command
         // $paketExternal = PaketExternal::limit(10)->get();
 
         foreach ($paketExternal as $external) {
-            $findPokmil = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
-            $findPpk    = PPKInternal::where('ppk_id', $external->ppk_id)->first();
+            $findPokmil      = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
+            $findPpk         = PPKInternal::where('ppk_id', $external->ppk_id)->first();
+            $findSatuanKerja = SatkerInternal::where('stk_id', $external->stk_id)->first();
             PaketInternal::create([
                 'pokmil_id' => $findPokmil->id ?? null,
                 'ppk_id'    => $findPpk->id ?? null,
+                'satker_id' => $findSatuanKerja->id ?? null,
                 'nama'      => $external->pkt_nama,
                 'pagu'      => (float) $external->pkt_pagu,
                 'hps'       => (float) $external->pkt_hps,

@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->string('pokmil_id')->references('id')->on('pokmil')->nullable();
             $table->string('ppk_id')->references('id')->on('ppk')->nullable();
+            $table->string('satker_id')->references('id')->on('satuan_kerja')->nullable();
             $table->char('kode')->nullable();
             $table->text('nama');
             $table->char('slug')->nullable();

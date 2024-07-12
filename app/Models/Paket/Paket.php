@@ -7,6 +7,7 @@ use App\Models\Master\Opd;
 use App\Models\Master\Panitia;
 use App\Models\Master\Pokmil;
 use App\Models\Master\Ppk;
+use App\Models\Master\Satker;
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -86,5 +87,10 @@ class Paket extends Model
     public function ppk(): BelongsTo
     {
         return $this->belongsTo(Ppk::class, 'ppk_id', 'id');
+    }
+
+    public function satuan_kerja(): BelongsTo
+    {
+        return $this->belongsTo(Satker::class, 'satker_id', 'id');
     }
 }
