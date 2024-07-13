@@ -19,7 +19,7 @@
     }
     .tanggal-loc {
       position: absolute;
-      bottom: 5cm;
+      bottom: 4.5cm;
       right: 3cm;
       text-align: right;
     }
@@ -148,32 +148,18 @@
   <tr>
     <td style="padding: 8px; vertical-align: top;">Kepada</td>
     <td style="padding: 8px; vertical-align: top;">:</td>
-    <td style="padding: 8px; vertical-align: top;">Pokmil {{ $paket->ppk_id }}</td>
+    <td style="padding: 8px; vertical-align: top;">{{ $paket->pokmil->nama }}</td>
   </tr>
   <tr>
     <td colspan="2"></td>
     <td style="padding: 8px;">Dengan Susunan Personil :</td>
   </tr>
+  @foreach($panitia as $p)
   <tr>
     <td colspan="2"></td>
-    <td style="padding: 0 8px;">Edy Supian, SE</td>
+    <td style="padding: 0 8px;">{{ $p->nama }}</td>
   </tr>
-  <tr>
-    <td colspan="2"></td>
-    <td style="padding: 0 8px;">Santoso</td>
-  </tr>
-  <tr>
-    <td colspan="2"></td>
-    <td style="padding: 0 8px;">A.S. Irwan Setiawan</td>
-  </tr>
-  <tr>
-    <td colspan="2"></td>
-    <td style="padding: 0 8px;">Awang Feriansyah, SE</td>
-  </tr>
-  <tr>
-    <td colspan="2"></td>
-    <td style="padding: 0 8px;">Ika Oktaviyani, SE., M.Si</td>
-  </tr>
+  @endforeach
 </table>&nbsp;&nbsp;
 
 
@@ -197,7 +183,7 @@
     <td style="width: 10%;"></td>
     <td style="padding: 0 8px; vertical-align: top; width: 30%;">3. Nama OPD</td>
     <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-    <td style="padding: 0 8px; vertical-align: top; width: 55%;">{{ $opd->nama }}</td>
+    <td style="padding: 0 8px; vertical-align: top; width: 55%;"></td>
     <td style="padding: 0 8px;"></td>
   </tr>
   <tr>
@@ -218,7 +204,7 @@
     <td style="width: 10%;"></td>
     <td style="padding: 0 8px; vertical-align: top; width: 30%;">6. HPS</td>
     <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-    <td style="padding: 0 8px; vertical-align: top; width: 55%;">Rp 1.260.621.000</td>
+    <td style="padding: 0 8px; vertical-align: top; width: 55%;">Rp {{ $paket->hps }}</td>
     <td style="padding: 0 8px;"></td>
   </tr>
   <tr>
