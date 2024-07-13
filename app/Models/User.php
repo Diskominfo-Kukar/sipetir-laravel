@@ -56,7 +56,7 @@ class User extends Authenticatable
     {
         $this->notify(new CustomResetPasswordNotification($token));
     }
-  
+
     public function panitia(): HasOne
     {
         return $this->hasOne(Panitia::class, 'user_id', 'id');
