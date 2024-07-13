@@ -12,10 +12,11 @@ return new class extends Migration {
     {
         Schema::create('opd', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('kode');
-            $table->char('kode_str');
+            $table->string('kode');
+            $table->string('kode_str')->nullable();
             $table->char('nama');
             $table->char('slug');
+            $table->text('alamat')->nullable();
             $table->enum('status', ['aktif', 'tidak'])->default('aktif');
             $table->string('jenis_opd_id')->references('id')->on('jenis_opd');
             $table->softDeletes();

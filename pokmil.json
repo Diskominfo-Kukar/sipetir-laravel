@@ -1,0 +1,48 @@
+[
+    {
+        "id": "0078cf84-b64f-45af-947b-e305f3c509e8",
+        "pokmil_id": 781198,
+        "nama": "Pokja Semenisasi Jalamn Jeruk RT 09 Desa Rapak Lambur Kecamatan Tenggarong Kab. Kutai Kartanegara (Bankeu)",
+        "tahun": "2017",
+        "no_sk": "100/ST/BLP",
+        "alamat": null,
+        "satker_id": "9c79f0f2-9a88-47c5-b3b0-a17f387032ac",
+        "deleted_at": null,
+        "created_at": "2024-07-09T06:28:23.000000Z",
+        "updated_at": "2024-07-09T06:28:23.000000Z",
+        "satuan_kerja": {
+            "id": "9c79f0f2-9a88-47c5-b3b0-a17f387032ac",
+            "stk_id": 357198,
+            "nama": "Sekretariat Daerah",
+            "opd_id": "3e22a6b3-141f-400b-aef4-ea131347b8c8",
+            "alamat": "Bagian Umum Sekretariat Daerah Kabupaten Kutai Kartanegara  di Komplek Perkantoran Bupati Kutai Kartanegara Gedung B Lantai Dasar Jalan Wolter Monginsidi No.1 Kelurahan Timbau Kecamatan Tenggarong",
+            "telepon": null,
+            "deleted_at": null,
+            "created_at": "2024-07-09T06:28:20.000000Z",
+            "updated_at": "2024-07-09T06:28:20.000000Z",
+            "opd": {
+                "id": "3e22a6b3-141f-400b-aef4-ea131347b8c8",
+                "kode": "D246",
+                "kode_str": null,
+                "nama": "Kab. Kutai Kartanegara",
+                "slug": "kab-kutai-kartanegara",
+                "alamat": null,
+                "status": "aktif",
+                "jenis_opd_id": "aacfb929-a483-43fb-a3df-28ebfa68c8cf",
+                "deleted_at": null,
+                "created_at": "2024-07-09T06:28:02.000000Z",
+                "updated_at": "2024-07-09T06:28:02.000000Z",
+                "jenis": {
+                    "id": "aacfb929-a483-43fb-a3df-28ebfa68c8cf",
+                    "nama": "KABUPATEN",
+                    "slug": "kabupaten",
+                    "keterangan": null,
+                    "status": "aktif",
+                    "deleted_at": null,
+                    "created_at": "2024-07-09T06:28:01.000000Z",
+                    "updated_at": "2024-07-09T06:28:01.000000Z"
+                }
+            }
+        }
+    }
+]

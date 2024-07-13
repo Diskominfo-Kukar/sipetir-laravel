@@ -14,9 +14,8 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->unsignedInteger('peg_id')->nullable()->unique();
-            $table->string('nip')->nullable();
-            $table->string('name');
+            $table->unsignedInteger('pegawai_id')->nullable()->unique();
+            $table->string('nama');
             $table->string('username')->unique();
             $table->string('email')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();

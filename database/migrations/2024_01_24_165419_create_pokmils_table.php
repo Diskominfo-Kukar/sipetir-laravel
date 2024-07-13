@@ -10,11 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('ppk', function (Blueprint $table) {
+        Schema::create('pokmil', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->unsignedInteger('ppk_id');
-            $table->string('panitia_id')->references('id')->on('panitia');
+            $table->unsignedInteger('pokmil_id')->unique();
+            $table->string('nama');
+            $table->year('tahun');
             $table->string('no_sk')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('satker_id')->references('id')->on('satuan_kerja');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -25,6 +28,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('ppk');
+        Schema::dropIfExists('pokmil');
     }
 };

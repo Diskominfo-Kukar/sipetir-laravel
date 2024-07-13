@@ -14,6 +14,11 @@ class DataOpdSeedeer extends Seeder
      */
     public function run(): void
     {
+        // $this->runOpdAPI();
+    }
+
+    public function runOpdAPI()
+    {
         $api_isb     = env('API_ISB');
         $api_key_opd = env('API_KEY_OPD');
         $response    = Http::get("{$api_isb}{$api_key_opd}");

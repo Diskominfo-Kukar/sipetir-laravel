@@ -117,7 +117,7 @@ class PaketController extends Controller
 
         $timelines = [
             1 => 'Upload',
-            2 => 'Verif BerkasVerif Berkas',
+            2 => 'Verif Berkas',
             3 => 'Pemilihan Pokmil',
             4 => 'TTE Surat Tugas',
             5 => 'Review',

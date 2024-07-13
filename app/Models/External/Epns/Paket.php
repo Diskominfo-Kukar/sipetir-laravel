@@ -19,7 +19,12 @@ class Paket extends Model
 
     public function ppk()
     {
-        return $this->belongsToMany(PPK::class, 'paket_ppk', 'pkt_id', 'ppk_id')
-            ->withPivot('audittype', 'audituser', 'auditupdate', 'ppk_jabatan', 'is_active', 'alasan_ganti');
+        return $this->belongsTo(PPK::class, 'ppk_id', 'ppk_id');
     }
+
+    // public function ppk()
+    // {
+    //     return $this->belongsToMany(PPK::class, 'paket_ppk', 'pkt_id', 'ppk_id')
+    //         ->withPivot('audittype', 'audituser', 'auditupdate', 'ppk_jabatan', 'is_active', 'alasan_ganti');
+    // }
 }

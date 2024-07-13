@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -21,7 +23,7 @@ class Panitia extends Model
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['nama', 'nik', 'nip', 'no_hp', 'user_id', 'jabatan_id'];
+    protected $fillable = ['user_id', 'nip', 'nama', 'alamat', 'golongan', 'pangkat', 'jabatan', 'telepon', 'no_sk', 'masa_berlaku', 'nik'];
 
     public function setNikAttribute($value)
     {
@@ -30,44 +32,27 @@ class Panitia extends Model
     }
 
     /**
-     * Get the phone associated with the Jabatan.
-     */
-    public function hasJabatan(): BelongsTo
-    {
-        return $this->belongsTo(Jabatan::class, 'jabatan_id');
-    }
-
-    public function jabatan(): Attribute
-    {
-        return new Attribute(
-            get: fn () => isset($this->hasJabatan) ? $this->hasJabatan->nama : ''
-        );
-    }
-
-    /**
      * Get the phone associated with the Users.
      */
-    public function hasUser(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function username(): Attribute
-    {
-        return new Attribute(
-            get: fn () => isset($this->hasUser) ? $this->hasUser->username : ''
-        );
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function email(): Attribute
     {
         return new Attribute(
-            get: fn () => isset($this->hasUser) ? $this->hasUser->email : ''
+            get: fn () => isset($this->user) ? $this->user->email : ''
         );
     }
 
-    public function pokmil()
+    public function pokmil(): BelongsToMany
     {
-        return $this->belongsTo(Pokmil::class);
+        return $this->belongsToMany(Pokmil::class, 'panitia_pokmil_pivot', 'panitia_id', 'pokmil_id', 'id', 'id')->withTimestamps();
+    }
+
+    public function ppk(): HasOne
+    {
+        return $this->hasOne(Ppk::class, 'panitia_id', 'id');
     }
 }

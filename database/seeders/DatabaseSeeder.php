@@ -20,6 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DataKategoriSeedeer::class);
         $this->call(JenisDokumenSeeder::class);
 
-        Artisan::call('sipetir:sync');
+        // Artisan::call('sipetir:sync');
     }
 }

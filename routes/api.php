@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\External\Epns\Panitia;
 use App\Models\Paket\Paket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,9 +20,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/test-postgres', function () {
-    return Panitia::limit(10)->get();
+    //
 });
 
 Route::get('/test-mysql', function () {
-    return Paket::limit(10)->get();
+    return Paket::with('ppk', 'satuan_kerja', 'pokmil.panitia.user', 'pokmil.satuan_kerja')
+        ->where('ppk_id', '!=', null)
+        ->where('pokmil_id', '!=', null)
+        ->where('satker_id', '!=', null)
+        ->limit(10)
+        ->get();
 });

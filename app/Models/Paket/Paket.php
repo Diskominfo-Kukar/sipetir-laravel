@@ -5,6 +5,9 @@ namespace App\Models\Paket;
 use App\Models\Master\JenisPengadaan;
 use App\Models\Master\Opd;
 use App\Models\Master\Panitia;
+use App\Models\Master\Pokmil;
+use App\Models\Master\Ppk;
+use App\Models\Master\Satker;
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -74,5 +77,20 @@ class Paket extends Model
         return new Attribute(
             get: fn () => isset($this->hasPanitia) ? $this->hasPanitia->nama : ''
         );
+    }
+
+    public function pokmil(): BelongsTo
+    {
+        return $this->belongsTo(Pokmil::class, 'pokmil_id', 'id');
+    }
+
+    public function ppk(): BelongsTo
+    {
+        return $this->belongsTo(Ppk::class, 'ppk_id', 'id');
+    }
+
+    public function satuan_kerja(): BelongsTo
+    {
+        return $this->belongsTo(Satker::class, 'satker_id', 'id');
     }
 }
