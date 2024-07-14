@@ -61,4 +61,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Panitia::class, 'user_id', 'id');
     }
+
+    public function role()
+    {
+        return $this->belongsToMany(Role::class, 'user_role');
+    }
 }
