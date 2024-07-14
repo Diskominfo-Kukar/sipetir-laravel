@@ -38,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/akun/password', [AkunController::class, 'passwordUpdate'])->name('akun.password.update');
 });
 
-Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('master')->group(function () {
+Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Kepala BPBJ'])->prefix('master')->group(function () {
     Route::controller(UserController::class)->prefix('user')->name('user.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
@@ -75,20 +75,20 @@ Route::middleware(['auth', 'role_or_permission:admin|superadmin'])->prefix('mast
     //panitia
     Route::resource('panitia', PanitiaController::class);
     Route::get('/panitia-get-data', [PanitiaController::class, 'getData'])->name('panitia.get-data');
-
-    //Paket
-    Route::resource('paket', PaketController::class);
-    Route::get('/paket-get-data', [PaketController::class, 'getData'])->name('paket.get-data');
-    Route::post('/upload-berkas', [PaketController::class, 'uploadBerkas'])->name('paket.uploadBerkas');
-    Route::post('/upload-berkas-submit', [PaketController::class, 'uploadAllBerkas'])->name('paket.uploadAllBerkas');
-    Route::post('/upload-berkas-verif', [PaketController::class, 'VerifBerkas'])->name('paket.VerifBerkas');
-    Route::get('/roll', [PaketController::class, 'roll'])->name('paket.roll');
-    Route::post('/progres-surat_tugas', [PaketController::class, 'progres_surat_tugas'])->name('paket.progres_surat_tugas');
-    Route::post('/generate-surat_tugas', [PaketController::class, 'generate_surat_tugas'])->name('paket.generate_surat_tugas');
-    Route::post('/review', [PaketController::class, 'review'])->name('paket.review');
-    Route::post('/answer_question', [PaketController::class, 'answer_question'])->name('paket.answer_question');
-    Route::post('/progres-berita_acara', [PaketController::class, 'progres_berita_acara'])->name('paket.progres_berita_acara');
-    Route::post('/berita_acara_PPK', [PaketController::class, 'berita_acara_PPK'])->name('paket.berita_acara_PPK');
 });
+
+//Paket
+Route::resource('paket', PaketController::class);
+Route::get('/paket-get-data', [PaketController::class, 'getData'])->name('paket.get-data');
+Route::post('/upload-berkas', [PaketController::class, 'uploadBerkas'])->name('paket.uploadBerkas');
+Route::post('/upload-berkas-submit', [PaketController::class, 'uploadAllBerkas'])->name('paket.uploadAllBerkas');
+Route::post('/upload-berkas-verif', [PaketController::class, 'VerifBerkas'])->name('paket.VerifBerkas');
+Route::get('/roll', [PaketController::class, 'roll'])->name('paket.roll');
+Route::post('/progres-surat_tugas', [PaketController::class, 'progres_surat_tugas'])->name('paket.progres_surat_tugas');
+Route::post('/generate-surat_tugas', [PaketController::class, 'generate_surat_tugas'])->name('paket.generate_surat_tugas');
+Route::post('/review', [PaketController::class, 'review'])->name('paket.review');
+Route::post('/answer_question', [PaketController::class, 'answer_question'])->name('paket.answer_question');
+Route::post('/progres-berita_acara', [PaketController::class, 'progres_berita_acara'])->name('paket.progres_berita_acara');
+Route::post('/berita_acara_PPK', [PaketController::class, 'berita_acara_PPK'])->name('paket.berita_acara_PPK');
 
 require __DIR__.'/auth.php';

@@ -10,11 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('anggota_panitia', function (Blueprint $table) {
-            $table->unsignedInteger('pnt_id');
-            $table->foreign('pnt_id')->references('pnt_id')->on('panitia');
-            $table->unsignedInteger('peg_id');
-            $table->foreign('peg_id')->references('peg_id')->on('users');
+        Schema::create('panitia_pokmil_pivot', function (Blueprint $table) {
+            $table->string('pokmil_id')->references('id')->on('pokmil');
+            $table->string('panitia_id')->references('id')->on('panitia');
+            $table->timestamps();
         });
     }
 
@@ -23,6 +22,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('anggota_panitia');
+        Schema::dropIfExists('panitia_pokmil_pivot');
     }
 };

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Paket;
 use App\Models\Master\Answer;
 use App\Models\Master\JenisDokumen;
 use App\Models\Master\KategoriReview;
-use App\Models\Master\Opd;
 use App\Models\Master\Panitia;
 use App\Models\Master\Pokmil;
 use App\Models\Paket\Komen;
@@ -117,7 +116,7 @@ class PaketController extends Controller
 
         $timelines = [
             1 => 'Upload',
-            2 => 'Verif Berkas',
+            2 => 'Verif BerkasVerif Berkas',
             3 => 'Pemilihan Pokmil',
             4 => 'TTE Surat Tugas',
             5 => 'Review',
@@ -138,6 +137,7 @@ class PaketController extends Controller
             'kategori_reviews' => $kategoriReviews,
             'timelines'        => collect($timelines),
             'panitia'          => $panitia_nama,
+            'surat_tugas'      => session('surat_tugas'),
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -305,17 +305,19 @@ class PaketController extends Controller
 
     public function roll()
     {
-        $id = Pokmil::pluck('id');
+        $id = Pokmil::pluck('pokmil_id');
 
         return response()->json($id);
     }
 
     public function progres_surat_tugas(Request $request)
     {
-        $paket = Paket::where('id', $request->paket_id)->first();
+        $paket       = Paket::where('id', $request->paket_id)->first();
+        $pokmil      = Pokmil::where('pokmil_id', $request->pokmil_number)->first();
+        $uuid_pokmil = $pokmil->id;
         $paket->update([
-            'ppk_id' => $request->pokmil_number,
-            'status' => '4',
+            'pokmil_id' => $uuid_pokmil,
+            'status'    => '4',
         ]);
         session()->flash('success', 'Pokmil berhasil dipilih untuk paket ini');
 
@@ -328,19 +330,24 @@ class PaketController extends Controller
         $tanggal = $tgl->locale('id')->translatedFormat('j F Y');
         $tglkop  = $tgl->format('m/Y');
 
-        $paket = Paket::where('id', $request->paket_id)->first();
-        $opd   = Opd::where('id', $paket->opd_id)->first();
+        $paket   = Paket::find($request->paket_id);
+        $pokmil  = Pokmil::find($paket->pokmil_id);
+        $panitia = $pokmil->panitia;
 
         $data = [
             'tanggal' => $tanggal,
             'tglkop'  => $tglkop,
             'paket'   => $paket,
-            'opd'     => $opd,
+            'panitia' => $panitia,
         ];
 
         $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_tugas', $data);
 
-        return $pdf->stream('surat_tugas.pdf');
+        $filePath = 'pdf/surat_tugas_'.$paket->id.'.pdf';
+        Storage::disk('public')->put($filePath, $pdf->output());
+        $pdfUrl = url('storage/'.$filePath);
+
+        return redirect()->back()->with('surat_tugas', $pdfUrl);
     }
 
     public function review(Request $request)

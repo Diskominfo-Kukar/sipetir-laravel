@@ -10,11 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('pokmils', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('panitia_id');
+        Schema::create('user_role', function (Blueprint $table) {
+            $table->string('user_id')->references('id')->on('user');
+            $table->string('role_id')->references('id')->on('role');
             $table->timestamps();
-            $table->foreign('panitia_id')->references('id')->on('panitia');
         });
     }
 
@@ -23,6 +22,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('pokmils');
+        Schema::dropIfExists('user_role');
     }
 };

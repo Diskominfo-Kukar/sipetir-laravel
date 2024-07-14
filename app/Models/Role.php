@@ -12,4 +12,9 @@ class Role extends SpatieRole
     protected $primaryKey = 'id';
 
     public $incrementing = false;
+
+    public function user()
+    {
+        return $this->belongsToMany(User::class, 'user_role');
+    }
 }
