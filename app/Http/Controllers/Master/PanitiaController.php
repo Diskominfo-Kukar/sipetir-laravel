@@ -203,22 +203,20 @@ class PanitiaController extends Controller
                 ->addColumn('no_hp_tampil', function ($row) {
                     return ucwords($row->no_hp_tampil);
                 })
-                // ->addColumn('action', function ($row) {
-                //     $actionBtn = '
-                //         <div class="btn-group btn-sm">
-                //             // <a title="edit" href="'.route($this->route.'.edit', $row->id).'" action="'.route($this->route.'.update', $row->id).'" class="btn btn-warning btn-sm remote-modal">
-                //             //     <i class="bx bx-edit"></i>
-                //             // </a>
-                //             // <button title="Hapus" type="button" class="btn btn-danger btn-sm deleteConfirmation" data-target="'.route($this->route.'.destroy', [$row->id]).'">
-                //             //     <i class="bx bx-trash "></i>
-                //             // </button>
-                //         </div>
-                //     ';
+                ->addColumn('action', function ($row) {
+                    $actionBtn = '
+                        <div class="btn-group btn-sm">
+                            <a title="edit" href="'.route($this->route.'.edit', $row->id).'" action="'.route($this->route.'.update', $row->id).'" class="btn btn-warning btn-sm remote-modal">
+                                <i class="bx bx-edit"></i>
+                            </a>
 
-                //     return $actionBtn;
-                // })
+                        </div>
+                    ';
 
-                // ->rawColumns(['action'])
+                    return $actionBtn;
+                })
+
+                ->rawColumns(['action'])
                 ->make(true);
         }
 
