@@ -9,7 +9,7 @@
             <div class="timeline-step {{$isActive ? 'active' : ''}} {{$isBeforeActive ? 'before-active' : ''}} {{$paket->status == 11 && $key == 1 ? 'active' : ''}}">
                 <div class="timeline-content">
                     <div class="inner-circle {{$isActive ? 'active' : ''}}"></div>
-                    <p class="h6 mt-3 mb-1">{{$timeline}}</p>
+                    <p class="mt-1 mb-1">{{$timeline}}</p>
                     {{-- <p class="h6 text-muted mb-0 mb-lg-0">Favland Founded</p> --}}
                 </div>
             </div>
@@ -24,7 +24,8 @@
         .timeline-steps {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap
+            flex-wrap: wrap;
+            font-size: 10pt;
         }
 
         .timeline-steps .timeline-step {
@@ -32,7 +33,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            margin: 1rem
+            margin: 0.1rem
         }
 
         @media (min-width:768px) {
@@ -83,17 +84,17 @@
             content: "";
             background-color: #3b82f6;
             display: inline-block;
-            height: 30px;
-            width: 30px;
-            min-width: 30px;
+            height: 15px;
+            width: 15px;
+            min-width: 15px;
             border-radius: 6.25rem;
             opacity: .5
         }
 
-        .timeline-steps .timeline-content .inner-circle.active, 
+        .timeline-steps .timeline-content .inner-circle.active,
         .timeline-steps .timeline-content .inner-circle.active:before {
             background-color: #2fc71a;
-        } 
+        }
 
 
     </style>

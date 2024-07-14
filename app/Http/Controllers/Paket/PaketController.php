@@ -105,18 +105,20 @@ class PaketController extends Controller
         $kategoriReviews = KategoriReview::orderBy('no_urut')->get();
         $kategoriReviews->load(['questions.answers.user.panitia']);
 
-        $user = Auth::user();
+        $user    = Auth::user();
+        $panitia = Panitia::where('user_id', $user->id)->first();
 
         if ($user->username == 'Superadmin') {
             $panitia_nama = 'Superadmin';
         } else {
-            $panitia      = Panitia::where('user_id', $user->id)->first();
             $panitia_nama = $panitia ? $panitia->nama : 'Tidak diketahui';
         }
 
+        $surat_tugas = $paket->surat_tugas;
+
         $timelines = [
             1 => 'Upload',
-            2 => 'Verif BerkasVerif Berkas',
+            2 => 'Verifikasi Berkas',
             3 => 'Pemilihan Pokmil',
             4 => 'TTE Surat Tugas',
             5 => 'Review',
@@ -137,7 +139,8 @@ class PaketController extends Controller
             'kategori_reviews' => $kategoriReviews,
             'timelines'        => collect($timelines),
             'panitia'          => $panitia_nama,
-            'surat_tugas'      => session('surat_tugas'),
+            'panitia_data'     => $panitia,
+            'surat_tugas'      => $surat_tugas,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -347,6 +350,10 @@ class PaketController extends Controller
         Storage::disk('public')->put($filePath, $pdf->output());
         $pdfUrl = url('storage/'.$filePath);
 
+        $paket->update([
+            'surat_tugas' => $filePath,
+        ]);
+
         return redirect()->back()->with('surat_tugas', $pdfUrl);
     }
 
@@ -363,13 +370,27 @@ class PaketController extends Controller
 
     public function answer_question(Request $request)
     {
+        $answer = Answer::where('paket_id', $request->paket_id)
+            ->where('question_id', $request->question_id)
+            ->first();
+
         if ($request->review !== null) {
-            Answer::create([
-                'user_id'     => Auth::id(),
-                'paket_id'    => $request->paket_id,
-                'question_id' => $request->question_id,
-                'review'      => $request->review,
-            ]);
+            if ($answer) {
+                $answer->update([
+                    'user_id'     => Auth::id(),
+                    'paket_id'    => $request->paket_id,
+                    'question_id' => $request->question_id,
+                    'review'      => $request->review,
+                ]);
+            } else {
+                Answer::create([
+                    'user_id'     => Auth::id(),
+                    'paket_id'    => $request->paket_id,
+                    'question_id' => $request->question_id,
+                    'review'      => $request->review,
+                ]);
+            }
+
             session()->flash('success', 'Sukses menambahkan jawaban');
         } else {
             //session()->flash('success', 'Gagal menambahkan jawaban');

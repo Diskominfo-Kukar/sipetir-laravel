@@ -6,9 +6,9 @@
             <div class="col-md-12">
                 <div class="text-white card-body bg-dark"
                     <div class="container">
-                        <div class="row text-center justify-content-center mb-5">
+                        <div class="row text-center justify-content-center">
                             <div class="col-xl-6 col-lg-8">
-                                <h2 class="font-weight-bold">Progress Timeline</h2>
+                                <p class="font-weight-bold">Progress Timeline</p>
                                 {{-- <p class="text-muted">We’re very proud of the path we’ve taken. Explore the history that made us the company we are today.</p> --}}
                             </div>
                         </div>
@@ -297,7 +297,8 @@
                                                                         <ul class="text-body">
                                                                             @if ($dokumen_Komen && $dokumen_Komen->komens->isNotEmpty())
                                                                                 @foreach ($dokumen_Komen->komens as $komen)
-                                                                                    <li>{{ $komen->isi }}</li>
+                                                                                    <li>{{ $komen->isi }} - {{ \Carbon\Carbon::parse($komen->created_at)->locale('id')->translatedFormat('d F Y H:i') }}</li>
+
                                                                                 @endforeach
                                                                             @else
                                                                                 -
@@ -372,6 +373,7 @@
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
                                                 <div class="d-flex justify-content-center">
+                                                    @if (!$surat_tugas)
                                                     <form action="{{ route('paket.generate_surat_tugas') }}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="paket_id" value="{{ $paket->id }}">
@@ -380,6 +382,7 @@
                                                             Buat Surat Tugas
                                                         </button>
                                                     </form>
+                                                    @endif
                                                     @if ($surat_tugas)
                                                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
                                                             <i class="bi bi-pen"></i>TTE
@@ -389,7 +392,7 @@
                                                 @if ($surat_tugas)
                                                     <br>
                                                     <div class="mt-4 w-100">
-                                                        <iframe src="{{ $surat_tugas }}" width="100%" height="800px"></iframe>
+                                                        <iframe src="{{ asset('storage/' . $surat_tugas)  }}" width="100%" height="800px"></iframe>
                                                     </div>
                                                 @endif
                                             </div>
@@ -443,7 +446,7 @@
                                                                             @if ($answer)
                                                                                 Jawaban: {{ $answer->review }}
                                                                                 @if ($answer->user->panitia)
-                                                                                    (Dijawab oleh {{ $answer->user->panitia->nama }})
+                                                                                    (Dijawab oleh {{ $answer->user->panitia->nama }}) - {{ \Carbon\Carbon::parse($answer->created_at)->locale('id')->translatedFormat('d F Y H:i') }}
                                                                                 @endif
                                                                             @else
                                                                                 &nbsp;<br>[ Belum ada jawaban ]
@@ -582,17 +585,17 @@
                         name="jabatan"
                         required
                         placeholder=""
-                        value=""
+                        value="{{ $panitia_data->jabatan }}"
                         type="text"
                         readonly
                     />
                     <x-ui.input
-                        label="NIK"
-                        id="nik"
-                        name="nik"
+                        label="NIP"
+                        id="nip"
+                        name="nip"
                         required
                         placeholder=""
-                        value=""
+                        value="{{ $panitia_data->nip }}"
                         type="text"
                         readonly
                     />
