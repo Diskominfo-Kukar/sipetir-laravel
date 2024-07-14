@@ -14,7 +14,7 @@
                             <th>Nama</th>
                             <th>Jabatan</th>
                             <th>No Hp</th>
-                            <th width="100px">Action</th>
+                            {{-- <th width="100px">Action</th> --}}
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -92,16 +92,16 @@
                         name: 'jabatan'
                     },
                     {
-                        data: 'no_hp',
-                        name: 'no_hp'
+                        data: 'no_hp_tampil',
+                        name: 'no_hp_tampil'
                     },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        className: 'text-center'
-                    },
+                    // {
+                    //     data: 'action',
+                    //     name: 'action',
+                    //     orderable: false,
+                    //     searchable: false,
+                    //     className: 'text-center'
+                    // },
                 ]
             });
 
