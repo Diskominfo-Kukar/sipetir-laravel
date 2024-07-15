@@ -9,9 +9,7 @@
                             <th width="5%">No</th>
                             <th width="5%">Tahun</th>
                             <th>Nama</th>
-                            <th>Uraiaan Pekerjaan</th>
-                            <th>Spesifikasi Pekerjaan</th>
-                            <th width="100px">Action</th>
+                            <th width="110px">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -62,14 +60,6 @@
                     {
                         data: 'nama',
                         name: 'nama'
-                    },
-                    {
-                        data: 'uraian_pekerjaan',
-                        name: 'uraian_pekerjaan'
-                    },
-                    {
-                        data: 'spesifikasi_pekerjaan',
-                        name: 'spesifikasi_pekerjaan'
                     },
                     {
                         data: 'action',

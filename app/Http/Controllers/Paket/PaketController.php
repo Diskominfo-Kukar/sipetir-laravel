@@ -189,20 +189,84 @@ class PaketController extends Controller
 
     public function getData(Request $request)
     {
+        $user = Auth::user();
+
         if ($request->ajax()) {
-            $data = Paket::get();
+            $query = Paket::query();
+
+            if ($user->role->first()->name == 'Panitia') {
+                $query->orderByRaw(
+                    'case
+                        when status = 5 then 1
+                        when status = 6 then 2
+                        else 3
+                    end'
+                )->orderBy('status', 'desc');
+            } elseif ($user->role->first()->name == 'ppk') {
+                $query->orderByRaw(
+                    'case
+                        when status = 1 then 1
+                        when status = 7 then 2
+                        else 3
+                    end'
+                )->orderBy('status', 'desc');
+            } elseif ($user->role->first()->name == 'Admin') {
+                $query->orderByRaw(
+                    'case
+                        when status = 2 then 1
+                        else 2
+                    end'
+                )->orderBy('status', 'desc');
+            } elseif ($user->role->first()->name == 'Kepala BPBJ') {
+                $query->orderByRaw(
+                    'case
+                        when status = 3 then 1
+                        when status = 4 then 2
+                        else 3
+                    end'
+                )->orderBy('status', 'desc');
+            } else {
+                $query->orderBy('status', 'desc');
+            }
+            $query->orderBy('updated_at', 'desc');
+            $data = $query->get();
 
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('nama_tahun', function ($row) {
                     return ucwords($row->nama_tahun);
                 })
-                ->addColumn('action', function ($row) {
+                ->addColumn('action', function ($row) use ($user) {
+                    $status      = $row->status;
+                    $buttonText  = 'Detail';
+                    $buttonClass = 'btn-primary';
+
+                    if ($user->role->first()->name == 'Panitia') {
+                        if ($status == 5 || $status == 6) {
+                            $buttonText  = 'Proses';
+                            $buttonClass = 'btn-warning';
+                        }
+                    } elseif ($user->role->first()->name == 'ppk') {
+                        if ($status == 1 || $status == 7) {
+                            $buttonText  = 'Proses';
+                            $buttonClass = 'btn-warning';
+                        }
+                    } elseif ($user->role->first()->name == 'Admin') {
+                        if ($status == 2) {
+                            $buttonText  = 'Proses';
+                            $buttonClass = 'btn-warning';
+                        }
+                    } elseif ($user->role->first()->name == 'Kepala BPBJ') {
+                        if ($status == 3 || $status == 4) {
+                            $buttonText  = 'Proses';
+                            $buttonClass = 'btn-warning';
+                        }
+                    }
+
                     $actionBtn = '
                         <div class="btn-group btn-sm">
-                            <a title="prosses" href="'.route($this->route.'.show', $row->id).'" action="'.route($this->route.'.update', $row->id).'" class="btn btn-warning btn-sm ">
-                                <i class="bx bx-edit"></i> Proses
+                            <a title="'.($buttonText).'" href="'.route($this->route.'.show', $row->id).'" class="btn '.$buttonClass.' btn-sm">
+                                <i class="bx bx-'.($buttonText == 'Proses' ? 'edit' : 'info-circle').'"></i> '.$buttonText.'
                             </a>
-
                         </div>
                     ';
 
