@@ -109,7 +109,9 @@ class PaketController extends Controller
         $panitia = Panitia::where('user_id', $user->id)->first();
 
         if ($user->username == 'Superadmin') {
-            $panitia_nama = 'Superadmin';
+            $panitia_nama     = 'Superadmin';
+            $panitia          = new Panitia();
+            $panitia->jabatan = '-';
         } else {
             $panitia_nama = $panitia ? $panitia->nama : 'Tidak diketahui';
         }
