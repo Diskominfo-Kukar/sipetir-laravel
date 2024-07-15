@@ -243,13 +243,18 @@
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
                                                 <div class="d-flex justify-content-center">
-                                                    <form action="#" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                        <button type="submit" class="btn btn-primary mx-2">Buat Berita Acara</button>
-                                                    </form>
-                                                    <a href="#" class="btn btn-secondary">TTE</a>
+                                                    @if ($berita_acara_1)
+                                                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
+                                                            <i class="bi bi-pen"></i>TTE
+                                                        </a>
+                                                    @endif
                                                 </div>
+                                                @if ($berita_acara_1)
+                                                    <br>
+                                                    <div class="mt-4 w-100">
+                                                        <iframe src="{{ asset('storage/' . $berita_acara_1)  }}" width="100%" height="800px"></iframe>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -492,18 +497,28 @@
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
                                                 <div class="d-flex justify-content-center">
+                                                    @if (!$berita_acara_1)
                                                     <form action="{{ route('paket.generate_berita_acara') }}" method="POST">
                                                         @csrf
                                                         <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                        <button type="submit" class="btn btn-primary mx-2">Buat Berita Acara</button>
+                                                        <button type="submit" class="btn btn-danger mx-2">
+                                                            <i class="fa fa-file-pdf"></i>
+                                                            Buat Berita Acara
+                                                        </button>
                                                     </form>
-                                                    <a href="#" class="btn btn-secondary">TTE</a>
-                                                    <form action="{{ route('paket.berita_acara_PPK') }}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                        <button type="submit" class="btn btn-success mx-2">Kirim ke PPK</button>
-                                                    </form>
+                                                    @endif
+                                                    @if ($berita_acara_1)
+                                                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
+                                                            <i class="bi bi-pen"></i>TTE
+                                                        </a>
+                                                    @endif
                                                 </div>
+                                                @if ($berita_acara_1)
+                                                    <br>
+                                                    <div class="mt-4 w-100">
+                                                        <iframe src="{{ asset('storage/' . $berita_acara_1)  }}" width="100%" height="800px"></iframe>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -534,72 +549,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="modal-tte" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form method="POST" action="{{ route('paket.review') }}">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">
-                        <i class="bx bx-file"></i> <span id="judul">Tandatangan Secara Elektronik</span>
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-primary">
-                        <i class="fa fa-info-circle"></i> Info
-                        <br>
-                        Setelah berhasil menandatangani dokumen, Permohonan akan dilanjutkan ke tahap selanjutnya.
-                    </div>
-                    <x-ui.input
-                        label="Nama"
-                        id="nama"
-                        name="nama"
-                        required
-                        placeholder=""
-                        value="{{ $panitia }}"
-                        type="text"
-                        readonly
-                    />
-                    <x-ui.input
-                        label="Jabatan"
-                        id="jabatan"
-                        name="jabatan"
-                        required
-                        placeholder=""
-                        value="{{ $panitia_data->jabatan }}"
-                        type="text"
-                        readonly
-                    />
-                    <x-ui.input
-                        label="NIP"
-                        id="nip"
-                        name="nip"
-                        required
-                        placeholder=""
-                        value="{{ $panitia_data->nip }}"
-                        type="text"
-                        readonly
-                    />
-                    <x-ui.input
-                        label="Passphrase"
-                        id="passphrase"
-                        name="passphrase"
-                        required
-                        placeholder="Passphrase Anda.."
-                        type="password"
-                        autocomplete="false"
-                    />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                    <button type="submit" class="btn btn-success mx-2">Proses TTE</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    </div>
+    @include('dashboard.paket.paket.components.modal-tte')
 
     <!--end row-->
     @push('styles')

@@ -116,7 +116,8 @@ class PaketController extends Controller
             $panitia_nama = $panitia ? $panitia->nama : 'Tidak diketahui';
         }
 
-        $surat_tugas = $paket->surat_tugas;
+        $surat_tugas    = $paket->surat_tugas;
+        $berita_acara_1 = $paket->berita_acara_review;
 
         $timelines = [
             1 => 'Upload',
@@ -143,6 +144,7 @@ class PaketController extends Controller
             'panitia'          => $panitia_nama,
             'panitia_data'     => $panitia,
             'surat_tugas'      => $surat_tugas,
+            'berita_acara_1'   => $berita_acara_1,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -228,7 +230,7 @@ class PaketController extends Controller
             } else {
                 $query->orderBy('status', 'desc');
             }
-            $query->orderBy('updated_at', 'desc');
+            $query->orderBy('created_at', 'desc');
             $data = $query->get();
 
             return DataTables::of($data)->addIndexColumn()
@@ -482,7 +484,7 @@ class PaketController extends Controller
         $tanggal = $tgl->locale('id')->translatedFormat('j F Y');
         $tglkop  = $tgl->format('m/Y');
 
-        $paket = Paket::where('id', $request->paket_id)->first();
+        $paket = Paket::find($request->paket_id);
 
         $data = [
             'tanggal' => $tanggal,
@@ -490,11 +492,17 @@ class PaketController extends Controller
             'paket'   => $paket,
         ];
 
-        // dd($data);
-
         $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
 
-        return $pdf->stream('surat_berita_acara.pdf');
+        $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
+        Storage::disk('public')->put($filePath, $pdf->output());
+        $pdfUrl = url('storage/'.$filePath);
+
+        $paket->update([
+            'berita_acara_review' => $filePath,
+        ]);
+
+        return redirect()->back()->with('berita_acara_1', $pdfUrl);
     }
 
     public function berita_acara_PPK(Request $request)
