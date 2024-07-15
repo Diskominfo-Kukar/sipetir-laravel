@@ -90,5 +90,6 @@ Route::post('/review', [PaketController::class, 'review'])->name('paket.review')
 Route::post('/answer_question', [PaketController::class, 'answer_question'])->name('paket.answer_question');
 Route::post('/progres-berita_acara', [PaketController::class, 'progres_berita_acara'])->name('paket.progres_berita_acara');
 Route::post('/berita_acara_PPK', [PaketController::class, 'berita_acara_PPK'])->name('paket.berita_acara_PPK');
+Route::post('/generate-berita_acara', [PaketController::class, 'generate_berita_acara'])->name('paket.generate_berita_acara');
 
 require __DIR__.'/auth.php';

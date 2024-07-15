@@ -410,6 +410,27 @@ class PaketController extends Controller
         return redirect()->back();
     }
 
+    public function generate_berita_acara(Request $request)
+    {
+        $tgl     = Carbon::now();
+        $tanggal = $tgl->locale('id')->translatedFormat('j F Y');
+        $tglkop  = $tgl->format('m/Y');
+
+        $paket = Paket::where('id', $request->paket_id)->first();
+
+        $data = [
+            'tanggal' => $tanggal,
+            'tglkop'  => $tglkop,
+            'paket'   => $paket,
+        ];
+
+        // dd($data);
+
+        $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
+
+        return $pdf->stream('surat_berita_acara.pdf');
+    }
+
     public function berita_acara_PPK(Request $request)
     {
         $paket = Paket::where('id', $request->paket_id)->first();
