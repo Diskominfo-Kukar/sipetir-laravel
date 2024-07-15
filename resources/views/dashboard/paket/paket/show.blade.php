@@ -427,7 +427,7 @@
                                 <div class="border shadow-none card">
                                     <div class="card-body d-flex flex-column justify-content-center align-items-center">
                                         <div class="d-flex justify-content-center">
-                                            <form action="#" method="POST">
+                                            <form action="{{ route('paket.generate_berita_acara') }}" target="_blank" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="paket_id" value="{{ $paket->id }}">
                                                 <button type="submit" class="btn btn-primary mx-2">Generate PDF</button>
