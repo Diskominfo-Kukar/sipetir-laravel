@@ -118,8 +118,10 @@ class PaketController extends Controller
 
         $surat_tugas    = $paket->surat_tugas;
         $berita_acara_1 = $paket->berita_acara_review;
+        $berita_acara_2 = $paket->berita_acara_penetapan;
+        $berita_acara_3 = $paket->berita_acara_pengumuman;
 
-        $log = static::getProses($paket->status);
+        $progres = static::getProses($paket->status);
 
         $timelines = [
             1 => 'Upload',
@@ -147,7 +149,9 @@ class PaketController extends Controller
             'panitia_data'     => $panitia,
             'surat_tugas'      => $surat_tugas,
             'berita_acara_1'   => $berita_acara_1,
-            'log'              => $log,
+            'berita_acara_2'   => $berita_acara_2,
+            'berita_acara_3'   => $berita_acara_3,
+            'progres'          => $progres,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -539,5 +543,61 @@ class PaketController extends Controller
         }
 
         return $proses;
+    }
+
+    public function upload_berita_acara_2(Request $request)
+    {
+        $paket = Paket::find($request->paket_id);
+        $file  = $request->file('dokumen');
+
+        if ($file) {
+            if ($file->getMimeType() === 'application/pdf') {
+                $filename = 'berita_acara_penetapan_'.$paket->id.'.pdf';
+                $file->storeAs('public/pdf', $filename);
+
+                $paket->update([
+                    'berita_acara_penetapan' => 'pdf/'.$filename,
+                ]);
+
+                session()->flash('success', 'Dokumen Berhasil di-upload');
+
+                return redirect()->back();
+            } else {
+                session()->flash('error', 'Dokumen harus berupa file PDF.');
+
+                return redirect()->back();
+            }
+        }
+        session()->flash('error', 'Dokumen gagal di-upload');
+
+        return redirect()->back();
+    }
+
+    public function upload_berita_acara_3(Request $request)
+    {
+        $paket = Paket::find($request->paket_id);
+        $file  = $request->file('dokumen');
+
+        if ($file) {
+            if ($file->getMimeType() === 'application/pdf') {
+                $filename = 'berita_acara_pengumuman_'.$paket->id.'.pdf';
+                $file->storeAs('public/pdf', $filename);
+
+                $paket->update([
+                    'berita_acara_pengumuman' => 'pdf/'.$filename,
+                ]);
+
+                session()->flash('success', 'Dokumen Berhasil di-upload');
+
+                return redirect()->back();
+            } else {
+                session()->flash('error', 'Dokumen harus berupa file PDF.');
+
+                return redirect()->back();
+            }
+        }
+        session()->flash('error', 'Dokumen gagal di-upload');
+
+        return redirect()->back();
     }
 }

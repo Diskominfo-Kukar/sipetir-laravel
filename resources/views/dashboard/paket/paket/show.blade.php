@@ -46,7 +46,7 @@
                     <ul class="list-group list-group-flush">
                         <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             Proses
-                            <span class="badge bg-secondary rounded-pill">{{ $log }}%</span>
+                            <span class="badge bg-secondary rounded-pill">{{ $progres }}%</span>
                         </li>
                     </ul>
                 </div>
@@ -96,6 +96,34 @@
                             <p class="text-center fw-bold">File kosong</p>
                         </div>
                         @endforelse
+                        @if($surat_tugas)
+                            <a href="{{ asset('storage/' . $surat_tugas)  }}" target="_blank">
+                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;Surat Tugas</label>
+                                </li>
+                            </a>
+                        @endif
+                        @if($berita_acara_1)
+                            <a href="{{ asset('storage/' . $berita_acara_1)  }}" target="_blank">
+                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;Berita Acara Review</label>
+                                </li>
+                            </a>
+                        @endif
+                        @if($berita_acara_2)
+                            <a href="{{ asset('storage/' . $berita_acara_2)  }}" target="_blank">
+                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;Berita Acara Penetapan</label>
+                                </li>
+                            </a>
+                        @endif
+                        @if($berita_acara_3)
+                            <a href="{{ asset('storage/' . $berita_acara_3)  }}" target="_blank">
+                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;Berita Acara Pengumuman</label>
+                                </li>
+                            </a>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -536,7 +564,19 @@
                     @endcan
                     {{-- End Akses Tampilan --}}
 
-                    @if($paket->status==0 || $paket->status==null)
+                    @if(($paket->status == 0 || $paket->status == null) &&  Gate::allows('viewAdmin', $paket))
+                        @if(!$paket->is_tayang_kuppbj && !$paket->is_tayang_pokja)
+                            @include('dashboard.paket.paket.components.status0')
+                        @else
+                            @if(!$berita_acara_2)
+                                @include('dashboard.paket.paket.components.penetapan')
+                            @elseif (!$berita_acara_3)
+                                @include('dashboard.paket.paket.components.pengumuman')
+                            @else
+                                @include('dashboard.paket.paket.components.status0')
+                            @endif
+                        @endif
+                    @elseif(($paket->status == 0 || $paket->status == null))
                         @include('dashboard.paket.paket.components.status0')
                     @endif
 

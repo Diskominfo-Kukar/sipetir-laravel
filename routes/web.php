@@ -85,12 +85,14 @@ Route::post('/upload-berkas-submit', [PaketController::class, 'uploadAllBerkas']
 Route::post('/upload-berkas-verif', [PaketController::class, 'VerifBerkas'])->name('paket.VerifBerkas');
 Route::get('/roll', [PaketController::class, 'roll'])->name('paket.roll');
 Route::post('/progres-surat_tugas', [PaketController::class, 'progres_surat_tugas'])->name('paket.progres_surat_tugas');
-Route::post('/generate-surat_tugas', [PaketController::class, 'generate_surat_tugas'])->name('paket.generate_surat_tugas');
+Route::post('/upload-surat_tugas', [PaketController::class, 'generate_surat_tugas'])->name('paket.generate_surat_tugas');
 Route::post('/review', [PaketController::class, 'review'])->name('paket.review');
 Route::post('/answer_question', [PaketController::class, 'answer_question'])->name('paket.answer_question');
 Route::post('/progres-berita_acara', [PaketController::class, 'progres_berita_acara'])->name('paket.progres_berita_acara');
 Route::post('/berita_acara_TTE_panitia', [PaketController::class, 'berita_acara_TTE_panitia'])->name('paket.berita_acara_TTE_panitia');
 Route::post('/berita_acara_TTE_ppk', [PaketController::class, 'berita_acara_TTE_ppk'])->name('paket.berita_acara_TTE_ppk');
 Route::post('/generate-berita_acara', [PaketController::class, 'generate_berita_acara'])->name('paket.generate_berita_acara');
+Route::post('/upload-berita_acara_2', [PaketController::class, 'upload_berita_acara_2'])->name('paket.upload_berita_acara_2');
+Route::post('/upload-berita_acara_3', [PaketController::class, 'upload_berita_acara_3'])->name('paket.upload_berita_acara_3');
 
 require __DIR__.'/auth.php';

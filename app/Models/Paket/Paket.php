@@ -36,6 +36,8 @@ class Paket extends Model
         'status',
         'surat_tugas',
         'berita_acara_review',
+        'berita_acara_penetapan',
+        'berita_acara_pengumuman',
     ];
 
     public function setNikAttribute($value)
