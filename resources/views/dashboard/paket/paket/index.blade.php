@@ -64,8 +64,8 @@
                         name: 'nama'
                     },
                     {
-                        data: 'urarian_pekerjaan',
-                        name: 'urarian_pekerjaan'
+                        data: 'uraian_pekerjaan',
+                        name: 'uraian_pekerjaan'
                     },
                     {
                         data: 'spesifikasi_pekerjaan',

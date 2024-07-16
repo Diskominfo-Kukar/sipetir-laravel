@@ -1,9 +1,9 @@
 <x-app-layout :title=$pageTitle :sub-title=$subTitle :icon=$icon :crumbs=$crumbs>
 
-    <div class=" card  shadow-sm radius-10 border-0 mb-3">
+    <div class="mb-3 border-0 shadow-sm card radius-10">
         <div class="card-header ">
-            <button class="btn btn-primary btn-md " data-bs-toggle="modal" data-bs-target="#addModal"><i
-                    class="bx bx-plus-circle pb-1 me-0"></i> Tambah</button>
+            {{-- <button class="btn btn-primary btn-md " data-bs-toggle="modal" data-bs-target="#addModal"><i
+                    class="pb-1 bx bx-plus-circle me-0"></i> Tambah</button> --}}
         </div>
         <div class="card-body">
             <div class="table-responsive-sm">
@@ -14,7 +14,7 @@
                             <th>Nama</th>
                             <th>OPD</th>
                             <th>No Hp</th>
-                            <th width="100px">Action</th>
+                            {{-- <th width="100px">Action</th> --}}
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -32,7 +32,7 @@
             value="{{ old('nip') }}" />
         <x-ui.input label="Nama " id="nama" name="nama" required placeholder="Nama"
             value="{{ old('nama') }}" />
-        <div class="form-group mb-3">
+        <div class="mb-3 form-group">
             <label for="opd_id" class="form-label">Pilih OPD</label>
             <select required name="opd_id" class="form-control" id="opd_id">
                 <option></option>
@@ -95,13 +95,13 @@
                         data: 'no_hp',
                         name: 'no_hp'
                     },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        className: 'text-center'
-                    },
+                    // {
+                    //     data: 'action',
+                    //     name: 'action',
+                    //     orderable: false,
+                    //     searchable: false,
+                    //     className: 'text-center'
+                    // },
                 ]
             });
 

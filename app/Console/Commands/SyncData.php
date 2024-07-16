@@ -125,6 +125,7 @@ class SyncData extends Command
 
         foreach ($dataSatkerExternal as $satker) {
             $opd = OpdInternal::whereKode($satker->instansi_id)->first();
+
             if (! is_null($opd)) {
                 SatkerInternal::updateOrCreate([
                     'stk_id' => $satker->stk_id,
@@ -144,6 +145,7 @@ class SyncData extends Command
 
         foreach ($dataPokmilExternal as $panitia) {
             $satker = SatkerInternal::where('stk_id', $panitia->stk_id)->first();
+
             if (! is_null($satker)) {
                 PokmilInternal::updateOrCreate([
                     'pokmil_id' => $panitia->pnt_id,
@@ -165,16 +167,20 @@ class SyncData extends Command
         // $pokmilInternal = PokmilInternal::limit(50)->get();
 
         $pokmilInternalMap = $pokmilInternal->keyBy('pokmil_id');
+
         foreach ($pokmilExternal as $external) {
             if ($pokmilInternalMap->has($external->pnt_id)) {
                 $pokmilPivot      = $pokmilInternalMap->get($external->pnt_id);
                 $anggotaPerPokmil = null;
+
                 foreach ($external->anggota as $anggota) {
                     $anggotaFind = User::where('pegawai_id', $anggota->peg_id)->with('panitia')->first();
+
                     if (! is_null($anggotaFind)) {
                         $anggotaPerPokmil[] = $anggotaFind->panitia->id;
                     }
                 }
+
                 if (! is_null($anggotaPerPokmil)) {
                     $pokmilPivot->panitia()->sync($anggotaPerPokmil);
                 }
@@ -189,6 +195,7 @@ class SyncData extends Command
 
         foreach ($ppkExternal as $external) {
             $user = User::with('panitia')->where('pegawai_id', $external->peg_id)->first();
+
             if (! is_null($user)) {
                 PPKInternal::create([
                     'ppk_id'     => $external->ppk_id,

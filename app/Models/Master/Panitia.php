@@ -55,4 +55,14 @@ class Panitia extends Model
     {
         return $this->hasOne(Ppk::class, 'panitia_id', 'id');
     }
+
+    /**
+     * Get the no hp.
+     */
+    protected function noHpTampil(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->telepon ? $this->telepon : '',
+        );
+    }
 }

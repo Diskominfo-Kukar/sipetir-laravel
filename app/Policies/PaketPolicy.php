@@ -17,21 +17,21 @@ class PaketPolicy
 
     public function viewPpk(User $user, Paket $paket): bool
     {
-        return in_array('ppk', $user->roles->pluck('name')->toArray()) || in_array('superadmin', $user->roles->pluck('name')->toArray());
+        return in_array('ppk', $user->role->pluck('name')->toArray()) || in_array('superadmin', $user->role->pluck('name')->toArray());
     }
 
     public function viewAdmin(User $user, Paket $paket): bool
     {
-        return in_array('Admin', $user->roles->pluck('name')->toArray()) || in_array('superadmin', $user->roles->pluck('name')->toArray());
+        return in_array('Admin', $user->role->pluck('name')->toArray()) || in_array('superadmin', $user->role->pluck('name')->toArray());
     }
 
     public function viewBpbj(User $user, Paket $paket): bool
     {
-        return in_array('Kepala BPBJ', $user->roles->pluck('name')->toArray()) || in_array('superadmin', $user->roles->pluck('name')->toArray());
+        return in_array('Kepala BPBJ', $user->role->pluck('name')->toArray()) || in_array('superadmin', $user->role->pluck('name')->toArray());
     }
 
     public function viewPanitia(User $user, Paket $paket): bool
     {
-        return in_array('Panitia', $user->roles->pluck('name')->toArray()) || in_array('superadmin', $user->roles->pluck('name')->toArray());
+        return in_array('Panitia', $user->role->pluck('name')->toArray()) || in_array('superadmin', $user->role->pluck('name')->toArray());
     }
 }

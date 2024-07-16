@@ -92,8 +92,8 @@
                         name: 'jabatan'
                     },
                     {
-                        data: 'no_hp',
-                        name: 'no_hp'
+                        data: 'no_hp_tampil',
+                        name: 'no_hp_tampil'
                     },
                     {
                         data: 'action',
