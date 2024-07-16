@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->text('alamat')->nullable();
             $table->string('golongan')->nullable();
             $table->string('pangkat')->nullable();
-            $table->string('jabatan')->nullable();
+            $table->string('jabatan_id')->references('id')->on('jabatan')->nullable();
             $table->string('telepon')->nullable();
             $table->string('no_sk')->nullable();
             $table->string('masa_berlaku')->nullable();
