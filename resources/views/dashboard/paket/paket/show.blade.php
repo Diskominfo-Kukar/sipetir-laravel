@@ -45,11 +45,8 @@
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                            Detail
-                        </li>
-                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                            Log Proses
-                            <span class="badge bg-secondary rounded-pill">1%</span>
+                            Proses
+                            <span class="badge bg-secondary rounded-pill">{{ $log }}%</span>
                         </li>
                     </ul>
                 </div>

@@ -5,9 +5,9 @@
                     @if ($paket->status == 4)
                         {{ route('paket.review') }}
                     @elseif($paket->status == 6)
-                        {{ route('paket.berita_acara_PPK') }}
+                        {{ route('paket.berita_acara_TTE_panitia') }}
                     @elseif ($paket->status == 7)
-                        #
+                        {{ route('paket.berita_acara_TTE_ppk') }}
                     @endif
                 ">
                 @csrf

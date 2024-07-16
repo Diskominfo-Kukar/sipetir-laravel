@@ -119,6 +119,8 @@ class PaketController extends Controller
         $surat_tugas    = $paket->surat_tugas;
         $berita_acara_1 = $paket->berita_acara_review;
 
+        $log = static::getProses($paket->status);
+
         $timelines = [
             1 => 'Upload',
             2 => 'Verifikasi Berkas',
@@ -145,6 +147,7 @@ class PaketController extends Controller
             'panitia_data'     => $panitia,
             'surat_tugas'      => $surat_tugas,
             'berita_acara_1'   => $berita_acara_1,
+            'log'              => $log,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -505,14 +508,36 @@ class PaketController extends Controller
         return redirect()->back()->with('berita_acara_1', $pdfUrl);
     }
 
-    public function berita_acara_PPK(Request $request)
+    public function berita_acara_TTE_panitia(Request $request)
     {
         $paket = Paket::where('id', $request->paket_id)->first();
         $paket->update([
             'status' => '7',
         ]);
-        session()->flash('success', 'Berhasil di kirim ke PPK');
+        session()->flash('success', 'Paket diserahkan ke PPK');
 
         return redirect()->back();
+    }
+
+    public function berita_acara_TTE_ppk(Request $request)
+    {
+        $paket = Paket::where('id', $request->paket_id)->first();
+        $paket->update([
+            'status' => '0',
+        ]);
+        session()->flash('success', 'Paket Selesai');
+
+        return redirect()->back();
+    }
+
+    public static function getProses($status)
+    {
+        if ($status != 0) {
+            $proses = ($status / 8) * 100;
+        } else {
+            $proses = 100;
+        }
+
+        return $proses;
     }
 }
