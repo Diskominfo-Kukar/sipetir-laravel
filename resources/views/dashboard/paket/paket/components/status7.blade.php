@@ -9,7 +9,7 @@
                 </div>
                 <div class="card-body">
                     <form class="row g-3">
-                        Berita acara telah diberika kepada PPK.
+                        Berita acara telah diberikan kepada PPK.
                     </form>
                 </div>
             </div>

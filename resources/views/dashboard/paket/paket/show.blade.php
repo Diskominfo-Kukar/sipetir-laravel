@@ -131,9 +131,8 @@
             <div class="col-md-8">
                 <div class="row">
 
-                    {{-- Akses Tampilan --}}
-                    @can('viewPpk', $paket)
-                        {{-- upload ppk--}}@if($paket->status==1)
+                    @if($paket->status==1)
+                        @can('viewPpk',$paket)
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -185,8 +184,13 @@
                                     </div>
                                 </div>
                             </div>
+                        @endcan
+                        @canany(['viewAdmin', 'viewBpbj', 'viewPanitia'],$paket)
+                            @include('dashboard.paket.paket.components.status1')
+                        @endcanany
 
-                        {{-- upload ulang ppk--}}@elseif($paket->status==11)
+                    @elseif($paket->status==11)
+                        @can('viewPpk',$paket)
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -248,48 +252,13 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif($paket->status==2)
-                            @include('dashboard.paket.paket.components.status2')
-                        @elseif($paket->status==3)
-                            @include('dashboard.paket.paket.components.status3')
-                        @elseif($paket->status==4)
-                            @include('dashboard.paket.paket.components.status4')
-                        @elseif($paket->status==5)
-                            @include('dashboard.paket.paket.components.status5')
-                        @elseif($paket->status==6)
-                            @include('dashboard.paket.paket.components.status6')
+                        @endcan
+                        @canany(['viewAdmin', 'viewBpbj', 'viewPanitia'],$paket)
+                            @include('dashboard.paket.paket.components.status1')
+                        @endcanany
 
-                        {{-- TTE berita acara --}}@elseif($paket->status==7)
-                            <div class="col-12">
-                                <div class="border-0 shadow-sm card">
-                                    <div class="card-body">
-                                        <h5 class="mb-0">Berita Acara</h5>
-                                        <hr>
-                                        <div class="border shadow-none card">
-                                            <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                                                <div class="d-flex justify-content-center">
-                                                    @if ($berita_acara_1)
-                                                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
-                                                            <i class="bi bi-pen"></i>TTE
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                                @if ($berita_acara_1)
-                                                    <br>
-                                                    <div class="mt-4 w-100">
-                                                        <iframe src="{{ asset('storage/' . $berita_acara_1)  }}" width="100%" height="800px"></iframe>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    @endcan
-
-                    @can('viewAdmin', $paket)
-                        {{-- verif berkas --}}@if($paket->status==2)
+                    @elseif($paket->status==2)
+                        @can('viewAdmin', $paket)
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -354,24 +323,13 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif($paket->status==1 || $paket->status==11)
-                            @include('dashboard.paket.paket.components.status1')
-                        @elseif($paket->status==3)
-                            @include('dashboard.paket.paket.components.status3')
-                        @elseif($paket->status==4)
-                            @include('dashboard.paket.paket.components.status4')
-                        @elseif($paket->status==5)
-                            @include('dashboard.paket.paket.components.status5')
-                        @elseif($paket->status==6)
-                            @include('dashboard.paket.paket.components.status6')
-                        @elseif($paket->status==7)
-                            @include('dashboard.paket.paket.components.status7')
+                        @endcan
+                        @canany(['viewPpk', 'viewBpbj', 'viewPanitia'], $paket)
+                            @include('dashboard.paket.paket.components.status2')
+                        @endcanany
 
-                        @endif
-                    @endcan
-
-                    @can('viewBpbj', $paket)
-                        {{-- Pilih pokmil --}}@if($paket->status==3)
+                    @elseif($paket->status==3)
+                        @can('viewBpbj', $paket)
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -394,7 +352,12 @@
                                     </div>
                                 </div>
                             </div>
-                        {{-- Surat tugas --}}@elseif($paket->status==4)
+                        @endcan
+                        @canany(['viewPpk', 'viewAdmin', 'viewPanitia'], $paket)
+                            @include('dashboard.paket.paket.components.status3')
+                        @endcanany
+                    @elseif($paket->status==4)
+                        @can('viewBpbj', $paket)
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -430,21 +393,12 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif($paket->status==1 || $paket->status==11)
-                            @include('dashboard.paket.paket.components.status1')
-                        @elseif($paket->status==2)
-                            @include('dashboard.paket.paket.components.status2')
-                        @elseif($paket->status==5)
-                            @include('dashboard.paket.paket.components.status5')
-                        @elseif($paket->status==6)
-                            @include('dashboard.paket.paket.components.status6')
-                        @elseif($paket->status==7)
-                            @include('dashboard.paket.paket.components.status7')
-                        @endif
-                    @endcan
-
-                    @can('viewPanitia', $paket)
-                        {{-- Review --}}@if($paket->status==5)
+                        @endcan
+                        @canany(['viewPpk', 'viewAdmin', 'viewPanitia'], $paket)
+                            @include('dashboard.paket.paket.components.status4')
+                        @endcanany
+                    @elseif($paket->status==5)
+                        @can('viewPanitia', $paket)
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -513,7 +467,12 @@
                                     </div>
                                 </div>
                             </div>
-                        {{-- Berita Acara --}}@elseif($paket->status==6)
+                        @endcan
+                        @canany(['viewPpk', 'viewAdmin', 'viewBpbj'], $paket)
+                            @include('dashboard.paket.paket.components.status5')
+                        @endcanany
+                    @elseif($paket->status==6)
+                        @can('viewPanitia', $paket)
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -549,20 +508,43 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif($paket->status==1 || $paket->status==11)
-                            @include('dashboard.paket.paket.components.status1')
-                        @elseif($paket->status==2)
-                            @include('dashboard.paket.paket.components.status2')
-                        @elseif($paket->status==3)
-                            @include('dashboard.paket.paket.components.status3')
-                        @elseif($paket->status==4)
-                            @include('dashboard.paket.paket.components.status4')
-                        @elseif($paket->status==7)
+                        @endcan
+                        @canany(['viewPpk', 'viewAdmin', 'viewBpbj'], $paket)
+                            @include('dashboard.paket.paket.components.status6')
+                        @endcanany
+                    @elseif($paket->status==7)
+                        @can('viewPpk', $paket)
+                            <div class="col-12">
+                                <div class="border-0 shadow-sm card">
+                                    <div class="card-body">
+                                        <h5 class="mb-0">Berita Acara</h5>
+                                        <hr>
+                                        <div class="border shadow-none card">
+                                            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                                <div class="d-flex justify-content-center">
+                                                    @if ($berita_acara_1)
+                                                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
+                                                            <i class="bi bi-pen"></i>TTE
+                                                        </a>
+                                                    @endif
+                                                </div>
+                                                @if ($berita_acara_1)
+                                                    <br>
+                                                    <div class="mt-4 w-100">
+                                                        <iframe src="{{ asset('storage/' . $berita_acara_1)  }}" width="100%" height="800px"></iframe>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endcan
+                        @canany(['viewPanitia', 'viewAdmin', 'viewBpbj'], $paket)
                             @include('dashboard.paket.paket.components.status7')
+                        @endcanany
 
-                        @endif
-                    @endcan
-                    {{-- End Akses Tampilan --}}
+                    @endif
 
                     @if(($paket->status == 0 || $paket->status == null) &&  Gate::allows('viewAdmin', $paket))
                         @if(!$paket->is_tayang_kuppbj && !$paket->is_tayang_pokja)
