@@ -19,7 +19,7 @@ class Satker extends Model
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['*'];
+    protected $fillable = ['stk_id', 'nama', 'opd_id', 'alamat', 'telepon'];
 
     public function opd(): BelongsTo
     {

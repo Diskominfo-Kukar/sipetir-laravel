@@ -33,6 +33,10 @@ return new class extends Migration {
             $table->longText('berita_acara_pengumuman')->nullable();
             $table->boolean('is_tayang_kuppbj')->default(0);
             $table->boolean('is_tayang_pokja')->default(0);
+            $table->dateTime('tgl_assign_ukpbj')->nullable();
+            $table->dateTime('tgl_assign_pokja')->nullable();
+            $table->dateTime('tgl_assign')->nullable();
+            $table->dateTime('tgl_buat')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
