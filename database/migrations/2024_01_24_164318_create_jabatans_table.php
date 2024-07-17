@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->char('nama');
             $table->char('slug');
-            $table->string('role_id')->references('id')->on('role');
             $table->softDeletes();
             $table->timestamps();
         });

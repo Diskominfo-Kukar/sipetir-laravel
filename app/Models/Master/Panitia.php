@@ -23,7 +23,7 @@ class Panitia extends Model
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['user_id', 'nip', 'nama', 'alamat', 'golongan', 'pangkat', 'jabatan', 'telepon', 'no_sk', 'masa_berlaku', 'nik'];
+    protected $fillable = ['user_id', 'nip', 'nama', 'alamat', 'golongan', 'pangkat', 'jabatan_id', 'telepon', 'no_sk', 'masa_berlaku', 'nik'];
 
     public function setNikAttribute($value)
     {

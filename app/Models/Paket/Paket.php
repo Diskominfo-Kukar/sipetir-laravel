@@ -26,7 +26,8 @@ class Paket extends Model
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['nama',
+    protected $fillable = [
+        'nama',
         'nik',
         'nip',
         'no_hp',
@@ -38,6 +39,12 @@ class Paket extends Model
         'berita_acara_review',
         'berita_acara_penetapan',
         'berita_acara_pengumuman',
+        'is_tayang_kuppbj',
+        'is_tayang_pokja',
+        'tgl_assign_ukpbj',
+        'tgl_assign_pokja',
+        'tgl_assign',
+        'tgl_buat',
     ];
 
     public function setNikAttribute($value)

@@ -18,7 +18,7 @@ class Pokmil extends Model
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['*'];
+    protected $fillable = ['pokmil_id', 'nama', 'tahun', 'no_sk', 'alamat', 'satker_id'];
 
     public function satuan_kerja(): BelongsTo
     {

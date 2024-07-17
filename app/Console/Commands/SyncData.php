@@ -8,6 +8,7 @@ use App\Models\External\Epns\Panitia as PokmilExternal;
 use App\Models\External\Epns\Pegawai as PegawaiExternal;
 use App\Models\External\Epns\PPK as PPKExternal;
 use App\Models\External\Epns\Satker as SatkerExternal;
+use App\Models\Master\Jabatan;
 use App\Models\Master\JenisOpd as JenisOpdInternal;
 use App\Models\Master\Opd as OpdInternal;
 use App\Models\Master\Pokmil as PokmilInternal;
@@ -15,6 +16,8 @@ use App\Models\Master\Ppk as PPKInternal;
 use App\Models\Master\Satker as SatkerInternal;
 use App\Models\Paket\Paket as PaketInternal;
 use App\Models\User;
+use App\Traits\StatusPaket;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -26,7 +29,7 @@ class SyncData extends Command
      *
      * @var string
      */
-    protected $signature = 'sipetir:sync';
+    protected $signature = 'sipetir:import';
 
     /**
      * The console command description.
@@ -41,6 +44,7 @@ class SyncData extends Command
     public function handle()
     {
         $this->syncOpd();
+        $this->syncJabatanMaster();
         $this->syncPegawaiMaster();
         $this->syncSatker();
         $this->syncPokmil();
@@ -73,10 +77,20 @@ class SyncData extends Command
         }
     }
 
+    public function syncJabatanMaster()
+    {
+        $jabatanOnPegawai = PegawaiExternal::select('peg_jabatan')->distinct()->pluck('peg_jabatan');
+
+        foreach ($jabatanOnPegawai as $jabatan) {
+            Jabatan::firstOrCreate([
+                'nama' => Str::upper($jabatan),
+            ]);
+        }
+    }
+
     public function syncPegawaiMaster()
     {
         $dataPegawaiExternal = PegawaiExternal::all();
-        // $dataPegawaiExternal = PegawaiExternal::limit(100)->get();
 
         $dataPegawaiExternalTotalRecords = $dataPegawaiExternal->count();
         $barPegawai                      = $this->output->createProgressBar($dataPegawaiExternalTotalRecords);
@@ -86,6 +100,9 @@ class SyncData extends Command
 
         foreach ($dataPegawaiExternal as $external) {
             try {
+                $currentJabatan      = Str::upper($external->peg_jabatan);
+                $findJabatanOnMaster = Jabatan::where('nama', $currentJabatan)->first();
+
                 $userCreated = User::updateOrCreate([
                     'pegawai_id' => (int) $external->peg_id,
                 ], [
@@ -102,12 +119,14 @@ class SyncData extends Command
                     'alamat'       => (string) $external->peg_alamat,
                     'golongan'     => (string) $external->peg_golongan,
                     'pangkat'      => (string) $external->peg_pangkat,
-                    'jabatan'      => (string) $external->peg_jabatan,
+                    'jabatan_id'   => (string) $findJabatanOnMaster->id,
                     'telepon'      => (string) $external->peg_telepon,
                     'no_sk'        => (string) $external->peg_no_sk,
                     'masa_berlaku' => (string) $external->peg_masa_berlaku,
-                    'nik'          => (string) $external->nik,
+                    'nik'          => (string) $external->peg_nik,
                 ]);
+
+                $userCreated->assignRole('Panitia');
 
                 $barPegawai->advance();
             } catch (\Exception $e) {
@@ -164,7 +183,6 @@ class SyncData extends Command
     {
         $pokmilExternal = PokmilExternal::with('anggota')->get();
         $pokmilInternal = PokmilInternal::all();
-        // $pokmilInternal = PokmilInternal::limit(50)->get();
 
         $pokmilInternalMap = $pokmilInternal->keyBy('pokmil_id');
 
@@ -191,7 +209,6 @@ class SyncData extends Command
     public function syncPpk()
     {
         $ppkExternal = PPKExternal::all();
-        // $ppkExternal = PPKExternal::limit(20)->get();
 
         foreach ($ppkExternal as $external) {
             $user = User::with('panitia')->where('pegawai_id', $external->peg_id)->first();
@@ -201,6 +218,8 @@ class SyncData extends Command
                     'ppk_id'     => $external->ppk_id,
                     'panitia_id' => $user->panitia->id,
                 ]);
+
+                $user->assignRole('PPK');
             }
         }
     }
@@ -208,19 +227,33 @@ class SyncData extends Command
     public function syncPaket()
     {
         $paketExternal = PaketExternal::all();
-        // $paketExternal = PaketExternal::limit(10)->get();
 
         foreach ($paketExternal as $external) {
             $findPokmil      = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
             $findPpk         = PPKInternal::where('ppk_id', $external->ppk_id)->first();
             $findSatuanKerja = SatkerInternal::where('stk_id', $external->stk_id)->first();
+
+            $statusPaket = null;
+
+            if ($external->is_tayang_kuppbj) {
+                $statusPaket = StatusPaket::Selesai->value;
+            } else {
+                $statusPaket = StatusPaket::Upload->value;
+            }
+
             PaketInternal::create([
-                'pokmil_id' => $findPokmil->id ?? null,
-                'ppk_id'    => $findPpk->id ?? null,
-                'satker_id' => $findSatuanKerja->id ?? null,
-                'nama'      => $external->pkt_nama,
-                'pagu'      => (float) $external->pkt_pagu,
-                'hps'       => (float) $external->pkt_hps,
+                'pokmil_id'        => $findPokmil->id ?? null,
+                'ppk_id'           => $findPpk->id ?? null,
+                'satker_id'        => $findSatuanKerja->id ?? null,
+                'nama'             => $external->pkt_nama,
+                'pagu'             => (float) $external->pkt_pagu,
+                'status'           => (int) $statusPaket,
+                'is_tayang_kuppbj' => (bool) $external->is_tayang_kuppbj,
+                'is_tayang_pokja'  => (bool) $external->is_tayang_pokja,
+                'tgl_assign_ukpbj' => Carbon::parse($external->pkt_tgl_assign_ukpbj),
+                'tgl_assign_pokja' => Carbon::parse($external->pkt_tgl_assign_pokja),
+                'tgl_assign'       => Carbon::parse($external->pkt_tgl_assign),
+                'tgl_buat'         => Carbon::parse($external->pkt_tgl_buat),
             ]);
         }
     }
