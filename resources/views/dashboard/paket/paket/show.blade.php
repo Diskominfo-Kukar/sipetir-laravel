@@ -30,7 +30,6 @@
                     <div class="card-body" style="background-color: #dad9d8">
 
                         <div class="mt-4 text-center">
-
                             <h4 class="mb-1">Kode Paket : {{$paket->kode}}</h4>
                             <p class="mb-0 text-secondary">
                                 {{$paket->opd}}
@@ -100,34 +99,23 @@
                             <p class="text-center fw-bold">File kosong</p>
                         </div>
                         @endforelse
-                        @if($surat_tugas)
-                            <a href="{{ asset('storage/' . $surat_tugas)  }}" target="_blank">
-                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;Surat Tugas</label>
-                                </li>
-                            </a>
-                        @endif
-                        @if($berita_acara_1)
-                            <a href="{{ asset('storage/' . $berita_acara_1)  }}" target="_blank">
-                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;Berita Acara Review</label>
-                                </li>
-                            </a>
-                        @endif
-                        @if($berita_acara_2)
-                            <a href="{{ asset('storage/' . $berita_acara_2)  }}" target="_blank">
-                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;Berita Acara Penetapan</label>
-                                </li>
-                            </a>
-                        @endif
-                        @if($berita_acara_3)
-                            <a href="{{ asset('storage/' . $berita_acara_3)  }}" target="_blank">
-                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;Berita Acara Pengumuman</label>
-                                </li>
-                            </a>
-                        @endif
+                        @php
+                            $documents = [
+                                'surat_tugas' => 'Surat Tugas',
+                                'berita_acara_1' => 'Berita Acara Review',
+                                'berita_acara_2' => 'Berita Acara Penetapan',
+                                'berita_acara_3' => 'Berita Acara Pengumuman',
+                            ];
+                        @endphp
+                        @foreach($documents as $key => $label)
+                            @if(!empty($$key))
+                                <a href="{{ asset('storage/' . $$key) }}" target="_blank">
+                                    <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                                        <label class="form-label"><i class="bi bi-download"></i>&nbsp;{{ $label }}</label>
+                                    </li>
+                                </a>
+                            @endif
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -135,7 +123,7 @@
             <div class="col-md-8">
                 <div class="row">
 
-                    @if($paket->status==1)
+                    @if($status=="Upload")
                         @if(auth()->user()->hasRole('PPK'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
@@ -189,10 +177,10 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status1')
+                            @include('dashboard.paket.paket.components.upload')
                         @endif
 
-                    @elseif($paket->status==11)
+                    @elseif($status=="Upload Ulang")
                         @if(auth()->user()->hasRole('PPK'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
@@ -256,10 +244,10 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status1')
+                            @include('dashboard.paket.paket.components.upload')
                         @endif
 
-                    @elseif($paket->status==2)
+                    @elseif($status=="Verifikasi Berkas")
                         @if(auth()->user()->hasRole('Admin'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
@@ -326,10 +314,10 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status2')
+                            @include('dashboard.paket.paket.components.verif')
                         @endif
 
-                    @elseif($paket->status==3)
+                    @elseif($status=="Pemilihan Pokmil")
                         @if(auth()->user()->hasRole('Kepala BPBJ'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
@@ -354,10 +342,10 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status3')
+                            @include('dashboard.paket.paket.components.pilpokmil')
                         @endif
-                    @elseif($paket->status==4)
-                        @if(auth()->user()->hasRole('Kepala BPBJ'))
+                    @elseif($status=="Surat Tugas")
+                        @if(auth()->user()->hasRole('PPK'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -376,6 +364,25 @@
                                                         </button>
                                                     </form>
                                                     @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            @include('dashboard.paket.paket.components.surattugas')
+                        @endif
+                    @elseif($status=="TTE Surat Tugas")
+                        @if(auth()->user()->hasRole('Kepala BPBJ'))
+                            <div class="col-12">
+                                <div class="border-0 shadow-sm card">
+                                    <div class="card-body">
+                                        <h5 class="mb-0">Surat Tugas</h5>
+                                        <hr>
+                                        <div class="border shadow-none card">
+                                            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                                <div class="d-flex justify-content-center">
                                                     @if ($surat_tugas)
                                                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
                                                             <i class="bi bi-pen"></i>TTE
@@ -394,9 +401,9 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status4')
+                            @include('dashboard.paket.paket.components.surattugasTTE')
                         @endif
-                    @elseif($paket->status==5)
+                    @elseif($status=="Review")
                         @if(auth()->user()->hasRole('Panitia'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
@@ -429,7 +436,7 @@
                                                                             @if ($answer)
                                                                                 Jawaban: {{ $answer->review }}
                                                                                 @if ($answer->user->panitia)
-                                                                                    (Dijawab oleh {{ $answer->user->panitia->nama }}) - {{ \Carbon\Carbon::parse($answer->created_at)->locale('id')->translatedFormat('d F Y H:i') }}
+                                                                                    (Dijawab oleh {{ $answer->user->panitia->nama }}) - {{ \Carbon\Carbon::parse($answer->updated_at)->locale('id')->translatedFormat('d F Y H:i') }}
                                                                                 @endif
                                                                             @else
                                                                                 &nbsp;<br>[ Belum ada jawaban ]
@@ -440,7 +447,7 @@
                                                                                 @csrf
                                                                                 <input type="hidden" name="question_id" value="{{ $question->id }}">
                                                                                 <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                                                <input type="text" name="review" class="form-control me-2" placeholder="{{ $panitia }} menjawab">
+                                                                                <input type="text" name="review" class="form-control me-2" placeholder="{{ $panitia->nama }} menjawab">
                                                                                 <button type="submit" class="btn btn-danger">Kirim</button>
                                                                             </form>
                                                                         </div>
@@ -467,9 +474,9 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status5')
+                            @include('dashboard.paket.paket.components.review')
                         @endif
-                    @elseif($paket->status==6)
+                    @elseif($status=="TTE Berita Acara Panitia")
                         @if(auth()->user()->hasRole('Panitia'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
@@ -507,9 +514,9 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status6')
+                            @include('dashboard.paket.paket.components.beritaacaraTTE_panitia')
                         @endif
-                    @elseif($paket->status==7)
+                    @elseif($status=="TTE Berita Acara PPK")                    
                         @if(auth()->user()->hasRole('PPK'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
@@ -537,7 +544,7 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status7')
+                            @include('dashboard.paket.paket.components.beritaacaraTTE_ppk')
                         @endif
 
                     @endif

@@ -9,7 +9,6 @@ use App\Notifications\CustomResetPasswordNotification;
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -62,17 +61,6 @@ class User extends Authenticatable
     public function panitia(): HasOne
     {
         return $this->hasOne(Panitia::class, 'user_id', 'id');
-    }
-
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class, 'model_has_roles', 'model_uuid', 'role_id')
-            ->where('model_type', self::class);
-    }
-
-    public function hasRole(string $roleName): bool
-    {
-        return $this->roles()->where('name', $roleName)->exists();
     }
 
     /**

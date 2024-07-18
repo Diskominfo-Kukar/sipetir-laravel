@@ -99,21 +99,19 @@ class PaketController extends Controller
         $paket_dokumen = PaketDokumen::with('jenisDokumen')->where('paket_id', $paket->id)->with('komens')->get();
         $file_dokumen  = $paket_dokumen->pluck('file', 'jenis_dokumen_id');
 
-        // Dump
-        // dump($paket_dokumen, $jenis_dokumen);
-
         $kategoriReviews = KategoriReview::orderBy('no_urut')->get();
         $kategoriReviews->load(['questions.answers.user.panitia']);
 
         $user    = Auth::user();
         $panitia = Panitia::where('user_id', $user->id)->first();
 
-        if ($user->username == 'Superadmin' || $user->username == 'admin') {
-            $panitia_nama     = 'Superadmin';
-            $panitia          = new Panitia();
-            $panitia->jabatan = '-';
-        } else {
-            $panitia_nama = $panitia ? $panitia->nama : 'Tidak diketahui';
+        $panitia          = $panitia ?? new Panitia();
+        $panitia->jabatan = $panitia->jabatan ?? '-';
+
+        if ($user->hasRole('Admin')) {
+            $panitia->nama = $panitia->nama ?? 'Admin';
+        } elseif ($user->hasRole('Superadmin')) {
+            $panitia->nama = $panitia->nama ?? 'Superadmin';
         }
 
         $surat_tugas    = $paket->surat_tugas;
@@ -127,11 +125,21 @@ class PaketController extends Controller
             1 => 'Upload',
             2 => 'Verifikasi Berkas',
             3 => 'Pemilihan Pokmil',
-            4 => 'TTE Surat Tugas',
-            5 => 'Review',
-            6 => 'TTE Berita Acara Panitia',
-            7 => 'TTE Berita Acara PPK',
+            4 => 'Surat Tugas',
+            5 => 'TTE Surat Tugas',
+            6 => 'Review',
+            7 => 'Berita Acara',
+            8 => 'TTE Berita Acara Panitia',
+            9 => 'TTE Berita Acara PPK',
         ];
+
+        if (array_key_exists($paket->status, $timelines)) {
+            $status = $timelines[$paket->status];
+        } elseif ($paket->status == 11) {
+            $status = 'Upload Ulang';
+        } else {
+            $status = 'Status tidak diketahui';
+        }
 
         $data = [
             'pageTitle'        => "Paket {$title}",
@@ -145,13 +153,13 @@ class PaketController extends Controller
             'file_dokumen'     => $file_dokumen,
             'kategori_reviews' => $kategoriReviews,
             'timelines'        => collect($timelines),
-            'panitia'          => $panitia_nama,
-            'panitia_data'     => $panitia,
+            'panitia'          => $panitia,
             'surat_tugas'      => $surat_tugas,
             'berita_acara_1'   => $berita_acara_1,
             'berita_acara_2'   => $berita_acara_2,
             'berita_acara_3'   => $berita_acara_3,
             'progres'          => $progres,
+            'status'           => $status,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -210,26 +218,30 @@ class PaketController extends Controller
             if ($user->hasRole('Panitia') && $user->hasRole('PPK')) {
                 $query->orderByRaw(
                     'case
-                        when status = 1 then 1
-                        when status = 7 then 2
-                        when status = 5 then 3
-                        when status = 6 then 4
+                        when status = 11 then 1
+                        when status = 1 then 2
+                        when status = 6 then 3
+                        when status = 7 then 4
+                        when status = 8 then 5
                         else 3
                     end'
                 )->orderBy('status', 'desc');
             } elseif ($user->hasRole('Panitia')) {
                 $query->orderByRaw(
                     'case
-                        when status = 5 then 1
-                        when status = 6 then 2
+                        when status = 6 then 1
+                        when status = 7 then 2
+                        when status = 8 then 3
                         else 3
                     end'
                 )->orderBy('status', 'desc');
             } elseif ($user->hasRole('PPK')) {
                 $query->orderByRaw(
                     'case
-                        when status = 1 then 1
-                        when status = 7 then 2
+                        when status = 11 then 1
+                        when status = 1 then 2
+                        when status = 4 then 3
+                        when status = 9 then 4
                         else 3
                     end'
                 )->orderBy('status', 'desc');
@@ -244,7 +256,7 @@ class PaketController extends Controller
                 $query->orderByRaw(
                     'case
                         when status = 3 then 1
-                        when status = 4 then 2
+                        when status = 5 then 2
                         else 3
                     end'
                 )->orderBy('status', 'desc');
@@ -265,14 +277,14 @@ class PaketController extends Controller
                     $buttonClass = 'btn-primary';
 
                     if ($user->hasRole('Panitia')) {
-                        if ($status == 5 || $status == 6) {
+                        if ($status == 6 || $status == 7 || $status == 8) {
                             $buttonText  = 'Proses';
                             $buttonClass = 'btn-warning';
                         }
                     }
 
                     if ($user->hasRole('PPK')) {
-                        if ($status == 1 || $status == 7) {
+                        if ($status == 1 || $status == 11 || $status == 4 || $status == 9) {
                             $buttonText  = 'Proses';
                             $buttonClass = 'btn-warning';
                         }
@@ -286,7 +298,7 @@ class PaketController extends Controller
                     }
 
                     if ($user->hasRole('Kepala BPBJ')) {
-                        if ($status == 3 || $status == 4) {
+                        if ($status == 3 || $status == 5) {
                             $buttonText  = 'Proses';
                             $buttonClass = 'btn-warning';
                         }
@@ -391,9 +403,16 @@ class PaketController extends Controller
             return redirect()->back();
         } elseif ($action == 'accept') {
             $paket = Paket::where('id', $request->paket_id)->first();
-            $paket->update([
-                'status' => '3',
-            ]);
+
+            if (! $paket->pokmil_id) {
+                $paket->update([
+                    'status' => '3',
+                ]);
+            } else {
+                $paket->update([
+                    'status' => '4',
+                ]);
+            }
             session()->flash('success', 'Dokumen Berhasil diverifikasi');
 
             return redirect()->back();
@@ -448,6 +467,7 @@ class PaketController extends Controller
 
         $paket->update([
             'surat_tugas' => $filePath,
+            'status'      => '5',
         ]);
 
         return redirect()->back()->with('surat_tugas', $pdfUrl);
@@ -457,9 +477,9 @@ class PaketController extends Controller
     {
         $paket = Paket::where('id', $request->paket_id)->first();
         $paket->update([
-            'status' => '5',
+            'status' => '6',
         ]);
-        //session()->flash('success', '');
+        session()->flash('success', 'Paket diserahkan kepada panitia untuk di review');
 
         return redirect()->back();
     }
@@ -499,7 +519,7 @@ class PaketController extends Controller
     {
         $paket = Paket::where('id', $request->paket_id)->first();
         $paket->update([
-            'status' => '6',
+            'status' => '7',
         ]);
         session()->flash('success', 'Semua review berhasil ditambahkan');
 

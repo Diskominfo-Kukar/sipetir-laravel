@@ -26,7 +26,7 @@ return new class extends Migration {
             $table->text('spesifikasi_pekerjaan')->nullable();
             $table->string('metode_pengadaan_id')->references('id')->on('metode_pengadaan')->nullable();
             $table->string('jenis_pengadaan_id')->references('id')->on('jenis_pengadaan')->nullable();
-            $table->char('status', 2)->nullable()->comment('0: selesai, 1: upload, 2:verif , 3: pilihpokmil, 4: TTE1, 5: Review, 6: TTE2, 7: TTE3, is_tayang_kuppbj');
+            $table->char('status', 2)->nullable()->comment('0: selesai, 1: upload, 2:verif , 3: pilihpokmil, 4: Surat Tugas, 5: TTE1, 6: Review, 7: Berita Acara, 8: TTE2, 9: TTE3, is_tayang_kuppbj');
             $table->longText('surat_tugas')->nullable();
             $table->longText('berita_acara_review')->nullable();
             $table->longText('berita_acara_penetapan')->nullable();

@@ -2,11 +2,11 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form method="POST" action="
-                    @if ($paket->status == 4)
+                    @if ($paket->status == 5)
                         {{ route('paket.review') }}
-                    @elseif($paket->status == 6)
+                    @elseif($paket->status == 8)
                         {{ route('paket.berita_acara_TTE_panitia') }}
-                    @elseif ($paket->status == 7)
+                    @elseif ($paket->status == 9)
                         {{ route('paket.berita_acara_TTE_ppk') }}
                     @endif
                 ">
@@ -29,7 +29,7 @@
                         name="nama"
                         required
                         placeholder=""
-                        value="{{ $panitia }}"
+                        value="{{ $panitia->nama }}"
                         type="text"
                         readonly
                     />
@@ -39,7 +39,7 @@
                         name="jabatan"
                         required
                         placeholder=""
-                        value="{{ $panitia_data->jabatan }}"
+                        value="{{ $panitia->jabatan }}"
                         type="text"
                         readonly
                     />
@@ -49,7 +49,7 @@
                         name="nip"
                         required
                         placeholder=""
-                        value="{{ $panitia_data->nip }}"
+                        value="{{ $panitia->nip }}"
                         type="text"
                         readonly
                     />

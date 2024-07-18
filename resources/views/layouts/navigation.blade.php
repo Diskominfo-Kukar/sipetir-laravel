@@ -12,7 +12,7 @@
                     <i class="bi bi-house-door-fill"></i>
                 </button>
             </li>
-            @role('superadmin|admin')
+            @role('superadmin|Admin')
                 <li class="nav-item" data-bs-toggle="tooltip" data-bs-placement="right" title="Data Master">
                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-data-master" type="button">
                         <i class="bi bi-grid-fill"></i>
@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            @role('superadmin|admin')
+            @role('superadmin|Admin')
                 <div class="tab-pane fade" id="pills-data-master">
                     <div class="list-group list-group-flush">
                         <div class="list-group-item">
