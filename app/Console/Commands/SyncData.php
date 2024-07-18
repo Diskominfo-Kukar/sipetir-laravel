@@ -234,6 +234,7 @@ class SyncData extends Command
             $findSatuanKerja = SatkerInternal::where('stk_id', $external->stk_id)->first();
 
             $statusPaket = null;
+
             if ($external->is_tayang_kuppbj) {
                 $statusPaket = StatusPaket::Selesai->value;
             } else {

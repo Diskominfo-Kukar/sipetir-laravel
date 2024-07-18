@@ -56,7 +56,7 @@
                                 data-bs-toggle="dropdown">
                                 <div class="user-setting d-flex align-items-center gap-1">
                                     <img src="{{ asset('images/avatar.png') }}" class="user-img" alt="avatar" />
-                                    <div class="user-name d-none d-sm-block">{{ auth()->user()->name }}</div>
+                                    <div class="user-name d-none d-sm-block">{{ auth()->user()->nama }}</div>
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -66,7 +66,7 @@
                                             <img src="{{ asset('images/avatar.png') }}" alt class="rounded-circle"
                                                 width="60" height="60" />
                                             <div class="ms-3">
-                                                <h6 class="mb-0 dropdown-user-name">{{ auth()->user()->name }}</h6>
+                                                <h6 class="mb-0 dropdown-user-name">{{ auth()->user()->nama }}</h6>
                                                 <small class="mb-0 dropdown-user-designation text-secondary">
                                                     {{ auth()->user()->level }}
                                                 </small>

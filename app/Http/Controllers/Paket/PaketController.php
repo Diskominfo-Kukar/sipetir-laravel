@@ -108,13 +108,20 @@ class PaketController extends Controller
         $user    = Auth::user();
         $panitia = Panitia::where('user_id', $user->id)->first();
 
-        if ($user->username == 'Superadmin') {
-            $panitia_nama = 'Superadmin';
+        if ($user->username == 'Superadmin' || $user->username == 'admin') {
+            $panitia_nama     = 'Superadmin';
+            $panitia          = new Panitia();
+            $panitia->jabatan = '-';
         } else {
             $panitia_nama = $panitia ? $panitia->nama : 'Tidak diketahui';
         }
 
-        $surat_tugas = $paket->surat_tugas;
+        $surat_tugas    = $paket->surat_tugas;
+        $berita_acara_1 = $paket->berita_acara_review;
+        $berita_acara_2 = $paket->berita_acara_penetapan;
+        $berita_acara_3 = $paket->berita_acara_pengumuman;
+
+        $progres = static::getProses($paket->status);
 
         $timelines = [
             1 => 'Upload',
@@ -141,6 +148,10 @@ class PaketController extends Controller
             'panitia'          => $panitia_nama,
             'panitia_data'     => $panitia,
             'surat_tugas'      => $surat_tugas,
+            'berita_acara_1'   => $berita_acara_1,
+            'berita_acara_2'   => $berita_acara_2,
+            'berita_acara_3'   => $berita_acara_3,
+            'progres'          => $progres,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -187,20 +198,105 @@ class PaketController extends Controller
 
     public function getData(Request $request)
     {
+        $user  = Auth::user();
+        $query = Paket::query();
+
         if ($request->ajax()) {
-            $data = Paket::get();
+            if ($user->hasRole('Panitia') || $user->hasRole('PPK')) {
+                $query = Paket::where('ppk_id', Auth::user()->ppk_id)
+                    ->orWhereIn('pokmil_id', Auth::user()->pokmil_id);
+            }
+
+            if ($user->hasRole('Panitia') && $user->hasRole('PPK')) {
+                $query->orderByRaw(
+                    'case
+                        when status = 1 then 1
+                        when status = 7 then 2
+                        when status = 5 then 3
+                        when status = 6 then 4
+                        else 3
+                    end'
+                )->orderBy('status', 'desc');
+            } elseif ($user->hasRole('Panitia')) {
+                $query->orderByRaw(
+                    'case
+                        when status = 5 then 1
+                        when status = 6 then 2
+                        else 3
+                    end'
+                )->orderBy('status', 'desc');
+            } elseif ($user->hasRole('PPK')) {
+                $query->orderByRaw(
+                    'case
+                        when status = 1 then 1
+                        when status = 7 then 2
+                        else 3
+                    end'
+                )->orderBy('status', 'desc');
+            } elseif ($user->hasRole('Admin')) {
+                $query->orderByRaw(
+                    'case
+                        when status = 2 then 1
+                        else 2
+                    end'
+                )->orderBy('status', 'desc');
+            } elseif ($user->hasRole('Kepala BPBJ')) {
+                $query->orderByRaw(
+                    'case
+                        when status = 3 then 1
+                        when status = 4 then 2
+                        else 3
+                    end'
+                )->orderBy('status', 'desc');
+            } else {
+                $query->orderBy('status', 'desc');
+            }
+            $query->orderBy('created_at', 'desc');
+            //$data = $query->get();
+            $data = $query->limit(100)->get();
 
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('nama_tahun', function ($row) {
                     return ucwords($row->nama_tahun);
                 })
-                ->addColumn('action', function ($row) {
+                ->addColumn('action', function ($row) use ($user) {
+                    $status      = $row->status;
+                    $buttonText  = 'Detail';
+                    $buttonClass = 'btn-primary';
+
+                    if ($user->hasRole('Panitia')) {
+                        if ($status == 5 || $status == 6) {
+                            $buttonText  = 'Proses';
+                            $buttonClass = 'btn-warning';
+                        }
+                    }
+
+                    if ($user->hasRole('PPK')) {
+                        if ($status == 1 || $status == 7) {
+                            $buttonText  = 'Proses';
+                            $buttonClass = 'btn-warning';
+                        }
+                    }
+
+                    if ($user->hasRole('Admin')) {
+                        if ($status == 2) {
+                            $buttonText  = 'Proses';
+                            $buttonClass = 'btn-warning';
+                        }
+                    }
+
+                    if ($user->hasRole('Kepala BPBJ')) {
+                        if ($status == 3 || $status == 4) {
+                            $buttonText  = 'Proses';
+                            $buttonClass = 'btn-warning';
+                        }
+                    }
+
                     $actionBtn = '
                         <div class="btn-group btn-sm">
-                            <a title="prosses" href="'.route($this->route.'.show', $row->id).'" action="'.route($this->route.'.update', $row->id).'" class="btn btn-warning btn-sm ">
-                                <i class="bx bx-edit"></i> Proses
+                            <a title="'.($buttonText).'" href="'.route($this->route.'.show', $row->id).'" class="btn '.$buttonClass.' btn-sm">
+                                <i class="bx bx-'.($buttonText == 'Proses' ? 'edit' : 'info-circle').'"></i> '.$buttonText.'
                             </a>
-
                         </div>
                     ';
 
@@ -410,13 +506,118 @@ class PaketController extends Controller
         return redirect()->back();
     }
 
-    public function berita_acara_PPK(Request $request)
+    public function generate_berita_acara(Request $request)
+    {
+        $tgl     = Carbon::now();
+        $tanggal = $tgl->locale('id')->translatedFormat('j F Y');
+        $tglkop  = $tgl->format('m/Y');
+
+        $paket = Paket::find($request->paket_id);
+
+        $data = [
+            'tanggal' => $tanggal,
+            'tglkop'  => $tglkop,
+            'paket'   => $paket,
+        ];
+
+        $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
+
+        $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
+        Storage::disk('public')->put($filePath, $pdf->output());
+        $pdfUrl = url('storage/'.$filePath);
+
+        $paket->update([
+            'berita_acara_review' => $filePath,
+        ]);
+
+        return redirect()->back()->with('berita_acara_1', $pdfUrl);
+    }
+
+    public function berita_acara_TTE_panitia(Request $request)
     {
         $paket = Paket::where('id', $request->paket_id)->first();
         $paket->update([
             'status' => '7',
         ]);
-        session()->flash('success', 'Berhasil di kirim ke PPK');
+        session()->flash('success', 'Paket diserahkan ke PPK');
+
+        return redirect()->back();
+    }
+
+    public function berita_acara_TTE_ppk(Request $request)
+    {
+        $paket = Paket::where('id', $request->paket_id)->first();
+        $paket->update([
+            'status' => '0',
+        ]);
+        session()->flash('success', 'Paket Selesai');
+
+        return redirect()->back();
+    }
+
+    public static function getProses($status)
+    {
+        if ($status != 0) {
+            $proses = ($status / 8) * 100;
+        } else {
+            $proses = 100;
+        }
+
+        return $proses;
+    }
+
+    public function upload_berita_acara_2(Request $request)
+    {
+        $paket = Paket::find($request->paket_id);
+        $file  = $request->file('dokumen');
+
+        if ($file) {
+            if ($file->getMimeType() === 'application/pdf') {
+                $filename = 'berita_acara_penetapan_'.$paket->id.'.pdf';
+                $file->storeAs('public/pdf', $filename);
+
+                $paket->update([
+                    'berita_acara_penetapan' => 'pdf/'.$filename,
+                ]);
+
+                session()->flash('success', 'Dokumen Berhasil di-upload');
+
+                return redirect()->back();
+            } else {
+                session()->flash('error', 'Dokumen harus berupa file PDF.');
+
+                return redirect()->back();
+            }
+        }
+        session()->flash('error', 'Dokumen gagal di-upload');
+
+        return redirect()->back();
+    }
+
+    public function upload_berita_acara_3(Request $request)
+    {
+        $paket = Paket::find($request->paket_id);
+        $file  = $request->file('dokumen');
+
+        if ($file) {
+            if ($file->getMimeType() === 'application/pdf') {
+                $filename = 'berita_acara_pengumuman_'.$paket->id.'.pdf';
+                $file->storeAs('public/pdf', $filename);
+
+                $paket->update([
+                    'berita_acara_pengumuman' => 'pdf/'.$filename,
+                ]);
+
+                session()->flash('success', 'Dokumen Berhasil di-upload');
+
+                return redirect()->back();
+            } else {
+                session()->flash('error', 'Dokumen harus berupa file PDF.');
+
+                return redirect()->back();
+            }
+        }
+        session()->flash('error', 'Dokumen gagal di-upload');
 
         return redirect()->back();
     }

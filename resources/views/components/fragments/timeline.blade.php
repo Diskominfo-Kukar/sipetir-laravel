@@ -3,10 +3,10 @@
         <div class="timeline-steps">
             @foreach ($timelines as $key => $timeline)
             @php
-                $isActive = $paket->status == $key;
-                $isBeforeActive = $paket->status - 1 == $key;
+                $isActive = $paket->status == $key || $paket->status == 11 && $key == 1;
+                $isBeforeActive = $paket->status - 1 == $key || $paket->status == 10 && $key == 1;
             @endphp
-            <div class="timeline-step {{$isActive ? 'active' : ''}} {{$isBeforeActive ? 'before-active' : ''}} {{$paket->status == 11 && $key == 1 ? 'active' : ''}}">
+            <div class="timeline-step {{$isActive ? 'active' : ''}} {{$isBeforeActive ? 'before-active' : ''}}">
                 <div class="timeline-content">
                     <div class="inner-circle {{$isActive ? 'active' : ''}}"></div>
                     <p class="mt-1 mb-1">{{$timeline}}</p>

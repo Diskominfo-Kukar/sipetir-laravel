@@ -7,7 +7,9 @@ namespace App\Models;
 use App\Models\Master\Panitia;
 use App\Notifications\CustomResetPasswordNotification;
 use App\Traits\UsesUuid;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -62,8 +64,31 @@ class User extends Authenticatable
         return $this->hasOne(Panitia::class, 'user_id', 'id');
     }
 
-    public function role()
+    public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'user_role');
+        return $this->belongsToMany(Role::class, 'model_has_roles', 'model_uuid', 'role_id')
+            ->where('model_type', self::class);
+    }
+
+    public function hasRole(string $roleName): bool
+    {
+        return $this->roles()->where('name', $roleName)->exists();
+    }
+
+    /**
+     * Get the ppk id.
+     */
+    protected function ppkId(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->panitia->ppk ? $this->panitia->ppk->id : '',
+        );
+    }
+
+    protected function pokmilId(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->panitia->pokmil->pluck('id')->toArray(),
+        );
     }
 }
