@@ -108,7 +108,7 @@ class PaketController extends Controller
         $user    = Auth::user();
         $panitia = Panitia::where('user_id', $user->id)->first();
 
-        if ($user->username == 'Superadmin') {
+        if ($user->username == 'Superadmin' || $user->username == 'admin') {
             $panitia_nama     = 'Superadmin';
             $panitia          = new Panitia();
             $panitia->jabatan = '-';
@@ -198,11 +198,14 @@ class PaketController extends Controller
 
     public function getData(Request $request)
     {
-        $user = Auth::user();
+        $user  = Auth::user();
+        $query = Paket::query();
 
         if ($request->ajax()) {
-            $query = Paket::where('ppk_id', Auth::user()->ppk_id)
-                ->orWhereIn('pokmil_id', Auth::user()->pokmil_id);
+            if ($user->hasRole('Panitia') || $user->hasRole('PPK')) {
+                $query = Paket::where('ppk_id', Auth::user()->ppk_id)
+                    ->orWhereIn('pokmil_id', Auth::user()->pokmil_id);
+            }
 
             if ($user->hasRole('Panitia') && $user->hasRole('PPK')) {
                 $query->orderByRaw(
@@ -250,7 +253,7 @@ class PaketController extends Controller
             }
             $query->orderBy('created_at', 'desc');
             //$data = $query->get();
-            $data = $query->get();
+            $data = $query->limit(100)->get();
 
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('nama_tahun', function ($row) {
