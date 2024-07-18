@@ -1,5 +1,9 @@
 <x-app-layout :title=$pageTitle :sub-title=$subTitle :icon=$icon :crumbs=$crumbs>
-
+@if(auth()->user()->hasRole('Panitia') || auth()->user()->hasRole('PPK'))
+    @unless($paket->ppk_id == auth()->user()->ppk_id || in_array($paket->pokmil_id, auth()->user()->pokmil_id))
+        {{ abort(403) }}
+    @endunless
+@endif
     <div>
         @if ($paket->status != 0)
         <div class="row mb-5">
@@ -132,7 +136,7 @@
                 <div class="row">
 
                     @if($paket->status==1)
-                        @can('viewPpk',$paket)
+                        @if(auth()->user()->hasRole('PPK'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -184,13 +188,12 @@
                                     </div>
                                 </div>
                             </div>
-                        @endcan
-                        @canany(['viewAdmin', 'viewBpbj', 'viewPanitia'],$paket)
+                        @else
                             @include('dashboard.paket.paket.components.status1')
-                        @endcanany
+                        @endif
 
                     @elseif($paket->status==11)
-                        @can('viewPpk',$paket)
+                        @if(auth()->user()->hasRole('PPK'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -252,13 +255,12 @@
                                     </div>
                                 </div>
                             </div>
-                        @endcan
-                        @canany(['viewAdmin', 'viewBpbj', 'viewPanitia'],$paket)
+                        @else
                             @include('dashboard.paket.paket.components.status1')
-                        @endcanany
+                        @endif
 
                     @elseif($paket->status==2)
-                        @can('viewAdmin', $paket)
+                        @if(auth()->user()->hasRole('Admin'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -323,13 +325,12 @@
                                     </div>
                                 </div>
                             </div>
-                        @endcan
-                        @canany(['viewPpk', 'viewBpbj', 'viewPanitia'], $paket)
+                        @else
                             @include('dashboard.paket.paket.components.status2')
-                        @endcanany
+                        @endif
 
                     @elseif($paket->status==3)
-                        @can('viewBpbj', $paket)
+                        @if(auth()->user()->hasRole('Kepala BPBJ'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -352,12 +353,11 @@
                                     </div>
                                 </div>
                             </div>
-                        @endcan
-                        @canany(['viewPpk', 'viewAdmin', 'viewPanitia'], $paket)
+                        @else
                             @include('dashboard.paket.paket.components.status3')
-                        @endcanany
+                        @endif
                     @elseif($paket->status==4)
-                        @can('viewBpbj', $paket)
+                        @if(auth()->user()->hasRole('Kepala BPBJ'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -393,12 +393,11 @@
                                     </div>
                                 </div>
                             </div>
-                        @endcan
-                        @canany(['viewPpk', 'viewAdmin', 'viewPanitia'], $paket)
+                        @else
                             @include('dashboard.paket.paket.components.status4')
-                        @endcanany
+                        @endif
                     @elseif($paket->status==5)
-                        @can('viewPanitia', $paket)
+                        @if(auth()->user()->hasRole('Panitia'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -467,12 +466,11 @@
                                     </div>
                                 </div>
                             </div>
-                        @endcan
-                        @canany(['viewPpk', 'viewAdmin', 'viewBpbj'], $paket)
+                        @else
                             @include('dashboard.paket.paket.components.status5')
-                        @endcanany
+                        @endif
                     @elseif($paket->status==6)
-                        @can('viewPanitia', $paket)
+                        @if(auth()->user()->hasRole('Panitia'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -508,12 +506,11 @@
                                     </div>
                                 </div>
                             </div>
-                        @endcan
-                        @canany(['viewPpk', 'viewAdmin', 'viewBpbj'], $paket)
+                        @else
                             @include('dashboard.paket.paket.components.status6')
-                        @endcanany
+                        @endif
                     @elseif($paket->status==7)
-                        @can('viewPpk', $paket)
+                        @if(auth()->user()->hasRole('PPK'))
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -539,14 +536,13 @@
                                     </div>
                                 </div>
                             </div>
-                        @endcan
-                        @canany(['viewPanitia', 'viewAdmin', 'viewBpbj'], $paket)
+                        @else
                             @include('dashboard.paket.paket.components.status7')
-                        @endcanany
+                        @endif
 
                     @endif
 
-                    @if(($paket->status == 0 || $paket->status == null) &&  Gate::allows('viewAdmin', $paket))
+                    @if(($paket->status == 0 || $paket->status == null) &&  auth()->user()->hasRole('Admin'))
                         @if(!$paket->is_tayang_kuppbj && !$paket->is_tayang_pokja)
                             @include('dashboard.paket.paket.components.status0')
                         @else

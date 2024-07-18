@@ -54,8 +54,8 @@
                         searchable: false
                     },
                     {
-                        data: 'tahun',
-                        name: 'tahun'
+                        data: 'status',
+                        name: 'status'
                     },
                     {
                         data: 'nama',

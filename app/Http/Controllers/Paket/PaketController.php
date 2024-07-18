@@ -201,9 +201,20 @@ class PaketController extends Controller
         $user = Auth::user();
 
         if ($request->ajax()) {
-            $query = Paket::query();
+            $query = Paket::where('ppk_id', Auth::user()->ppk_id)
+                ->orWhereIn('pokmil_id', Auth::user()->pokmil_id);
 
-            if ($user->role->first()->name == 'Panitia') {
+            if ($user->hasRole('Panitia') && $user->hasRole('PPK')) {
+                $query->orderByRaw(
+                    'case
+                        when status = 1 then 1
+                        when status = 7 then 2
+                        when status = 5 then 3
+                        when status = 6 then 4
+                        else 3
+                    end'
+                )->orderBy('status', 'desc');
+            } elseif ($user->hasRole('Panitia')) {
                 $query->orderByRaw(
                     'case
                         when status = 5 then 1
@@ -211,7 +222,7 @@ class PaketController extends Controller
                         else 3
                     end'
                 )->orderBy('status', 'desc');
-            } elseif ($user->role->first()->name == 'ppk') {
+            } elseif ($user->hasRole('PPK')) {
                 $query->orderByRaw(
                     'case
                         when status = 1 then 1
@@ -219,14 +230,14 @@ class PaketController extends Controller
                         else 3
                     end'
                 )->orderBy('status', 'desc');
-            } elseif ($user->role->first()->name == 'Admin') {
+            } elseif ($user->hasRole('Admin')) {
                 $query->orderByRaw(
                     'case
                         when status = 2 then 1
                         else 2
                     end'
                 )->orderBy('status', 'desc');
-            } elseif ($user->role->first()->name == 'Kepala BPBJ') {
+            } elseif ($user->hasRole('Kepala BPBJ')) {
                 $query->orderByRaw(
                     'case
                         when status = 3 then 1
@@ -238,6 +249,7 @@ class PaketController extends Controller
                 $query->orderBy('status', 'desc');
             }
             $query->orderBy('created_at', 'desc');
+            //$data = $query->get();
             $data = $query->get();
 
             return DataTables::of($data)->addIndexColumn()
@@ -249,22 +261,28 @@ class PaketController extends Controller
                     $buttonText  = 'Detail';
                     $buttonClass = 'btn-primary';
 
-                    if ($user->role->first()->name == 'Panitia') {
+                    if ($user->hasRole('Panitia')) {
                         if ($status == 5 || $status == 6) {
                             $buttonText  = 'Proses';
                             $buttonClass = 'btn-warning';
                         }
-                    } elseif ($user->role->first()->name == 'ppk') {
+                    }
+
+                    if ($user->hasRole('PPK')) {
                         if ($status == 1 || $status == 7) {
                             $buttonText  = 'Proses';
                             $buttonClass = 'btn-warning';
                         }
-                    } elseif ($user->role->first()->name == 'Admin') {
+                    }
+
+                    if ($user->hasRole('Admin')) {
                         if ($status == 2) {
                             $buttonText  = 'Proses';
                             $buttonClass = 'btn-warning';
                         }
-                    } elseif ($user->role->first()->name == 'Kepala BPBJ') {
+                    }
+
+                    if ($user->hasRole('Kepala BPBJ')) {
                         if ($status == 3 || $status == 4) {
                             $buttonText  = 'Proses';
                             $buttonClass = 'btn-warning';
