@@ -1,9 +1,9 @@
 <x-app-layout :title=$pageTitle :sub-title=$subTitle :icon=$icon :crumbs=$crumbs>
-@if(auth()->user()->hasRole('Panitia') || auth()->user()->hasRole('PPK'))
+@role(['Panitia','PPK'])
     @unless($paket->ppk_id == auth()->user()->ppk_id || in_array($paket->pokmil_id, auth()->user()->pokmil_id))
         {{ abort(403) }}
     @endunless
-@endif
+@endrole
     <div>
         @if ($paket->status != 0)
         <div class="row mb-5">
@@ -124,7 +124,7 @@
                 <div class="row">
 
                     @if($status=="Upload")
-                        @if(auth()->user()->hasRole('PPK'))
+                        @role('PPK')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -178,10 +178,10 @@
                             </div>
                         @else
                             @include('dashboard.paket.paket.components.upload')
-                        @endif
+                        @endrole
 
                     @elseif($status=="Upload Ulang")
-                        @if(auth()->user()->hasRole('PPK'))
+                        @role('PPK')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -245,10 +245,10 @@
                             </div>
                         @else
                             @include('dashboard.paket.paket.components.upload')
-                        @endif
+                        @endrole
 
                     @elseif($status=="Verifikasi Berkas")
-                        @if(auth()->user()->hasRole('Admin'))
+                        @role('Admin')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -315,10 +315,10 @@
                             </div>
                         @else
                             @include('dashboard.paket.paket.components.verif')
-                        @endif
+                        @endrole
 
                     @elseif($status=="Pemilihan Pokmil")
-                        @if(auth()->user()->hasRole('Kepala BPBJ'))
+                        @role('Kepala BPBJ')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -343,9 +343,10 @@
                             </div>
                         @else
                             @include('dashboard.paket.paket.components.pilpokmil')
-                        @endif
+                        @endrole
+
                     @elseif($status=="Surat Tugas")
-                        @if(auth()->user()->hasRole('PPK'))
+                        @role('PPK')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -372,9 +373,10 @@
                             </div>
                         @else
                             @include('dashboard.paket.paket.components.surattugas')
-                        @endif
+                        @endrole
+
                     @elseif($status=="TTE Surat Tugas")
-                        @if(auth()->user()->hasRole('Kepala BPBJ'))
+                        @role('Kepala BPBJ')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -402,9 +404,10 @@
                             </div>
                         @else
                             @include('dashboard.paket.paket.components.surattugasTTE')
-                        @endif
+                        @endrole
+
                     @elseif($status=="Review")
-                        @if(auth()->user()->hasRole('Panitia'))
+                        @role('Panitia')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -475,9 +478,10 @@
                             </div>
                         @else
                             @include('dashboard.paket.paket.components.review')
-                        @endif
+                        @endrole
+
                     @elseif($status=="TTE Berita Acara Panitia")
-                        @if(auth()->user()->hasRole('Panitia'))
+                        @role('Panitia')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -515,9 +519,10 @@
                             </div>
                         @else
                             @include('dashboard.paket.paket.components.beritaacaraTTE_panitia')
-                        @endif
-                    @elseif($status=="TTE Berita Acara PPK")                    
-                        @if(auth()->user()->hasRole('PPK'))
+                        @endrole
+
+                    @elseif($status=="TTE Berita Acara PPK")
+                        @role('PPK')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -545,7 +550,7 @@
                             </div>
                         @else
                             @include('dashboard.paket.paket.components.beritaacaraTTE_ppk')
-                        @endif
+                        @endrole
 
                     @endif
 
