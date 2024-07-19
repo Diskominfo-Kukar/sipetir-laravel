@@ -623,7 +623,7 @@ class PaketController extends Controller
     public static function getProses($status)
     {
         if ($status != 0) {
-            $proses = ($status / 8) * 100;
+            $proses = ($status / 10) * 100;
         } else {
             $proses = 100;
         }
