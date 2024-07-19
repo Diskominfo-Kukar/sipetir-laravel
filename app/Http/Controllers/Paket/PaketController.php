@@ -11,6 +11,7 @@ use App\Models\Master\Pokmil;
 use App\Models\Paket\Komen;
 use App\Models\Paket\Paket;
 use App\Models\Paket\PaketDokumen;
+use App\Models\Paket\SuratTugas;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -457,11 +458,42 @@ class PaketController extends Controller
         $pokmil  = Pokmil::find($paket->pokmil_id);
         $panitia = $pokmil->panitia;
 
+        $surat_tugas = SuratTugas::where('paket_id', $request->paket_id)->first();
+
+        if ($surat_tugas) {
+            $surat_tugas->update([
+                'paket_id'        => $request->paket_id,
+                'kode'            => $request->kode,
+                'jenis_pekerjaan' => $request->jenis_pekerjaan,
+                'nama_paket'      => $request->nama_paket,
+                'nama_opd'        => $request->nama_opd,
+                'sumber_dana'     => $request->sumber_dana,
+                'pagu'            => $request->pagu,
+                'hps'             => $request->hps,
+                'dpa'             => $request->dpa,
+                'tahun'           => $request->tahun,
+            ]);
+        } else {
+            $surat_tugas = SuratTugas::create([
+                'paket_id'        => $request->paket_id,
+                'kode'            => $request->kode,
+                'jenis_pekerjaan' => $request->jenis_pekerjaan,
+                'nama_paket'      => $request->nama_paket,
+                'nama_opd'        => $request->nama_opd,
+                'sumber_dana'     => $request->sumber_dana,
+                'pagu'            => $request->pagu,
+                'hps'             => $request->hps,
+                'dpa'             => $request->dpa,
+                'tahun'           => $request->tahun,
+            ]);
+        }
+
         $data = [
-            'tanggal' => $tanggal,
-            'tglkop'  => $tglkop,
-            'paket'   => $paket,
-            'panitia' => $panitia,
+            'surat_tugas' => $surat_tugas,
+            'tanggal'     => $tanggal,
+            'tglkop'      => $tglkop,
+            'paket'       => $paket,
+            'panitia'     => $panitia,
         ];
 
         $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_tugas', $data);

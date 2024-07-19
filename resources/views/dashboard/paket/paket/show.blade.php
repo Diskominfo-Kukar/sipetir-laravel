@@ -354,20 +354,77 @@
                                         <hr>
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                                                <div class="d-flex justify-content-center">
-                                                    @if (!$surat_tugas)
-                                                    <form action="{{ route('paket.generate_surat_tugas') }}" method="POST">
+                                                <div class="d-flex justify-content-center w-100">
+                                                    <form action="{{ route('paket.generate_surat_tugas') }}" method="POST" class="w-100">
                                                         @csrf
+                                                        <div class="form-group row mb-3">
+                                                            <label for="kode" class="col-sm-3 col-form-label text-right">Kode Surat</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="number" name="kode" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="nama_paket" class="col-sm-3 col-form-label text-right">Nama Paket</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" name="nama_paket" class="form-control" value="{{ $paket->nama }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="jenis_pekerjaan" class="col-sm-3 col-form-label text-right">Jenis Pekerjaan</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" name="jenis_pekerjaan" class="form-control" value="{{ $paket->jenis_pekerjaan }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="nama_opd" class="col-sm-3 col-form-label text-right">Nama OPD</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" name="nama_opd" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="sumber_dana" class="col-sm-3 col-form-label text-right">Sumber Dana</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" name="sumber_dana" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="pagu" class="col-sm-3 col-form-label text-right">Pagu</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="number" name="pagu" class="form-control" value="{{ $paket->pagu }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="hps" class="col-sm-3 col-form-label text-right">HPS</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="number" name="hps" class="form-control" value="{{ $paket->hps }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="dpa" class="col-sm-3 col-form-label text-right">DPA</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" name="dpa" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="tahun" class="col-sm-3 col-form-label text-right">Tahun</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="number" name="tahun" class="form-control" required>
+                                                            </div>
+                                                        </div>
                                                         <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                        <button type="submit" class="btn btn-danger mx-2">
-                                                            <i class="fa fa-file-pdf"></i>
-                                                            Buat Surat Tugas
-                                                        </button>
+                                                        <div class="form-group row mt-4">
+                                                            <div class="col-sm-12 text-center">
+                                                                <button type="submit" class="btn btn-danger mx-2">
+                                                                    <i class="fa fa-file-pdf"></i>
+                                                                    Buat Surat Tugas
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     </form>
-                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>

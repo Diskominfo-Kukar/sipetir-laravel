@@ -118,7 +118,7 @@
   <div class="body">
     <p class="text-center">
       <strong>SURAT TUGAS KELOMPOK PEMILIHAN (POKMIL)</strong><br>
-      NOMOR : 323/ST-POKMIL/BPBJ/{{ $tglkop }}
+      NOMOR : {{ $surat_tugas->kode }}/ST-POKMIL/BPBJ/{{ $tglkop }}
     </p>&nbsp;
   <table style="border-collapse: collapse; width: 100%;">
     <tr>
@@ -169,56 +169,56 @@
     <td style="width: 10%;"></td>
     <td style="padding: 0 8px; vertical-align: top; width: 30%;">1. Jenis Pekerjaan</td>
     <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-    <td style="padding: 0 8px; vertical-align: top; width: 55%;">{{ $paket->nama }}</td>
+    <td style="padding: 0 8px; vertical-align: top; width: 55%;">{{ $surat_tugas->jenis_pekerjaan }}</td>
     <td style="padding: 0 8px;"></td>
   </tr>
   <tr>
     <td style="width: 10%;"></td>
     <td style="padding: 0 8px; vertical-align: top; width: 30%;">2. Paket Pekerjaan</td>
     <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-    <td style="padding: 0 8px; vertical-align: top; width: 55%;">Peningkatan Jalan Lingkungan Desa Panca Jaya Kec. Muara Kaman</td>
+    <td style="padding: 0 8px; vertical-align: top; width: 55%;">{{ $surat_tugas->nama_paket }}</td>
     <td style="padding: 0 8px;"></td>
   </tr>
   <tr>
     <td style="width: 10%;"></td>
     <td style="padding: 0 8px; vertical-align: top; width: 30%;">3. Nama OPD</td>
     <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-    <td style="padding: 0 8px; vertical-align: top; width: 55%;"></td>
+    <td style="padding: 0 8px; vertical-align: top; width: 55%;">{{ $surat_tugas->nama_opd }}</td>
     <td style="padding: 0 8px;"></td>
   </tr>
   <tr>
     <td style="width: 10%;"></td>
     <td style="padding: 0 8px; vertical-align: top; width: 30%;">4. Sumber Dana</td>
     <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-    <td style="padding: 0 8px; vertical-align: top; width: 55%;">APBD</td>
+    <td style="padding: 0 8px; vertical-align: top; width: 55%;">{{ $surat_tugas->sumber_dana }}</td>
     <td style="padding: 0 8px;"></td>
   </tr>
   <tr>
     <td style="width: 10%;"></td>
     <td style="padding: 0 8px; vertical-align: top; width: 30%;">5. Pagu Dana</td>
     <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-    <td style="padding: 0 8px; vertical-align: top; width: 55%;">Rp {{ $paket->pagu }}</td>
+    <td style="padding: 0 8px; vertical-align: top; width: 55%;">Rp {{ $surat_tugas->pagu }}</td>
     <td style="padding: 0 8px;"></td>
   </tr>
   <tr>
     <td style="width: 10%;"></td>
     <td style="padding: 0 8px; vertical-align: top; width: 30%;">6. HPS</td>
     <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-    <td style="padding: 0 8px; vertical-align: top; width: 55%;">Rp {{ $paket->hps }}</td>
+    <td style="padding: 0 8px; vertical-align: top; width: 55%;">Rp {{ $surat_tugas->hps }}</td>
     <td style="padding: 0 8px;"></td>
   </tr>
   <tr>
     <td style="width: 10%;"></td>
     <td style="padding: 0 8px; vertical-align: top; width: 30%;">7. Nomor DPA</td>
     <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-    <td style="padding: 0 8px; vertical-align: top; width: 55%;">1.04.05.2.01</td>
+    <td style="padding: 0 8px; vertical-align: top; width: 55%;">{{ $surat_tugas->dpa }}</td>
     <td style="padding: 0 8px;"></td>
   </tr>
   <tr>
     <td style="width: 10%;"></td>
     <td style="padding: 0 8px; vertical-align: top; width: 30%;">8. Tahun Anggaran</td>
     <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-    <td style="padding: 0 8px; vertical-align: top; width: 55%;">{{ $paket->tahun }}</td>
+    <td style="padding: 0 8px; vertical-align: top; width: 55%;">{{ $surat_tugas->tahun }}</td>
     <td style="padding: 0 8px;"></td>
   </tr>
 </table>&nbsp;&nbsp;
