@@ -38,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/akun/password', [AkunController::class, 'passwordUpdate'])->name('akun.password.update');
 });
 
-Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Kepala BPBJ'])->prefix('master')->group(function () {
+Route::middleware(['auth', 'role_or_permission:Admin|superadmin'])->prefix('master')->group(function () {
     Route::controller(UserController::class)->prefix('user')->name('user.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
@@ -77,22 +77,25 @@ Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Kepala BPBJ'])->
     Route::get('/panitia-get-data', [PanitiaController::class, 'getData'])->name('panitia.get-data');
 });
 
-//Paket
-Route::resource('paket', PaketController::class);
-Route::get('/paket-get-data', [PaketController::class, 'getData'])->name('paket.get-data');
-Route::post('/upload-berkas', [PaketController::class, 'uploadBerkas'])->name('paket.uploadBerkas');
-Route::post('/upload-berkas-submit', [PaketController::class, 'uploadAllBerkas'])->name('paket.uploadAllBerkas');
-Route::post('/upload-berkas-verif', [PaketController::class, 'VerifBerkas'])->name('paket.VerifBerkas');
-Route::get('/roll', [PaketController::class, 'roll'])->name('paket.roll');
-Route::post('/progres-surat_tugas', [PaketController::class, 'progres_surat_tugas'])->name('paket.progres_surat_tugas');
-Route::post('/upload-surat_tugas', [PaketController::class, 'generate_surat_tugas'])->name('paket.generate_surat_tugas');
-Route::post('/review', [PaketController::class, 'review'])->name('paket.review');
-Route::post('/answer_question', [PaketController::class, 'answer_question'])->name('paket.answer_question');
-Route::post('/progres-berita_acara', [PaketController::class, 'progres_berita_acara'])->name('paket.progres_berita_acara');
-Route::post('/berita_acara_TTE_panitia', [PaketController::class, 'berita_acara_TTE_panitia'])->name('paket.berita_acara_TTE_panitia');
-Route::post('/berita_acara_TTE_ppk', [PaketController::class, 'berita_acara_TTE_ppk'])->name('paket.berita_acara_TTE_ppk');
-Route::post('/generate-berita_acara', [PaketController::class, 'generate_berita_acara'])->name('paket.generate_berita_acara');
-Route::post('/upload-berita_acara_2', [PaketController::class, 'upload_berita_acara_2'])->name('paket.upload_berita_acara_2');
-Route::post('/upload-berita_acara_3', [PaketController::class, 'upload_berita_acara_3'])->name('paket.upload_berita_acara_3');
+Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Panitia|PPK|Kepala BPBJ'])->group(function () {
+    Route::resource('paket', PaketController::class);
+    Route::controller(PaketController::class)->name('paket.')->group(function () {
+        Route::get('/paket-get-data', 'getData')->name('get-data');
+        Route::post('/upload-berkas', 'uploadBerkas')->name('uploadBerkas');
+        Route::post('/upload-berkas-submit', 'uploadAllBerkas')->name('uploadAllBerkas');
+        Route::post('/upload-berkas-verif', 'VerifBerkas')->name('VerifBerkas');
+        Route::get('/roll', 'roll')->name('roll');
+        Route::post('/progres-surat_tugas', 'progres_surat_tugas')->name('progres_surat_tugas');
+        Route::post('/upload-surat_tugas', 'generate_surat_tugas')->name('generate_surat_tugas');
+        Route::post('/review', 'review')->name('review');
+        Route::post('/answer_question', 'answer_question')->name('answer_question');
+        Route::post('/progres-berita_acara', 'progres_berita_acara')->name('progres_berita_acara');
+        Route::post('/berita_acara_TTE_panitia', 'berita_acara_TTE_panitia')->name('berita_acara_TTE_panitia');
+        Route::post('/berita_acara_TTE_ppk', 'berita_acara_TTE_ppk')->name('berita_acara_TTE_ppk');
+        Route::post('/generate-berita_acara', 'generate_berita_acara')->name('generate_berita_acara');
+        Route::post('/upload-berita_acara_2', 'upload_berita_acara_2')->name('upload_berita_acara_2');
+        Route::post('/upload-berita_acara_3', 'upload_berita_acara_3')->name('upload_berita_acara_3');
+    });
+});
 
 require __DIR__.'/auth.php';

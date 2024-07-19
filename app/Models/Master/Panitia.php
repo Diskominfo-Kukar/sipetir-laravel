@@ -65,4 +65,9 @@ class Panitia extends Model
             get: fn () => $this->telepon ? $this->telepon : '',
         );
     }
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'jabatan_id');
+    }
 }

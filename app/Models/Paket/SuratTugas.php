@@ -18,6 +18,7 @@ class SuratTugas extends Model
 
     protected $fillable = [
         'paket_id',
+        'kode',
         'nama_paket',
         'jenis_pekerjaan',
         'nama_opd',

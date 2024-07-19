@@ -1,11 +1,11 @@
 <x-app-layout :title=$pageTitle :sub-title=$subTitle :icon=$icon :crumbs=$crumbs>
-@if(auth()->user()->hasRole('Panitia') || auth()->user()->hasRole('PPK'))
+@role(['Panitia','PPK'])
     @unless($paket->ppk_id == auth()->user()->ppk_id || in_array($paket->pokmil_id, auth()->user()->pokmil_id))
         {{ abort(403) }}
     @endunless
-@endif
+@endrole
     <div>
-        @if ($paket->status != 0)
+        @if ($paket->status != 0 && $paket->status != 10)
         <div class="row mb-5">
             <div class="col-md-12">
                 <div class="text-white card-body bg-dark"
@@ -30,7 +30,6 @@
                     <div class="card-body" style="background-color: #dad9d8">
 
                         <div class="mt-4 text-center">
-
                             <h4 class="mb-1">Kode Paket : {{$paket->kode}}</h4>
                             <p class="mb-0 text-secondary">
                                 {{$paket->opd}}
@@ -100,34 +99,23 @@
                             <p class="text-center fw-bold">File kosong</p>
                         </div>
                         @endforelse
-                        @if($surat_tugas)
-                            <a href="{{ asset('storage/' . $surat_tugas)  }}" target="_blank">
-                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;Surat Tugas</label>
-                                </li>
-                            </a>
-                        @endif
-                        @if($berita_acara_1)
-                            <a href="{{ asset('storage/' . $berita_acara_1)  }}" target="_blank">
-                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;Berita Acara Review</label>
-                                </li>
-                            </a>
-                        @endif
-                        @if($berita_acara_2)
-                            <a href="{{ asset('storage/' . $berita_acara_2)  }}" target="_blank">
-                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;Berita Acara Penetapan</label>
-                                </li>
-                            </a>
-                        @endif
-                        @if($berita_acara_3)
-                            <a href="{{ asset('storage/' . $berita_acara_3)  }}" target="_blank">
-                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                                    <label class="form-label"><i class="bi bi-download"></i>&nbsp;Berita Acara Pengumuman</label>
-                                </li>
-                            </a>
-                        @endif
+                        @php
+                            $documents = [
+                                'surat_tugas' => 'Surat Tugas',
+                                'berita_acara_1' => 'Berita Acara Review',
+                                'berita_acara_2' => 'Berita Acara Penetapan',
+                                'berita_acara_3' => 'Berita Acara Pengumuman',
+                            ];
+                        @endphp
+                        @foreach($documents as $key => $label)
+                            @if(!empty($$key))
+                                <a href="{{ asset('storage/' . $$key) }}" target="_blank">
+                                    <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                                        <label class="form-label"><i class="bi bi-download"></i>&nbsp;{{ $label }}</label>
+                                    </li>
+                                </a>
+                            @endif
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -135,8 +123,8 @@
             <div class="col-md-8">
                 <div class="row">
 
-                    @if($paket->status==1)
-                        @if(auth()->user()->hasRole('PPK'))
+                    @if($status=="Upload")
+                        @role('PPK')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -189,11 +177,11 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status1')
-                        @endif
+                            @include('dashboard.paket.paket.components.upload')
+                        @endrole
 
-                    @elseif($paket->status==11)
-                        @if(auth()->user()->hasRole('PPK'))
+                    @elseif($status=="Upload Ulang")
+                        @role('PPK')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -256,11 +244,11 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status1')
-                        @endif
+                            @include('dashboard.paket.paket.components.upload')
+                        @endrole
 
-                    @elseif($paket->status==2)
-                        @if(auth()->user()->hasRole('Admin'))
+                    @elseif($status=="Verifikasi Berkas")
+                        @role('Admin')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -326,11 +314,11 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status2')
-                        @endif
+                            @include('dashboard.paket.paket.components.verif')
+                        @endrole
 
-                    @elseif($paket->status==3)
-                        @if(auth()->user()->hasRole('Kepala BPBJ'))
+                    @elseif($status=="Pemilihan Pokmil")
+                        @role('Kepala BPBJ')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -354,10 +342,98 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status3')
-                        @endif
-                    @elseif($paket->status==4)
-                        @if(auth()->user()->hasRole('Kepala BPBJ'))
+                            @include('dashboard.paket.paket.components.pilpokmil')
+                        @endrole
+
+                    @elseif($status=="Surat Tugas")
+                        @role('PPK')
+                            <div class="col-12">
+                                <div class="border-0 shadow-sm card">
+                                    <div class="card-body">
+                                        <h5 class="mb-0">Surat Tugas</h5>
+                                        <hr>
+                                        <div class="border shadow-none card">
+                                            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                                <div class="d-flex justify-content-center w-100">
+                                                    <form action="{{ route('paket.generate_surat_tugas') }}" method="POST" class="w-100">
+                                                        @csrf
+                                                        <div class="form-group row mb-3">
+                                                            <label for="kode" class="col-sm-3 col-form-label text-right">Kode Surat</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="number" name="kode" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="nama_paket" class="col-sm-3 col-form-label text-right">Nama Paket</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" name="nama_paket" class="form-control" value="{{ $paket->nama }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="jenis_pekerjaan" class="col-sm-3 col-form-label text-right">Jenis Pekerjaan</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" name="jenis_pekerjaan" class="form-control" value="{{ $paket->jenis_pekerjaan }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="nama_opd" class="col-sm-3 col-form-label text-right">Nama OPD</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" name="nama_opd" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="sumber_dana" class="col-sm-3 col-form-label text-right">Sumber Dana</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" name="sumber_dana" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="pagu" class="col-sm-3 col-form-label text-right">Pagu</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="number" name="pagu" class="form-control" value="{{ $paket->pagu }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="hps" class="col-sm-3 col-form-label text-right">HPS</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="number" name="hps" class="form-control" value="{{ $paket->hps }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="dpa" class="col-sm-3 col-form-label text-right">DPA</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" name="dpa" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row mb-3">
+                                                            <label for="tahun" class="col-sm-3 col-form-label text-right">Tahun</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="number" name="tahun" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                        <div class="form-group row mt-4">
+                                                            <div class="col-sm-12 text-center">
+                                                                <button type="submit" class="btn btn-danger mx-2">
+                                                                    <i class="fa fa-file-pdf"></i>
+                                                                    Buat Surat Tugas
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            @include('dashboard.paket.paket.components.surattugas')
+                        @endrole
+
+                    @elseif($status=="TTE Surat Tugas")
+                        @role('Kepala BPBJ')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -366,16 +442,6 @@
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
                                                 <div class="d-flex justify-content-center">
-                                                    @if (!$surat_tugas)
-                                                    <form action="{{ route('paket.generate_surat_tugas') }}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                        <button type="submit" class="btn btn-danger mx-2">
-                                                            <i class="fa fa-file-pdf"></i>
-                                                            Buat Surat Tugas
-                                                        </button>
-                                                    </form>
-                                                    @endif
                                                     @if ($surat_tugas)
                                                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
                                                             <i class="bi bi-pen"></i>TTE
@@ -394,10 +460,11 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status4')
-                        @endif
-                    @elseif($paket->status==5)
-                        @if(auth()->user()->hasRole('Panitia'))
+                            @include('dashboard.paket.paket.components.surattugasTTE')
+                        @endrole
+
+                    @elseif($status=="Review")
+                        @role('Panitia')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -429,7 +496,7 @@
                                                                             @if ($answer)
                                                                                 Jawaban: {{ $answer->review }}
                                                                                 @if ($answer->user->panitia)
-                                                                                    (Dijawab oleh {{ $answer->user->panitia->nama }}) - {{ \Carbon\Carbon::parse($answer->created_at)->locale('id')->translatedFormat('d F Y H:i') }}
+                                                                                    (Dijawab oleh {{ $answer->user->panitia->nama }}) - {{ \Carbon\Carbon::parse($answer->updated_at)->locale('id')->translatedFormat('d F Y H:i') }}
                                                                                 @endif
                                                                             @else
                                                                                 &nbsp;<br>[ Belum ada jawaban ]
@@ -440,7 +507,7 @@
                                                                                 @csrf
                                                                                 <input type="hidden" name="question_id" value="{{ $question->id }}">
                                                                                 <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                                                <input type="text" name="review" class="form-control me-2" placeholder="{{ $panitia }} menjawab">
+                                                                                <input type="text" name="review" class="form-control me-2" placeholder="{{ $panitia->nama }} menjawab">
                                                                                 <button type="submit" class="btn btn-danger">Kirim</button>
                                                                             </form>
                                                                         </div>
@@ -467,10 +534,11 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status5')
-                        @endif
-                    @elseif($paket->status==6)
-                        @if(auth()->user()->hasRole('Panitia'))
+                            @include('dashboard.paket.paket.components.review')
+                        @endrole
+
+                    @elseif($status=="Berita Acara")
+                        @role('Panitia')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -489,28 +557,18 @@
                                                         </button>
                                                     </form>
                                                     @endif
-                                                    @if ($berita_acara_1)
-                                                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
-                                                            <i class="bi bi-pen"></i>TTE
-                                                        </a>
-                                                    @endif
                                                 </div>
-                                                @if ($berita_acara_1)
-                                                    <br>
-                                                    <div class="mt-4 w-100">
-                                                        <iframe src="{{ asset('storage/' . $berita_acara_1)  }}" width="100%" height="800px"></iframe>
-                                                    </div>
-                                                @endif
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status6')
-                        @endif
-                    @elseif($paket->status==7)
-                        @if(auth()->user()->hasRole('PPK'))
+                            @include('dashboard.paket.paket.components.beritaacaraTTE_panitia')
+                        @endrole
+
+                    @elseif($status=="TTE Berita Acara Panitia")
+                        @role('Panitia')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -537,24 +595,51 @@
                                 </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.status7')
-                        @endif
+                            @include('dashboard.paket.paket.components.beritaacaraTTE_panitia')
+                        @endrole
+
+                    @elseif($status=="TTE Berita Acara PPK")
+                        @role('PPK')
+                            <div class="col-12">
+                                <div class="border-0 shadow-sm card">
+                                    <div class="card-body">
+                                        <h5 class="mb-0">Berita Acara</h5>
+                                        <hr>
+                                        <div class="border shadow-none card">
+                                            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                                <div class="d-flex justify-content-center">
+                                                    @if ($berita_acara_1)
+                                                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
+                                                            <i class="bi bi-pen"></i>TTE
+                                                        </a>
+                                                    @endif
+                                                </div>
+                                                @if ($berita_acara_1)
+                                                    <br>
+                                                    <div class="mt-4 w-100">
+                                                        <iframe src="{{ asset('storage/' . $berita_acara_1)  }}" width="100%" height="800px"></iframe>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            @include('dashboard.paket.paket.components.beritaacaraTTE_ppk')
+                        @endrole
 
                     @endif
 
-                    @if(($paket->status == 0 || $paket->status == null) &&  auth()->user()->hasRole('Admin'))
-                        @if(!$paket->is_tayang_kuppbj && !$paket->is_tayang_pokja)
-                            @include('dashboard.paket.paket.components.status0')
+                    @if(($paket->status == 10) &&  auth()->user()->hasRole('Admin'))
+                        @if(!$berita_acara_2)
+                            @include('dashboard.paket.paket.components.penetapan')
+                        @elseif (!$berita_acara_3)
+                            @include('dashboard.paket.paket.components.pengumuman')
                         @else
-                            @if(!$berita_acara_2)
-                                @include('dashboard.paket.paket.components.penetapan')
-                            @elseif (!$berita_acara_3)
-                                @include('dashboard.paket.paket.components.pengumuman')
-                            @else
-                                @include('dashboard.paket.paket.components.status0')
-                            @endif
+                            @include('dashboard.paket.paket.components.status0')
                         @endif
-                    @elseif(($paket->status == 0 || $paket->status == null))
+                    @elseif(($paket->status == 0 || $paket->status == 10 || $paket->status == null ))
                         @include('dashboard.paket.paket.components.status0')
                     @endif
 

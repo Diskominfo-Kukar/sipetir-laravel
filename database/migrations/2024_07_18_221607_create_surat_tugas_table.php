@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('surat_tugas', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->text('kode')->unique()->nullable();
+            $table->integer('kode')->nullable();
             $table->string('paket_id')->references('id')->on('paket')->nullable();
             $table->text('nama_paket')->nullable();
             $table->text('jenis_pekerjaan')->nullable();
@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->text('dpa')->nullable();
             $table->integer('tahun')->nullable();
             $table->timestamps();
+            $table->unique(['kode', 'tahun']);
         });
     }
 

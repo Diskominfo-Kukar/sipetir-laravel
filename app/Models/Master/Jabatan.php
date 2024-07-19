@@ -25,4 +25,9 @@ class Jabatan extends Model
         $this->attributes['nama'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
+
+    public function panitia()
+    {
+        return $this->hasOne(Panitia::class, 'jabatan_id');
+    }
 }
