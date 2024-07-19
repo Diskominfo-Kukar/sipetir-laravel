@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Paket;
 
 use App\Models\Master\Answer;
+use App\Models\Master\Jabatan;
 use App\Models\Master\JenisDokumen;
 use App\Models\Master\KategoriReview;
 use App\Models\Master\Panitia;
@@ -105,8 +106,11 @@ class PaketController extends Controller
         $user    = Auth::user();
         $panitia = Panitia::where('user_id', $user->id)->first();
 
-        $panitia          = $panitia ?? new Panitia();
-        $panitia->jabatan = $panitia->jabatan ?? '-';
+        if (! $panitia) {
+            $panitia          = new Panitia();
+            $panitia->jabatan = new Jabatan();
+        }
+        $panitia->jabatan->nama = $panitia->jabatan->nama ?? '-';
 
         if ($user->hasRole('Admin')) {
             $panitia->nama = $panitia->nama ?? 'Admin';
@@ -248,8 +252,9 @@ class PaketController extends Controller
             } elseif ($user->hasRole('Admin')) {
                 $query->orderByRaw(
                     'case
-                        when status = 2 then 1
-                        else 2
+                        when status = 10 then 1
+                        when status = 2 then 2
+                        else 3
                     end'
                 )->orderBy('status', 'desc');
             } elseif ($user->hasRole('Kepala BPBJ')) {
@@ -265,7 +270,7 @@ class PaketController extends Controller
             }
             $query->orderBy('created_at', 'desc');
             //$data = $query->get();
-            $data = $query->limit(100)->get();
+            $data = $query->limit(1000)->get();
 
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('nama_tahun', function ($row) {
@@ -291,7 +296,7 @@ class PaketController extends Controller
                     }
 
                     if ($user->hasRole('Admin')) {
-                        if ($status == 2) {
+                        if ($status == 2 || $status == 10) {
                             $buttonText  = 'Proses';
                             $buttonClass = 'btn-warning';
                         }
@@ -548,6 +553,7 @@ class PaketController extends Controller
 
         $paket->update([
             'berita_acara_review' => $filePath,
+            'status'              => '8',
         ]);
 
         return redirect()->back()->with('berita_acara_1', $pdfUrl);
@@ -557,7 +563,7 @@ class PaketController extends Controller
     {
         $paket = Paket::where('id', $request->paket_id)->first();
         $paket->update([
-            'status' => '7',
+            'status' => '9',
         ]);
         session()->flash('success', 'Paket diserahkan ke PPK');
 
@@ -567,9 +573,16 @@ class PaketController extends Controller
     public function berita_acara_TTE_ppk(Request $request)
     {
         $paket = Paket::where('id', $request->paket_id)->first();
-        $paket->update([
-            'status' => '0',
-        ]);
+
+        if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
+            $paket->update([
+                'status' => '0',
+            ]);
+        } else {
+            $paket->update([
+                'status' => '10',
+            ]);
+        }
         session()->flash('success', 'Paket Selesai');
 
         return redirect()->back();

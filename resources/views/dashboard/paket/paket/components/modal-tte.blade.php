@@ -39,7 +39,7 @@
                         name="jabatan"
                         required
                         placeholder=""
-                        value="{{ $panitia->jabatan }}"
+                        value="{{ $panitia->jabatan->nama }}"
                         type="text"
                         readonly
                     />

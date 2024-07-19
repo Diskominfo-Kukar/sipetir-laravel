@@ -5,7 +5,7 @@
     @endunless
 @endrole
     <div>
-        @if ($paket->status != 0)
+        @if ($paket->status != 0 && $paket->status != 10)
         <div class="row mb-5">
             <div class="col-md-12">
                 <div class="text-white card-body bg-dark"
@@ -480,7 +480,7 @@
                             @include('dashboard.paket.paket.components.review')
                         @endrole
 
-                    @elseif($status=="TTE Berita Acara Panitia")
+                    @elseif($status=="Berita Acara")
                         @role('Panitia')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
@@ -500,6 +500,26 @@
                                                         </button>
                                                     </form>
                                                     @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            @include('dashboard.paket.paket.components.beritaacaraTTE_panitia')
+                        @endrole
+
+                    @elseif($status=="TTE Berita Acara Panitia")
+                        @role('Panitia')
+                            <div class="col-12">
+                                <div class="border-0 shadow-sm card">
+                                    <div class="card-body">
+                                        <h5 class="mb-0">Berita Acara</h5>
+                                        <hr>
+                                        <div class="border shadow-none card">
+                                            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                                <div class="d-flex justify-content-center">
                                                     @if ($berita_acara_1)
                                                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
                                                             <i class="bi bi-pen"></i>TTE
@@ -554,19 +574,15 @@
 
                     @endif
 
-                    @if(($paket->status == 0 || $paket->status == null) &&  auth()->user()->hasRole('Admin'))
-                        @if(!$paket->is_tayang_kuppbj && !$paket->is_tayang_pokja)
-                            @include('dashboard.paket.paket.components.status0')
+                    @if(($paket->status == 10) &&  auth()->user()->hasRole('Admin'))
+                        @if(!$berita_acara_2)
+                            @include('dashboard.paket.paket.components.penetapan')
+                        @elseif (!$berita_acara_3)
+                            @include('dashboard.paket.paket.components.pengumuman')
                         @else
-                            @if(!$berita_acara_2)
-                                @include('dashboard.paket.paket.components.penetapan')
-                            @elseif (!$berita_acara_3)
-                                @include('dashboard.paket.paket.components.pengumuman')
-                            @else
-                                @include('dashboard.paket.paket.components.status0')
-                            @endif
+                            @include('dashboard.paket.paket.components.status0')
                         @endif
-                    @elseif(($paket->status == 0 || $paket->status == null))
+                    @elseif(($paket->status == 0 || $paket->status == 10 || $paket->status == null ))
                         @include('dashboard.paket.paket.components.status0')
                     @endif
 
