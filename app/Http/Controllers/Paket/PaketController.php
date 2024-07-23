@@ -6,8 +6,10 @@ use App\Models\Master\Answer;
 use App\Models\Master\Jabatan;
 use App\Models\Master\JenisDokumen;
 use App\Models\Master\KategoriReview;
+use App\Models\Master\Opd;
 use App\Models\Master\Panitia;
 use App\Models\Master\Pokmil;
+use App\Models\Paket\BeritaAcara;
 use App\Models\Paket\Komen;
 use App\Models\Paket\Paket;
 use App\Models\Paket\PaketDokumen;
@@ -91,6 +93,12 @@ class PaketController extends Controller
      */
     public function show(Paket $paket)
     {
+        if (! auth()->user()->hasRole('Kepala BPBJ')) {
+            if (! $paket->ppk_id == auth()->user()->ppk_id && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id)) {
+                return abort(403);
+            }
+        }
+
         $title         = $paket->nama;
         $jenis_dokumen = JenisDokumen::orderBy('nama')->get();
         $crumbs        = [
@@ -104,8 +112,9 @@ class PaketController extends Controller
         $kategoriReviews = KategoriReview::orderBy('no_urut')->get();
         $kategoriReviews->load(['questions.answers.user.panitia']);
 
-        $user    = Auth::user();
-        $panitia = Panitia::where('user_id', $user->id)->first();
+        $user       = Auth::user();
+        $pokmil_ids = auth()->user()->pokmil_id;
+        $panitia    = Panitia::where('user_id', $user->id)->first();
 
         if (! $panitia) {
             $panitia          = new Panitia();
@@ -125,6 +134,9 @@ class PaketController extends Controller
         $berita_acara_3 = $paket->berita_acara_pengumuman;
 
         $progres = static::getProses($paket->status);
+
+        $new_data = SuratTugas::where('paket_id', $paket->id)->first();
+        $opd      = Opd::all();
 
         $timelines = [
             1 => 'Upload',
@@ -165,6 +177,9 @@ class PaketController extends Controller
             'berita_acara_3'   => $berita_acara_3,
             'progres'          => $progres,
             'status'           => $status,
+            'pokmil_ids'       => $pokmil_ids,
+            'new_data'         => $new_data,
+            'opd'              => $opd,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -216,8 +231,10 @@ class PaketController extends Controller
 
         if ($request->ajax()) {
             if ($user->hasRole('Panitia') || $user->hasRole('PPK')) {
-                $query = Paket::where('ppk_id', Auth::user()->ppk_id)
-                    ->orWhereIn('pokmil_id', Auth::user()->pokmil_id);
+                if (! $user->hasRole('Kepala BPBJ')) {
+                    $query = Paket::where('ppk_id', Auth::user()->ppk_id)
+                        ->orWhereIn('pokmil_id', Auth::user()->pokmil_id);
+                }
             }
 
             if ($user->hasRole('Panitia') && $user->hasRole('PPK')) {
@@ -510,6 +527,70 @@ class PaketController extends Controller
         return redirect()->back()->with('surat_tugas', $pdfUrl);
     }
 
+    public function generate_berita_acara(Request $request)
+    {
+        $tgl     = Carbon::now();
+        $tanggal = $tgl->locale('id')->translatedFormat('j F Y');
+        $tglkop  = $tgl->format('m/Y');
+
+        $paket = Paket::find($request->paket_id);
+
+        $berita_acara = BeritaAcara::where('paket_id', $request->paket_id)->first();
+
+        if ($berita_acara) {
+            $berita_acara->update([
+                'paket_id'        => $request->paket_id,
+                'kode'            => $request->kode,
+                'jenis_pekerjaan' => $request->jenis_pekerjaan,
+                'nama_paket'      => $request->nama_paket,
+                'nama_opd'        => $request->nama_opd,
+                'sumber_dana'     => $request->sumber_dana,
+                'pagu'            => $request->pagu,
+                'hps'             => $request->hps,
+                'dpa'             => $request->dpa,
+                'tahun'           => $request->tahun,
+                'lokasi'          => $request->lokasi,
+                'waktu'           => $request->waktu,
+                'uraian'          => $request->uraian,
+            ]);
+        } else {
+            $berita_acara = BeritaAcara::create([
+                'paket_id'        => $request->paket_id,
+                'kode'            => $request->kode,
+                'jenis_pekerjaan' => $request->jenis_pekerjaan,
+                'nama_paket'      => $request->nama_paket,
+                'nama_opd'        => $request->nama_opd,
+                'sumber_dana'     => $request->sumber_dana,
+                'pagu'            => $request->pagu,
+                'hps'             => $request->hps,
+                'dpa'             => $request->dpa,
+                'tahun'           => $request->tahun,
+                'lokasi'          => $request->lokasi,
+                'waktu'           => $request->waktu,
+                'uraian'          => $request->uraian,
+            ]);
+        }
+
+        $data = [
+            'tanggal' => $tanggal,
+            'tglkop'  => $tglkop,
+            'paket'   => $paket,
+        ];
+
+        $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
+
+        $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
+        Storage::disk('public')->put($filePath, $pdf->output());
+        $pdfUrl = url('storage/'.$filePath);
+
+        $paket->update([
+            'berita_acara_review' => $filePath,
+            'status'              => '8',
+        ]);
+
+        return redirect()->back()->with('berita_acara_1', $pdfUrl);
+    }
+
     public function review(Request $request)
     {
         $paket = Paket::where('id', $request->paket_id)->first();
@@ -561,34 +642,6 @@ class PaketController extends Controller
         session()->flash('success', 'Semua review berhasil ditambahkan');
 
         return redirect()->back();
-    }
-
-    public function generate_berita_acara(Request $request)
-    {
-        $tgl     = Carbon::now();
-        $tanggal = $tgl->locale('id')->translatedFormat('j F Y');
-        $tglkop  = $tgl->format('m/Y');
-
-        $paket = Paket::find($request->paket_id);
-
-        $data = [
-            'tanggal' => $tanggal,
-            'tglkop'  => $tglkop,
-            'paket'   => $paket,
-        ];
-
-        $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
-
-        $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
-        Storage::disk('public')->put($filePath, $pdf->output());
-        $pdfUrl = url('storage/'.$filePath);
-
-        $paket->update([
-            'berita_acara_review' => $filePath,
-            'status'              => '8',
-        ]);
-
-        return redirect()->back()->with('berita_acara_1', $pdfUrl);
     }
 
     public function berita_acara_TTE_panitia(Request $request)
