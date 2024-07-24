@@ -93,6 +93,7 @@ Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Panitia|PPK|Kepa
         Route::post('/berita_acara_TTE_panitia', 'berita_acara_TTE_panitia')->name('berita_acara_TTE_panitia');
         Route::post('/berita_acara_TTE_ppk', 'berita_acara_TTE_ppk')->name('berita_acara_TTE_ppk');
         Route::post('/generate-berita_acara', 'generate_berita_acara')->name('generate_berita_acara');
+        Route::post('/upload-berita_acara_1', 'upload_berita_acara_1')->name('upload_berita_acara_1');
         Route::post('/upload-berita_acara_2', 'upload_berita_acara_2')->name('upload_berita_acara_2');
         Route::post('/upload-berita_acara_3', 'upload_berita_acara_3')->name('upload_berita_acara_3');
     });

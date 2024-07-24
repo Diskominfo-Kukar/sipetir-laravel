@@ -287,8 +287,8 @@ class PaketController extends Controller
                 $query->orderBy('status', 'desc');
             }
             $query->orderBy('created_at', 'desc');
-            //$data = $query->get();
-            $data = $query->limit(1000)->get();
+            $data = $query->get();
+            //$data = $query->limit(1000)->get();
 
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('nama_tahun', function ($row) {
@@ -552,6 +552,8 @@ class PaketController extends Controller
                 'lokasi'          => $request->lokasi,
                 'waktu'           => $request->waktu,
                 'uraian'          => $request->uraian,
+                'intro'           => $request->intro,
+                'outro'           => $request->outro,
             ]);
         } else {
             $berita_acara = BeritaAcara::create([
@@ -568,6 +570,8 @@ class PaketController extends Controller
                 'lokasi'          => $request->lokasi,
                 'waktu'           => $request->waktu,
                 'uraian'          => $request->uraian,
+                'intro'           => $request->intro,
+                'outro'           => $request->outro,
             ]);
         }
 
@@ -682,6 +686,35 @@ class PaketController extends Controller
         }
 
         return $proses;
+    }
+
+    public function upload_berita_acara_1(Request $request)
+    {
+        $paket = Paket::find($request->paket_id);
+        $file  = $request->file('dokumen');
+
+        if ($file) {
+            if ($file->getMimeType() === 'application/pdf') {
+                $filename = 'berita_acara_review_'.$paket->id.'.pdf';
+                $file->storeAs('public/pdf', $filename);
+
+                $paket->update([
+                    'berita_acara_review' => 'pdf/'.$filename,
+                    'status'              => '8',
+                ]);
+
+                session()->flash('success', 'Dokumen Berhasil di-upload');
+
+                return redirect()->back();
+            } else {
+                session()->flash('error', 'Dokumen harus berupa file PDF.');
+
+                return redirect()->back();
+            }
+        }
+        session()->flash('error', 'Dokumen gagal di-upload');
+
+        return redirect()->back();
     }
 
     public function upload_berita_acara_2(Request $request)

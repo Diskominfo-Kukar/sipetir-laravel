@@ -30,5 +30,7 @@ class BeritaAcara extends Model
         'lokasi',
         'waktu',
         'uraian',
+        'intro',
+        'outro',
     ];
 }

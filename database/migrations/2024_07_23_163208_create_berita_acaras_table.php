@@ -24,6 +24,8 @@ return new class extends Migration {
             $table->text('lokasi')->nullable();
             $table->text('waktu')->nullable();
             $table->text('uraian')->nullable();
+            $table->text('Intro')->nullable();
+            $table->text('Outro')->nullable();
             $table->timestamps();
             $table->unique(['kode', 'tahun']);
         });
