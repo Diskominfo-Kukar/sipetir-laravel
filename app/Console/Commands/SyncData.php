@@ -8,12 +8,14 @@ use App\Models\External\Epns\Panitia as PokmilExternal;
 use App\Models\External\Epns\Pegawai as PegawaiExternal;
 use App\Models\External\Epns\PPK as PPKExternal;
 use App\Models\External\Epns\Satker as SatkerExternal;
+use App\Models\External\Epns\SumberDana as SumberDanaExternal;
 use App\Models\Master\Jabatan;
 use App\Models\Master\JenisOpd as JenisOpdInternal;
 use App\Models\Master\Opd as OpdInternal;
 use App\Models\Master\Pokmil as PokmilInternal;
 use App\Models\Master\Ppk as PPKInternal;
 use App\Models\Master\Satker as SatkerInternal;
+use App\Models\Master\SumberDana;
 use App\Models\Paket\Paket as PaketInternal;
 use App\Models\User;
 use App\Traits\StatusPaket;
@@ -43,14 +45,15 @@ class SyncData extends Command
      */
     public function handle()
     {
-        $this->syncOpd();
-        $this->syncJabatanMaster();
-        $this->syncPegawaiMaster();
-        $this->syncSatker();
-        $this->syncPokmil();
-        $this->syncPanitiaPokmil();
-        $this->syncPpk();
-        $this->syncPaket();
+        // $this->syncOpd();
+        // $this->syncJabatanMaster();
+        // $this->syncPegawaiMaster();
+        // $this->syncSatker();
+        // $this->syncPokmil();
+        // $this->syncPanitiaPokmil();
+        // $this->syncPpk();
+        // $this->syncPaket();
+        $this->syncSumberDana();
     }
 
     public function syncOpd()
@@ -320,5 +323,20 @@ class SyncData extends Command
         $bar->finish();
         $this->line('');
         $this->info('Import Data Paket Berhasil');
+    }
+
+    public function syncSumberDana()
+    {
+        $this->info('Memulai Import Data Sumber Data');
+        $externalSumberDana = SumberDanaExternal::all();
+
+        foreach ($externalSumberDana as $sumberDana) {
+            SumberDana::create([
+                'nama' => $sumberDana->sbd_ket,
+            ]);
+        }
+
+        $this->line('');
+        $this->info('Import Data Sumber Dana Berhasil');
     }
 }
