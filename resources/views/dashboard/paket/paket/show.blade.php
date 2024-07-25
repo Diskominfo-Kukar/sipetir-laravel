@@ -384,7 +384,12 @@
                                                         <div class="form-group row mb-3">
                                                             <label for="sumber_dana" class="col-sm-3 col-form-label text-right">Sumber Dana</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" name="sumber_dana" class="form-control" required>
+                                                                <select name="sumber_dana" class="form-control" required>
+                                                                    <option value="" disabled selected></option>
+                                                                    @foreach($sumber_dana as $item)
+                                                                        <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-3">
@@ -594,7 +599,12 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label for="sumber_dana" class="col-sm-3 col-form-label text-right">Sumber Dana</label>
                                                                             <div class="col-sm-9">
-                                                                                <input type="text" name="sumber_dana" class="form-control" value="{{ old('sumber_dana', $new_data->sumber_dana) }}" required>
+                                                                                <select name="sumber_dana" class="form-control" required>
+                                                                                    <option value="{{ old('sumber_dana', $new_data->sumber_dana) }}">{{ old('sumber_dana', $new_data->sumber_dana) }}</option>
+                                                                                    @foreach($sumber_dana as $item)
+                                                                                        <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                                                    @endforeach
+                                                                                </select>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">

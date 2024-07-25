@@ -9,6 +9,7 @@ use App\Models\Master\KategoriReview;
 use App\Models\Master\Opd;
 use App\Models\Master\Panitia;
 use App\Models\Master\Pokmil;
+use App\Models\Master\SumberDana;
 use App\Models\Paket\BeritaAcara;
 use App\Models\Paket\Komen;
 use App\Models\Paket\Paket;
@@ -135,8 +136,9 @@ class PaketController extends Controller
 
         $progres = static::getProses($paket->status);
 
-        $new_data = SuratTugas::where('paket_id', $paket->id)->first();
-        $opd      = Opd::all();
+        $new_data    = SuratTugas::where('paket_id', $paket->id)->first();
+        $opd         = Opd::all();
+        $sumber_dana = SumberDana::all();
 
         $timelines = [
             1 => 'Upload',
@@ -180,6 +182,7 @@ class PaketController extends Controller
             'pokmil_ids'       => $pokmil_ids,
             'new_data'         => $new_data,
             'opd'              => $opd,
+            'sumber_dana'      => $sumber_dana,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
