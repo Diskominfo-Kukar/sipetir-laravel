@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('notifikasi', function (Blueprint $table) {
+        Schema::create('otp', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('modul_id');
             $table->string('panitia_id')->references('id')->on('panitia');
@@ -26,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('notifikasi');
+        Schema::dropIfExists('otp');
     }
 };

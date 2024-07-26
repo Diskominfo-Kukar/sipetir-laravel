@@ -2,7 +2,9 @@
 
 namespace App\Traits;
 
-trait Otp
+use App\Models\Master\Otp;
+
+trait Notifikasi
 {
     public static function sendTo($tipe, $message)
     {
@@ -19,6 +21,23 @@ trait Otp
         }
 
         return 'Invalid tipe';
+    }
+
+    public static function sendOtpTo($tipe, $request)
+    {
+        $kodeOtp = 1234;
+
+        Otp::create([
+            'modul_id'   => $request->modul_id,
+            'panitia_id' => $request->panitia_id,
+            'message'    => $request->message,
+            'tipe'       => $request->tipe,
+            'status'     => $request->status,
+        ]);
+
+        $otpMessage = 'Kode OTP Anda: '.$kodeOtp;
+
+        return self::sendTo($tipe, $otpMessage);
     }
 
     private static function whatsapp($message)

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models\Lib;
+namespace App\Models\Master;
 
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Model;
 
-class Notifikasi extends Model
+class Otp extends Model
 {
     use UsesUuid;
 
-    protected $table = 'notifikasi';
+    protected $table = 'otp';
 
     protected $fillable = ['modul_id', 'panitia_id', 'message', 'tipe', 'status'];
 

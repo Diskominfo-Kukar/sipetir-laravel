@@ -8,6 +8,7 @@ use App\Http\Controllers\Master\JabatanController;
 use App\Http\Controllers\Master\JenisDokumenController;
 use App\Http\Controllers\Master\KategoriReviewController;
 use App\Http\Controllers\Master\OpdController;
+use App\Http\Controllers\Master\OtpController;
 use App\Http\Controllers\Master\PanitiaController;
 use App\Http\Controllers\Master\PpkController;
 use App\Http\Controllers\Master\QuestionController;
@@ -75,6 +76,10 @@ Route::middleware(['auth', 'role_or_permission:Admin|superadmin'])->prefix('mast
     //panitia
     Route::resource('panitia', PanitiaController::class);
     Route::get('/panitia-get-data', [PanitiaController::class, 'getData'])->name('panitia.get-data');
+
+    //OTP
+    Route::resource('otp', OtpController::class);
+    Route::get('/otp-get-data', [OtpController::class, 'getData'])->name('otp.get-data');
 });
 
 Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Panitia|PPK|Kepala BPBJ'])->group(function () {

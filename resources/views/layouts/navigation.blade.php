@@ -86,7 +86,9 @@
                         <a href="{{ route('user.index') }}" class="list-group-item">
                             <i class="lni lni-users"></i> Users
                         </a>
-
+                        <a href="{{ route('otp.index') }}" class="list-group-item">
+                            <i class="lni lni-key"></i> One-Time Password
+                        </a>
 
                     </div>
                 </div>
@@ -100,7 +102,7 @@
                         </div>
                         <small class="mb-0">Menu Utama Aplikasi</small>
                     </div>
-                    <a href="{{route('paket.index')}}" class="list-group-item">
+                    <a href="{{ route('paket.index') }}" class="list-group-item">
                         <i class="lni lni-comments-alt"></i> Paket
                     </a>
 
