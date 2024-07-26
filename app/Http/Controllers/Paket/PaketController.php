@@ -581,9 +581,10 @@ class PaketController extends Controller
         }
 
         $data = [
-            'tanggal' => $tanggal,
-            'tglkop'  => $tglkop,
-            'paket'   => $paket,
+            'tanggal'      => $tanggal,
+            'tglkop'       => $tglkop,
+            'paket'        => $paket,
+            'berita_acara' => $berita_acara,
         ];
 
         $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);

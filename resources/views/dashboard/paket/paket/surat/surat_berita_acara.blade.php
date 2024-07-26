@@ -171,33 +171,27 @@
             Nomor: 323/ST-POKMIL/BPBJ/{{ $tglkop }}
         </p>&nbsp;
 
-        <p style="padding: 8px; text-align: justify;">Pada hari ini <b>Selasa</b> tanggal <b>Lima</b> bulan
-            <b>Maret</b> tahun
-            <b>Dua Ribu Dua Puluh Empat</b>, bertempat di Ruang Rapat Bagian Pengadaan Barang dan Jasa (BPBJ), kami
-            yang bertandatangan di dalam dokumen Berita Acara ini <b>Kelompok Kerja Pemilihan 11-Rev</b> Bagian
-            Pengadaan Barang dan Jasa Sekretariat Daerah Kab. Kutai Kartanegara bersama Peiabat Pembuat
-            Komitmen (PPK) :
-        </p>
+        {!! $berita_acara->intro !!}
 
         <table style="border-collapse: collapse; width: 100%;">
 
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nama PPK</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;"><b>Arsel Haris Miar,A.Md</b>
+                <td style="padding: 0; vertical-align: top; width: 75%;"><b>{{ $paket->ppk->nama }}</b>
                 </td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">SKPD/OPD</td>
-                <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%; border:1px solid black;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%; border:1px solid black;">Dinas Pekerjaan
-                    Umum</td>
+                <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
+                <td style="padding: 0; vertical-align: top; width: 75%; ">-
+                    </td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">No. SK</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
                 <td style="padding: 0; vertical-align: top; width: 75%;">
-                    P.1476/DPU/UTL/100.3/11/2023</td>
+                    {{ $paket->ppk->panitia->no_sk }}</td>
             </tr>
 
             <tr>
@@ -209,62 +203,54 @@
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nama Paket Pengadaan</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
                 <td style="padding: 0; vertical-align: top; width: 75%;">
-                    <b>REKONSTRUKSI JALAN DESA DESA BATU - BATU - DESA SALO CELLA ( BANKEU )</b>
+                    <b>{{ $berita_acara->nama_paket }} </b>
                 </td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Lokasi Pekerjaan
                 </td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">Kabupaten Kutai Kartanegara - Kutai
-                    Kartanegara (Kab.)</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->lokasi }}</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Waktu Pelaksanaan</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">120 (Seratus Dua Puluh) Hari Kalender</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->waktu }} Hari Kalender</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Uraian Pekerjaan</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">REKONSTRUKSI JALAN DESA DESA BATU - BATU -
-                    DESA SALO CELLA ( BANKEU ) adalah sebagai berikut : Rekonstruksi Jalan</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->uraian }}</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Sumber Dana</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">APBD KAB. KUTAI KARTANEGARA HT 2024</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->sumber_dana }}</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nilai Pagu Anggaran</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. 4.607.673.000,-</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. {{ $berita_acara->pagu }},-</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nilai HPS</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. 4.607.639.000,-</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. {{ $berita_acara->hps }},-</td>
             </tr>
         </table>&nbsp;
 
-        <p style="padding: 0 8px; text-align: justify;">Dalam pembahasan ini telah dilakukan reviu terhadap Dokumen
-            Persiapan Pengadaan meliputi spesifikasi teknis dan DED, Harga Perkiraan Sendiri (HPS), Rancangan
-            Kontrak, Dokumen Anggaran Belanja, ID, paket RUP, waktu penggunaan barang/jasa, analisis pasar serta
-            Uraian pekerjaan, identifikasi bahaya dan penetapan resiko Pekerjaan Konstruksi terkait Keselamatan
-            Konstruksi pada Pekerjaan Konstruksi.
-            Dengan dokumentasi reviu sebagaimana terlampir.
-        </p>
+        {!! $berita_acara->outro !!}
 
         <p style="padding:16px 8px;" class="text-center">
             <strong>PEJABAT PEMBUAT KOMITMEN
-                <br>REKONSTRUKSI JALAN DESA DESA BATU - BATU - DESA SALO CELLA ( BANKEU )
-                <br>Dinas Pekerjaan Umum
+                <br>{{ $berita_acara->nama_paket }}
+                <br>-
             </strong>
         </p>
 
         <p style="padding:70px 8px;" class="text-center">
-            <strong><u>Arsel HarisMiar,A.Md</u></strong>
-            <br>NIP. 197509281995031002
+            <strong><u>{{ $paket->ppk->nama }}</u></strong>
+            <br>NIP. {{ $paket->ppk->panitia->nip }}
         </p>
 
     </div>
@@ -304,9 +290,9 @@
                         <p style="padding: 0 8px;"><i>Spesifikasi teknis untuk pengadaan Pekerjaan Konstruksi
                                 meliputi:</i>
                         </p>
-                        <img style="padding: 8px;"
+                        <!--img style="padding: 8px;"
                             src="data:image/png;base64,{{ base64_encode(file_get_contents(base_path('public/img/logo.png'))) }}"
-                            width="80" alt="">
+                            width="80" alt=""-->
 
                         <p style="padding: 8px; text-align: justify;">Peraturan LKPP No. 12 Tahun 2021 tentang Pedoman
                             Pelaksanaan Pengadaan Barang/Jasa Pemerintah Melalui Penyedia</p>
