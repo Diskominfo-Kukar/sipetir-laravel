@@ -135,6 +135,7 @@ class PaketController extends Controller
         $berita_acara_3 = $paket->berita_acara_pengumuman;
 
         $progres = static::getProses($paket->status);
+        $tanggal = static::getTanggal();
 
         $new_data    = SuratTugas::where('paket_id', $paket->id)->first();
         $opd         = Opd::all();
@@ -183,6 +184,7 @@ class PaketController extends Controller
             'new_data'         => $new_data,
             'opd'              => $opd,
             'sumber_dana'      => $sumber_dana,
+            'tanggal'          => $tanggal,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -689,6 +691,63 @@ class PaketController extends Controller
         }
 
         return $proses;
+    }
+
+    public static function getTahun($tahun)
+    {
+        $angkaTerjemahan = [
+            1 => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima',
+            6 => 'Enam', 7 => 'Tujuh', 8 => 'Delapan', 9 => 'Sembilan',
+            0 => 'Nol',
+        ];
+
+        $tahun      = strval($tahun);
+        $tahunArray = str_split($tahun);
+
+        $terjemahan = '';
+
+        // Menambahkan "Dua Ribu" jika tahun adalah 2000-an
+        if (count($tahunArray) === 4 && $tahunArray[0] == 2 && $tahunArray[1] == 0) {
+            $terjemahan .= 'Dua Ribu ';
+        }
+
+        // Menambahkan angka terakhir
+        $terjemahan .= $angkaTerjemahan[intval($tahunArray[2])].' Ribu '.$angkaTerjemahan[intval($tahunArray[3])];
+
+        return $terjemahan;
+    }
+
+    public static function getTanggal()
+    {
+        $tgl = Carbon::now();
+        $tgl->locale('id');
+        $hari = $tgl->translatedFormat('l');
+
+        $tanggalTerjemahan = [
+            1  => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima',
+            6  => 'Enam', 7 => 'Tujuh', 8 => 'Delapan', 9 => 'Sembilan', 10 => 'Sepuluh',
+            11 => 'Sebelas', 12 => 'Dua Belas', 13 => 'Tiga Belas', 14 => 'Empat Belas', 15 => 'Lima Belas',
+            16 => 'Enam Belas', 17 => 'Tujuh Belas', 18 => 'Delapan Belas', 19 => 'Sembilan Belas', 20 => 'Dua Puluh',
+            21 => 'Dua Puluh Satu', 22 => 'Dua Puluh Dua', 23 => 'Dua Puluh Tiga', 24 => 'Dua Puluh Empat', 25 => 'Dua Puluh Lima',
+            26 => 'Dua Puluh Enam', 27 => 'Dua Puluh Tujuh', 28 => 'Dua Puluh Delapan', 29 => 'Dua Puluh Sembilan', 30 => 'Tiga Puluh',
+            31 => 'Tiga Puluh Satu',
+        ];
+
+        $tanggalAngka = $tgl->day;
+        $tanggal      = $tanggalTerjemahan[$tanggalAngka];
+        $bulan        = $tgl->translatedFormat('F');
+
+        $tahunAngka = $tgl->year;
+        $tahun      = static::getTahun($tahunAngka);
+
+        $data = [
+            'hari'    => $hari,
+            'tanggal' => $tanggal,
+            'bulan'   => $bulan,
+            'tahun'   => $tahun,
+        ];
+
+        return $data;
     }
 
     public function upload_berita_acara_1(Request $request)

@@ -634,7 +634,7 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label for="lokasi" class="col-sm-3 col-form-label text-right">Lokasi Pekerjaan</label>
                                                                             <div class="col-sm-9">
-                                                                                <input type="text" name="lokasi" class="form-control" required>
+                                                                                <input type="text" name="lokasi" class="form-control" value="{{ old('lokasi', $new_data->lokasi) }}" required>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
@@ -652,13 +652,29 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label for="intro" class="col-sm-3 col-form-label text-right">Kalimat Pembuka</label>
                                                                             <div class="col-sm-9">
-                                                                                <textarea name="intro" class="form-control" rows="5" required></textarea>
+                                                                                <textarea name="intro" class="form-control" rows="5" required>
+                                                                                    <p style="padding: 8px; text-align: justify;">Pada hari ini <b>{{ $tanggal['hari'] }}</b> tanggal <b>{{ $tanggal['tanggal'] }}</b> bulan
+                                                                                        <b>{{ $tanggal['bulan'] }}</b> tahun
+                                                                                        <b>{{ $tanggal['tahun'] }}</b>, bertempat di Ruang Rapat Bagian Pengadaan Barang dan Jasa (BPBJ), kami
+                                                                                        yang bertandatangan di dalam dokumen Berita Acara ini <b>{{ $paket->pokmil->nama }}</b> Bagian
+                                                                                        Pengadaan Barang dan Jasa Sekretariat Daerah Kab. Kutai Kartanegara bersama Pejabat Pembuat
+                                                                                        Komitmen (PPK) :
+                                                                                    </p>
+                                                                                </textarea>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
                                                                             <label for="outro" class="col-sm-3 col-form-label text-right">Kalimat Penutup</label>
                                                                             <div class="col-sm-9">
-                                                                                <textarea name="outro" class="form-control" rows="5" required></textarea>
+                                                                                <textarea name="outro" class="form-control" rows="5" required>
+                                                                                    <p style="padding: 0 8px; text-align: justify;">Dalam pembahasan ini telah dilakukan reviu terhadap Dokumen
+                                                                                        Persiapan Pengadaan meliputi spesifikasi teknis dan DED, Harga Perkiraan Sendiri (HPS), Rancangan
+                                                                                        Kontrak, Dokumen Anggaran Belanja, ID, paket RUP, waktu penggunaan barang/jasa, analisis pasar serta
+                                                                                        Uraian pekerjaan, identifikasi bahaya dan penetapan resiko Pekerjaan Konstruksi terkait Keselamatan
+                                                                                        Konstruksi pada Pekerjaan Konstruksi.
+                                                                                        Dengan dokumentasi reviu sebagaimana terlampir.
+                                                                                    </p>
+                                                                                </textarea>
                                                                             </div>
                                                                         </div>
                                                                         <input type="hidden" name="paket_id" value="{{ $paket->id }}">
