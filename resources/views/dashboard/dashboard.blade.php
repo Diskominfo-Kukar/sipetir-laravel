@@ -46,7 +46,6 @@
         </div>
     </div>
 
-
     {{-- 
         <div class="card shadow-sm radius-10 border-0 mb-3">
             <div class="card-body">
@@ -66,6 +65,80 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Paket</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead class="bg-dark text-white">
+                            <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">Tahun</th>
+                                <th scope="col">Nama</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($pakets as $index => $paket)
+                                <tr>
+                                    <td scope="col">{{ $index + 1 }}</td>
+                                    <td scope="col">{{ $paket->tahun ?? '-' }}</td>
+                                    <td scope="col">{{ $paket->nama }}</td>
+                                    <td scope="col">
+                                        @php
+                                            $user = Auth::user();
+                                            $status = $paket->status;
+                                            $buttonText = 'Detail';
+                                            $buttonClass = 'btn-primary';
+
+                                            if ($user->hasRole('Panitia')) {
+                                                if ($status == 6 || $status == 7 || $status == 8) {
+                                                    $buttonText = 'Proses';
+                                                    $buttonClass = 'btn-warning';
+                                                }
+                                            }
+
+                                            if ($user->hasRole('PPK')) {
+                                                if ($status == 1 || $status == 11 || $status == 4 || $status == 9) {
+                                                    $buttonText = 'Proses';
+                                                    $buttonClass = 'btn-warning';
+                                                }
+                                            }
+
+                                            if ($user->hasRole('Admin')) {
+                                                if ($status == 2 || $status == 10) {
+                                                    $buttonText = 'Proses';
+                                                    $buttonClass = 'btn-warning';
+                                                }
+                                            }
+
+                                            if ($user->hasRole('Kepala BPBJ')) {
+                                                if ($status == 3 || $status == 5) {
+                                                    $buttonText = 'Proses';
+                                                    $buttonClass = 'btn-warning';
+                                                }
+                                            }
+                                        @endphp
+                                        <div class="btn-group btn-sm">
+                                            <a title="{{ $buttonText }}" href="{{ route('paket.show', $paket->id) }}"
+                                                class="btn {{ $buttonClass }} btn-sm">
+                                                <i
+                                                    class="bx bx-{{ $buttonText == 'Proses' ? 'edit' : 'info-circle' }}"></i>
+                                                {{ $buttonText }}
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
