@@ -8,9 +8,11 @@ enum StatusPaket: int
     case Upload         = 1;
     case Verif          = 2;
     case PilihPokmil    = 3;
-    case TTE1           = 4;
-    case Review         = 5;
-    case TTE2           = 6;
-    case TTE3           = 7;
-    case IsTayangKUPPBJ = 8;
+    case SuratTugas     = 4;
+    case TTE1           = 5;
+    case Review         = 6;
+    case BeritaAcara    = 7;
+    case TTE2           = 8;
+    case TTE3           = 9;
+    case IsTayangKUPPBJ = 10;
 }

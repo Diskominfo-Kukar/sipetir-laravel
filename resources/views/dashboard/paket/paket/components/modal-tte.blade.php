@@ -66,6 +66,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                    <input type="hidden" name="panitia_id" value="{{ $panitia->id }}">
                     <button type="submit" class="btn btn-success mx-2">Proses TTE</button>
                 </div>
             </form>

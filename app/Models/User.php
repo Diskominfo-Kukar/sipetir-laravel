@@ -69,14 +69,14 @@ class User extends Authenticatable
     protected function ppkId(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->panitia->ppk ? $this->panitia->ppk->id : '',
+            get: fn () => $this->panitia ? ($this->panitia->ppk ? $this->panitia->ppk->id : '') : '',
         );
     }
 
     protected function pokmilId(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->panitia->pokmil->pluck('id')->toArray(),
+            get: fn () => $this->panitia?->pokmil?->pluck('id')->toArray() ?? [],
         );
     }
 }

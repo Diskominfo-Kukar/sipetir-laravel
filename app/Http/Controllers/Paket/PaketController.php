@@ -94,7 +94,7 @@ class PaketController extends Controller
      */
     public function show(Paket $paket)
     {
-        if (! auth()->user()->hasRole('Kepala BPBJ')) {
+        if (! auth()->user()->hasRole('Kepala BPBJ') && ! auth()->user()->hasRole('Admin')) {
             if (! $paket->ppk_id == auth()->user()->ppk_id && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id)) {
                 return abort(403);
             }
@@ -141,6 +141,17 @@ class PaketController extends Controller
         $opd         = Opd::all();
         $sumber_dana = SumberDana::all();
 
+        $pokmil = $paket->pokmil;
+
+        if ($pokmil) {
+            $panitiaSudahAcc = $pokmil->panitia()
+                ->wherePivot('panitia_id', $panitia->id)
+                ->wherePivot('approve', 1)
+                ->exists();
+        } else {
+            $panitiaSudahAcc = false;
+        }
+
         $timelines = [
             1 => 'Upload',
             2 => 'Verifikasi Berkas',
@@ -185,6 +196,7 @@ class PaketController extends Controller
             'opd'              => $opd,
             'sumber_dana'      => $sumber_dana,
             'tanggal'          => $tanggal,
+            'panitiaSudahAcc'  => $panitiaSudahAcc,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -656,11 +668,33 @@ class PaketController extends Controller
 
     public function berita_acara_TTE_panitia(Request $request)
     {
-        $paket = Paket::where('id', $request->paket_id)->first();
-        $paket->update([
-            'status' => '9',
-        ]);
-        session()->flash('success', 'Paket diserahkan ke PPK');
+        $paket  = Paket::where('id', $request->paket_id)->first();
+        $pokmil = $paket->pokmil;
+
+        $panitiaSudahAcc = $pokmil->panitia()
+            ->wherePivot('panitia_id', $request->panitia_id)
+            ->wherePivot('approve', 1)
+            ->exists();
+
+        if ($panitiaSudahAcc) {
+            session()->flash('success', 'Anda sudah menyetujui berita acara');
+
+            return redirect()->back();
+        } else {
+            $pokmil->panitia()->updateExistingPivot($request->panitia_id, ['approve' => 1]);
+        }
+
+        $totalPanitia    = $pokmil->panitia()->count();
+        $totalPanitiaAcc = $pokmil->panitia()->wherePivot('approve', true)->count();
+
+        if ($totalPanitiaAcc >= $totalPanitia / 2) {
+            $paket->update([
+                'status' => '9',
+            ]);
+            session()->flash('success', 'Berhasil menyetujui berita acara dan paket diserahkan ke PPK');
+        } else {
+            session()->flash('success', 'Berhasil menyetujui berita acara');
+        }
 
         return redirect()->back();
     }

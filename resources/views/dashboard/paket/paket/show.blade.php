@@ -727,10 +727,12 @@
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
                                                 <div class="d-flex justify-content-center">
-                                                    @if ($berita_acara_1)
+                                                    @if ($berita_acara_1 && !$panitiaSudahAcc)
                                                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
                                                             <i class="bi bi-pen"></i>TTE
                                                         </a>
+                                                    @elseif($panitiaSudahAcc)
+                                                        Sudah menyetujui berita acara, menunggu panitia lain menyetujui berita acara ini.
                                                     @endif
                                                 </div>
                                                 @if ($berita_acara_1)
