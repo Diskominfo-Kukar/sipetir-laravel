@@ -14,6 +14,8 @@ return new class extends Migration {
             $table->string('pokmil_id')->references('id')->on('pokmil');
             $table->string('panitia_id')->references('id')->on('panitia');
             $table->boolean('approve')->default(false);
+            $table->index('pokmil_id');
+            $table->index('panitia_id');
             $table->timestamps();
         });
     }
