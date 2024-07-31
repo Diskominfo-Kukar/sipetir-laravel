@@ -28,6 +28,7 @@
         "nunomaduro/collision": "^6.1",
         "nunomaduro/larastan": "^2.2",
         "phpro/grumphp": "^1.13",
+        "phpstan/phpstan": "^1.11",
         "phpunit/phpunit": "^9.5.10",
         "spatie/laravel-ignition": "^2.0",
         "spaze/phpstan-disallowed-calls": "^2.5",

@@ -2,6 +2,7 @@
 
 namespace App\Models\Master;
 
+use App\Models\Paket\Paket;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +22,11 @@ class Answer extends Model
     public function question()
     {
         return $this->belongsTo(Question::class, 'question_id');
+    }
+
+    public function paket()
+    {
+        return $this->belongsTo(Paket::class);
     }
 
     public function user()

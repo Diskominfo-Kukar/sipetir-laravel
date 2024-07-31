@@ -550,7 +550,13 @@ class PaketController extends Controller
         $tanggal = $tgl->locale('id')->translatedFormat('j F Y');
         $tglkop  = $tgl->format('m/Y');
 
-        $paket = Paket::find($request->paket_id);
+        $paket     = Paket::find($request->paket_id);
+        $paketId   = $request->paket_id;
+        $kategoris = KategoriReview::with(['questions' => function ($query) use ($paketId) { // @phpstan-ignore-line
+            $query->with(['answers' => function ($query) use ($paketId) {
+                $query->where('paket_id', $paketId);
+            }]);
+        }])->get();
 
         $berita_acara = BeritaAcara::where('paket_id', $request->paket_id)->first();
 
@@ -597,6 +603,7 @@ class PaketController extends Controller
             'tglkop'       => $tglkop,
             'paket'        => $paket,
             'berita_acara' => $berita_acara,
+            'kategoris'    => $kategoris,
         ];
 
         $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);

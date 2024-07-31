@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+/**
+ * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Master\Question[] $questions
+ */
 class KategoriReview extends Model
 {
     use HasFactory, SoftDeletes, UsesUuid;
