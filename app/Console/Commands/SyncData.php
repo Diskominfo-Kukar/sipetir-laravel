@@ -45,14 +45,14 @@ class SyncData extends Command
      */
     public function handle()
     {
-        // $this->syncOpd();
-        // $this->syncJabatanMaster();
-        // $this->syncPegawaiMaster();
-        // $this->syncSatker();
-        // $this->syncPokmil();
-        // $this->syncPanitiaPokmil();
-        // $this->syncPpk();
-        // $this->syncPaket();
+        $this->syncOpd();
+        $this->syncJabatanMaster();
+        $this->syncPegawaiMaster();
+        $this->syncSatker();
+        $this->syncPokmil();
+        $this->syncPanitiaPokmil();
+        $this->syncPpk();
+        $this->syncPaket();
         $this->syncSumberDana();
     }
 
