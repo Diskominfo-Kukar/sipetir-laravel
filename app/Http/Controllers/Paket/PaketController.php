@@ -136,6 +136,8 @@ class PaketController extends Controller
 
         $progres = static::getProses($paket->status);
         $tanggal = static::getTanggal();
+        $kode_ba = static::getKodeSurat('ba');
+        $kode_sa = static::getKodeSurat('sa');
 
         $new_data    = SuratTugas::where('paket_id', $paket->id)->first();
         $opd         = Opd::all();
@@ -197,9 +199,50 @@ class PaketController extends Controller
             'sumber_dana'      => $sumber_dana,
             'tanggal'          => $tanggal,
             'panitiaSudahAcc'  => $panitiaSudahAcc,
+            'kode_ba'          => $kode_ba,
+            'kode_sa'          => $kode_sa,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
+    }
+
+    public static function getKodeSurat($type)
+    {
+        $tahun = Carbon::now()->year;
+        $kode  = 1;
+
+        if ($type === 'ba') {
+            $kodeList = BeritaAcara::whereYear('created_at', $tahun)
+                ->orderBy('kode', 'asc')
+                ->pluck('kode')
+                ->toArray();
+        } elseif ($type === 'sa') {
+            $kodeList = SuratTugas::whereYear('created_at', $tahun)
+                ->orderBy('kode', 'asc')
+                ->pluck('kode')
+                ->toArray();
+        }
+
+        if (! empty($kodeList)) {
+            $maxKode = max($kodeList);
+
+            $missingKode = false;
+
+            for ($i = 1; $i <= $maxKode; $i++) {
+                if (! in_array($i, $kodeList)) {
+                    $kode        = $i;
+                    $missingKode = true;
+
+                    break;
+                }
+            }
+
+            if (! $missingKode) {
+                $kode = $maxKode + 1;
+            }
+        }
+
+        return $kode;
     }
 
     /**
@@ -508,18 +551,28 @@ class PaketController extends Controller
                 'tahun'           => $request->tahun,
             ]);
         } else {
-            $surat_tugas = SuratTugas::create([
-                'paket_id'        => $request->paket_id,
-                'kode'            => $request->kode,
-                'jenis_pekerjaan' => $request->jenis_pekerjaan,
-                'nama_paket'      => $request->nama_paket,
-                'nama_opd'        => $request->nama_opd,
-                'sumber_dana'     => $request->sumber_dana,
-                'pagu'            => $request->pagu,
-                'hps'             => $request->hps,
-                'dpa'             => $request->dpa,
-                'tahun'           => $request->tahun,
-            ]);
+            $tahun         = Carbon::now()->year;
+            $kode_duplikat = SuratTugas::whereYear('created_at', $tahun)
+                ->where('kode', $request->kode)->first();
+
+            if (! $kode_duplikat) {
+                $surat_tugas = SuratTugas::create([
+                    'paket_id'        => $request->paket_id,
+                    'kode'            => $request->kode,
+                    'jenis_pekerjaan' => $request->jenis_pekerjaan,
+                    'nama_paket'      => $request->nama_paket,
+                    'nama_opd'        => $request->nama_opd,
+                    'sumber_dana'     => $request->sumber_dana,
+                    'pagu'            => $request->pagu,
+                    'hps'             => $request->hps,
+                    'dpa'             => $request->dpa,
+                    'tahun'           => $request->tahun,
+                ]);
+            } else {
+                session()->flash('error', 'Kode surat sudah digunakan');
+
+                return redirect()->back();
+            }
         }
 
         $data = [
@@ -540,6 +593,7 @@ class PaketController extends Controller
             'surat_tugas' => $filePath,
             'status'      => '5',
         ]);
+        session()->flash('success', 'Surat Tugas berhasil dibuat');
 
         return redirect()->back()->with('surat_tugas', $pdfUrl);
     }
@@ -579,23 +633,33 @@ class PaketController extends Controller
                 'outro'           => $request->outro,
             ]);
         } else {
-            $berita_acara = BeritaAcara::create([
-                'paket_id'        => $request->paket_id,
-                'kode'            => $request->kode,
-                'jenis_pekerjaan' => $request->jenis_pekerjaan,
-                'nama_paket'      => $request->nama_paket,
-                'nama_opd'        => $request->nama_opd,
-                'sumber_dana'     => $request->sumber_dana,
-                'pagu'            => $request->pagu,
-                'hps'             => $request->hps,
-                'dpa'             => $request->dpa,
-                'tahun'           => $request->tahun,
-                'lokasi'          => $request->lokasi,
-                'waktu'           => $request->waktu,
-                'uraian'          => $request->uraian,
-                'intro'           => $request->intro,
-                'outro'           => $request->outro,
-            ]);
+            $tahun         = Carbon::now()->year;
+            $kode_duplikat = BeritaAcara::whereYear('created_at', $tahun)
+                ->where('kode', $request->kode)->first();
+
+            if (! $kode_duplikat) {
+                $berita_acara = BeritaAcara::create([
+                    'paket_id'        => $request->paket_id,
+                    'kode'            => $request->kode,
+                    'jenis_pekerjaan' => $request->jenis_pekerjaan,
+                    'nama_paket'      => $request->nama_paket,
+                    'nama_opd'        => $request->nama_opd,
+                    'sumber_dana'     => $request->sumber_dana,
+                    'pagu'            => $request->pagu,
+                    'hps'             => $request->hps,
+                    'dpa'             => $request->dpa,
+                    'tahun'           => $request->tahun,
+                    'lokasi'          => $request->lokasi,
+                    'waktu'           => $request->waktu,
+                    'uraian'          => $request->uraian,
+                    'intro'           => $request->intro,
+                    'outro'           => $request->outro,
+                ]);
+            } else {
+                session()->flash('error', 'Kode surat sudah digunakan');
+
+                return redirect()->back();
+            }
         }
 
         $data = [
@@ -616,6 +680,7 @@ class PaketController extends Controller
             'berita_acara_review' => $filePath,
             'status'              => '8',
         ]);
+        session()->flash('success', 'Berita acara berhasil dibuat');
 
         return redirect()->back()->with('berita_acara_1', $pdfUrl);
     }

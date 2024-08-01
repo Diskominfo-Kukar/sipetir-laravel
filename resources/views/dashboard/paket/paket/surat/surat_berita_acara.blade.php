@@ -168,7 +168,7 @@
                 DAN KERTAS KERJA PERSIAPAN PEMILIHAN<br>
                 <u>TAHUN ANGGARAN {{ date('Y', strtotime($tanggal)) }}</u>
             </strong><br>
-            Nomor: 323/ST-POKMIL/BPBJ/{{ $tglkop }}
+            Nomor: {{ $berita_acara->kode }}/BA.R/25651198/{{ $tglkop }}
         </p>&nbsp;
 
         {!! $berita_acara->intro !!}

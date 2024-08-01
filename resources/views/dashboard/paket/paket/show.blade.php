@@ -355,7 +355,7 @@
                                                         <div class="form-group row mb-3">
                                                             <label for="kode" class="col-sm-3 col-form-label text-right">Kode Surat</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="kode" class="form-control" required>
+                                                                <input type="number" name="kode" class="form-control" value="{{ $kode_sa }}" required>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-3">
@@ -570,7 +570,7 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label for="kode" class="col-sm-3 col-form-label text-right">Kode Surat</label>
                                                                             <div class="col-sm-9">
-                                                                                <input type="number" name="kode" class="form-control" value="{{ old('kode', $new_data->kode) }}" required>
+                                                                                <input type="number" name="kode" class="form-control" value="{{ old('kode', $kode_ba) }}" required>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
