@@ -346,13 +346,13 @@ class PaketController extends Controller
             } else {
                 $query->orderBy('status', 'desc');
             }
-            $query->orderBy('created_at', 'desc');
+            $query->orderBy('tgl_buat', 'asc');
             $data = $query->get();
             //$data = $query->limit(1000)->get();
 
             return DataTables::of($data)->addIndexColumn()
-                ->addColumn('tahun', function ($row) {
-                    return $row->tahun; // Menggunakan accessor tahun
+                ->addColumn('tgl_buat', function ($row) {
+                    return Carbon::parse($row->tgl_buat)->format('Y');
                 })
                 ->addColumn('action', function ($row) use ($user) {
                     $status      = $row->status;

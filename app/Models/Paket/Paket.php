@@ -27,8 +27,6 @@ class Paket extends Model
 
     protected $logOnly = ['*'];
 
-    protected $dates = ['tgl_buat'];
-
     protected $fillable = [
         'nama',
         'nik',
@@ -119,10 +117,5 @@ class Paket extends Model
     public function answers()
     {
         return $this->hasMany(Answer::class);
-    }
-
-    public function getTahunAttribute()
-    {
-        return $this->created_at->format('Y');
     }
 }

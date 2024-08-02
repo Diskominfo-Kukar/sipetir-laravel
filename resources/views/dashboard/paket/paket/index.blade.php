@@ -54,8 +54,9 @@
                         searchable: false
                     },
                     {
-                        data: 'tahun',
-                        name: 'tahun'
+                        data: 'tgl_buat',
+                        name: 'tgl_buat',
+                        
                     },
                     {
                         data: 'nama',
