@@ -351,8 +351,8 @@ class PaketController extends Controller
             //$data = $query->limit(1000)->get();
 
             return DataTables::of($data)->addIndexColumn()
-                ->addColumn('nama_tahun', function ($row) {
-                    return ucwords($row->nama_tahun);
+                ->addColumn('tahun', function ($row) {
+                    return $row->tahun; // Menggunakan accessor tahun
                 })
                 ->addColumn('action', function ($row) use ($user) {
                     $status      = $row->status;
