@@ -168,36 +168,30 @@
                 DAN KERTAS KERJA PERSIAPAN PEMILIHAN<br>
                 <u>TAHUN ANGGARAN {{ date('Y', strtotime($tanggal)) }}</u>
             </strong><br>
-            Nomor: 323/ST-POKMIL/BPBJ/{{ $tglkop }}
+            Nomor: {{ $berita_acara->kode }}/BA.R/25651198/{{ $tglkop }}
         </p>&nbsp;
 
-        <p style="padding: 8px; text-align: justify;">Pada hari ini <b>Selasa</b> tanggal <b>Lima</b> bulan
-            <b>Maret</b> tahun
-            <b>Dua Ribu Dua Puluh Empat</b>, bertempat di Ruang Rapat Bagian Pengadaan Barang dan Jasa (BPBJ), kami
-            yang bertandatangan di dalam dokumen Berita Acara ini <b>Kelompok Kerja Pemilihan 11-Rev</b> Bagian
-            Pengadaan Barang dan Jasa Sekretariat Daerah Kab. Kutai Kartanegara bersama Peiabat Pembuat
-            Komitmen (PPK) :
-        </p>
+        {!! $berita_acara->intro !!}
 
         <table style="border-collapse: collapse; width: 100%;">
 
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nama PPK</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;"><b>Arsel Haris Miar,A.Md</b>
+                <td style="padding: 0; vertical-align: top; width: 75%;"><b>{{ $paket->ppk->nama }}</b>
                 </td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">SKPD/OPD</td>
-                <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%; border:1px solid black;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%; border:1px solid black;">Dinas Pekerjaan
-                    Umum</td>
+                <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
+                <td style="padding: 0; vertical-align: top; width: 75%; ">-
+                    </td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">No. SK</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
                 <td style="padding: 0; vertical-align: top; width: 75%;">
-                    P.1476/DPU/UTL/100.3/11/2023</td>
+                    {{ $paket->ppk->panitia->no_sk }}</td>
             </tr>
 
             <tr>
@@ -209,62 +203,54 @@
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nama Paket Pengadaan</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
                 <td style="padding: 0; vertical-align: top; width: 75%;">
-                    <b>REKONSTRUKSI JALAN DESA DESA BATU - BATU - DESA SALO CELLA ( BANKEU )</b>
+                    <b>{{ $berita_acara->nama_paket }} </b>
                 </td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Lokasi Pekerjaan
                 </td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">Kabupaten Kutai Kartanegara - Kutai
-                    Kartanegara (Kab.)</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->lokasi }}</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Waktu Pelaksanaan</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">120 (Seratus Dua Puluh) Hari Kalender</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->waktu }} Hari Kalender</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Uraian Pekerjaan</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">REKONSTRUKSI JALAN DESA DESA BATU - BATU -
-                    DESA SALO CELLA ( BANKEU ) adalah sebagai berikut : Rekonstruksi Jalan</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->uraian }}</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Sumber Dana</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">APBD KAB. KUTAI KARTANEGARA HT 2024</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->sumber_dana }}</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nilai Pagu Anggaran</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. 4.607.673.000,-</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. {{ $berita_acara->pagu }},-</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nilai HPS</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. 4.607.639.000,-</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. {{ $berita_acara->hps }},-</td>
             </tr>
         </table>&nbsp;
 
-        <p style="padding: 0 8px; text-align: justify;">Dalam pembahasan ini telah dilakukan reviu terhadap Dokumen
-            Persiapan Pengadaan meliputi spesifikasi teknis dan DED, Harga Perkiraan Sendiri (HPS), Rancangan
-            Kontrak, Dokumen Anggaran Belanja, ID, paket RUP, waktu penggunaan barang/jasa, analisis pasar serta
-            Uraian pekerjaan, identifikasi bahaya dan penetapan resiko Pekerjaan Konstruksi terkait Keselamatan
-            Konstruksi pada Pekerjaan Konstruksi.
-            Dengan dokumentasi reviu sebagaimana terlampir.
-        </p>
+        {!! $berita_acara->outro !!}
 
         <p style="padding:16px 8px;" class="text-center">
             <strong>PEJABAT PEMBUAT KOMITMEN
-                <br>REKONSTRUKSI JALAN DESA DESA BATU - BATU - DESA SALO CELLA ( BANKEU )
-                <br>Dinas Pekerjaan Umum
+                <br>{{ $berita_acara->nama_paket }}
+                <br>-
             </strong>
         </p>
 
         <p style="padding:70px 8px;" class="text-center">
-            <strong><u>Arsel HarisMiar,A.Md</u></strong>
-            <br>NIP. 197509281995031002
+            <strong><u>{{ $paket->ppk->nama }}</u></strong>
+            <br>NIP. {{ $paket->ppk->panitia->nip }}
         </p>
 
     </div>
@@ -295,369 +281,68 @@
 
             {{-- sub bagian 1 --}}
             <div>
-                {{-- 1.A --}}
-                <div style="padding: 8px;">
-                    <li type="A" value="1" style="padding: 0 8px; font-weight: bold;">
-                        Reviu Spesifikasi Teknis
-                    </li>
-                    <div>
-                        <p style="padding: 0 8px;"><i>Spesifikasi teknis untuk pengadaan Pekerjaan Konstruksi
-                                meliputi:</i>
-                        </p>
-                        <img style="padding: 8px;"
-                            src="data:image/png;base64,{{ base64_encode(file_get_contents(base_path('public/img/logo.png'))) }}"
-                            width="80" alt="">
 
-                        <p style="padding: 8px; text-align: justify;">Peraturan LKPP No. 12 Tahun 2021 tentang Pedoman
-                            Pelaksanaan Pengadaan Barang/Jasa Pemerintah Melalui Penyedia</p>
-
-                        <table class="table-border" style="width:100%">
-                            <tr>
-                                <th style="width: 6%">No.</th>
-                                <th style="width: 42%">Uraian / Pertanyaan</th>
-                                <th style="width: 42%">Catatan / Pembahasan</th>
-                            </tr>
-
-                            <tr>
-                                <td style="vertical-align: top;" class="text-center"><b>1</b></td>
-                                <td style="padding:0 8px;"><b>Ruang lingkup Pekerjaan Konstruksi yang dibutuhkan</b>
-                                </td>
-                                <td></td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">a. </td>
-                                        <td style="width: 95% ">Apakah spesifikasi sudah memuat ruang lingkup Pekerjaan
-                                            Konstruksi yang
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;">Spesilikasi <b>sudah</b>
-                                    memuat
-                                    ruang lingkup Pekerjaan.</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">b. </td>
-                                        <td style="width: 95% ">Di bagian dokumen apa dimuat ruang lingkup Pekerjaan
-                                            Konstruksi yang dibutuhkan?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah,</b> terdapat di
-                                    Bagian
-                                    metode pelaksanaan pada dokumen spesifikasi teknis yang telah dibuat oleh PPK</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">c. </td>
-                                        <td style="width: 95% ">Apakah sudah mencamtumkan kriteria kinerja produk
-                                            <i>(output performance)</i> yang diinginkan?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">d. </td>
-                                        <td style="width: 95% ">Apakah sudah mencamtumkan tata cara pengukuran dan tata
-                                            cara pembayaran?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah</td>
-                            </tr>
-
-                        </table>
-                    </div>
-
-                    <div>
-                        <p style="padding:16px 8px 8px 8px;"><b>Reviu klarifikasi tambahan dari Pokja Pemilihan terkalt
-                                Spesifikasi
-                                Teknis</b></p>
-
-                        <table class="table-border" style="width:100%">
-                            <tr>
-                                <th style="width: 6%">No.</th>
-                                <th style="width: 42%">Uraian / Pertanyaan</th>
-                                <th style="width: 42%">Catatan / Pembahasan</th>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center">1</td>
-                                <td></td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b></td>
-                            </tr>
-                            <tr>
-                                <td style="width: 6% " class="text-center">2</td>
-                                <td></td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b></td>
-                            </tr>
-
-                        </table>
-                    </div>
-
-                    <div>
-                        <p style="padding:16px 8px 8px 8px;"><b>Rekomendasi / Catatan Hasil Reviu:</b></p>
-
-                        <div class="table-border" style="width:100%; height:50px"></div>
-                    </div>
-
-                </div>
-                {{-- /end 1.A --}}
-
-                {{-- 1.B --}}
-                <div style="padding: 8px;">
-                    <li type="A" value="2" style="padding: 0 8px; font-weight: bold;">
-                        Reviu Harga Perkiraan Sendiri (HPS)
-                    </li>
-                    <div>
-                        <table class="table-border" style="width:100%">
-                            <tr>
-                                <th style="width: 6%">No.</th>
-                                <th style="width: 42%">Uraian / Pertanyaan</th>
-                                <th style="width: 42%">Catatan / Pembahasan</th>
-                            </tr>
-
-                            <tr>
-                                <td style="vertical-align: top;" class="text-center"><b>1</b></td>
-                                <td style="padding:0 8px;"><b>Ruang lingkup Pekerjaan Konstruksi yang dibutuhkan</b>
-                                </td>
-                                <td></td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">a. </td>
-                                        <td style="width: 95% ">Apakah spesifikasi sudah memuat ruang lingkup Pekerjaan
-                                            Konstruksi yang
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;">Spesilikasi <b>sudah</b>
-                                    memuat
-                                    ruang lingkup Pekerjaan.</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">b. </td>
-                                        <td style="width: 95% ">Di bagian dokumen apa dimuat ruang lingkup Pekerjaan
-                                            Konstruksi yang dibutuhkan?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah,</b> terdapat di
-                                    Bagian
-                                    metode pelaksanaan pada dokumen spesifikasi teknis yang telah dibuat oleh PPK</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">c. </td>
-                                        <td style="width: 95% ">Apakah sudah mencamtumkan kriteria kinerja produk
-                                            <i>(output performance)</i> yang diinginkan?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">d. </td>
-                                        <td style="width: 95% ">Apakah sudah mencamtumkan tata cara pengukuran dan tata
-                                            cara pembayaran?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah</td>
-                            </tr>
-
-                        </table>
-                    </div>
-
-                    <div>
-                        <p style="padding:16px 8px 8px 8px;"><b>Reviu klarifikasi tambahan dari Pokja Pemilihan terkalt
-                                Spesifikasi
-                                Teknis</b></p>
-
-                        <table class="table-border" style="width:100%">
-                            <tr>
-                                <th style="width: 6%">No.</th>
-                                <th style="width: 42%">Uraian / Pertanyaan</th>
-                                <th style="width: 42%">Catatan / Pembahasan</th>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center">1</td>
-                                <td></td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b></td>
-                            </tr>
-                            <tr>
-                                <td style="width: 6% " class="text-center">2</td>
-                                <td></td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b></td>
-                            </tr>
-
-                        </table>
-                    </div>
-
-                    <div>
-                        <p style="padding:16px 8px 8px 8px;"><b>Rekomendasi / Catatan Hasil Reviu:</b></p>
-
-                        <div class="table-border" style="width:100%; height:50px"></div>
-                    </div>
-
-                </div>
-                {{-- /end 1.B --}}
-
-                {{-- 1.C --}}
-                <div style="padding: 8px;">
-                    <li type="A" value="3" style="padding: 0 8px; font-weight: bold;">
-                        Reviu Rancangan Kontrak / Perjanjian
-                    </li>
-
+                @foreach ($kategoris as $kategori)
                     <div style="padding: 8px;">
-                        <p><i>Reviu Rancangan Kontrak untuk memastikan bahwa draft kontrak telah sesuai dengan ruang
-                                lingkup pekerjaan. Reviu rancangan kontrak memperhatikan:
-                                <br>
-                                1) Naskah Perjanjian;
-                                <br>
-                                2) Syarat-syarat Umum Kontrak;
-                            </i>
-                        </p>
-                    </div>
+                        <li type="A" value="{{ $loop->iteration }}" style="padding: 0 8px; font-weight: bold;">
+                            {{ $kategori->nama }}&nbsp;<br>&nbsp;
+                        </li>
+                        <div>
+                            <table class="table-border" style="width:100%">
+                                <tr>
+                                    <th style="width: 6%">No.</th>
+                                    <th style="width: 42%">Uraian / Pertanyaan</th>
+                                    <th style="width: 42%">Catatan / Pembahasan</th>
+                                </tr>
 
-                    <div style="padding: 8px 0;">
-                        <table class="table-border" style="width:100%">
-                            <tr>
-                                <th class="text-center" style="border: 1px solid width: 6%">No.</th>
-                                <th style="width: 42%">Uraian / Pertanyaan</th>
-                                <th style="width: 42%">Catatan / Pembahasan</th>
-                            </tr>
-
-                            <tr>
-                                <td style="vertical-align: top;" class="text-center"><b>1</b></td>
-                                <td style="padding:0 8px;"><b>Ruang lingkup Pekerjaan Konstruksi yang dibutuhkan</b>
-                                </td>
-                                <td></td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">a. </td>
-                                        <td style="width: 95% ">Apakah spesifikasi sudah memuat ruang lingkup Pekerjaan
-                                            Konstruksi yang
+                                @foreach ($kategori->questions as $question)
+                                    <tr>
+                                        <td style="vertical-align: top;" class="text-center">{{ $loop->iteration }}</td>
+                                        <td style="padding:0 8px;">{{ $question->nama }}</td>
+                                        <td>
+                                            @foreach ($question->answers as $answer)
+                                                {{ $answer->review }}
+                                            @endforeach
                                         </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;">Spesilikasi <b>sudah</b>
-                                    memuat
-                                    ruang lingkup Pekerjaan.</td>
-                            </tr>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                        <div>
+                            <p style="padding:16px 8px 8px 8px;"><b>Reviu klarifikasi tambahan dari Pokja Pemilihan terkalt
+                                    Spesifikasi
+                                    Teknis</b></p>
 
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">b. </td>
-                                        <td style="width: 95% ">Di bagian dokumen apa dimuat ruang lingkup Pekerjaan
-                                            Konstruksi yang dibutuhkan?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah,</b> terdapat di
-                                    Bagian
-                                    metode pelaksanaan pada dokumen spesifikasi teknis yang telah dibuat oleh PPK</td>
-                            </tr>
+                            <table class="table-border" style="width:100%">
+                                <tr>
+                                    <th style="width: 6%">No.</th>
+                                    <th style="width: 42%">Uraian / Pertanyaan</th>
+                                    <th style="width: 42%">Catatan / Pembahasan</th>
+                                </tr>
 
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">c. </td>
-                                        <td style="width: 95% ">Apakah sudah mencamtumkan kriteria kinerja produk
-                                            <i>(output performance)</i> yang diinginkan?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah</td>
-                            </tr>
+                                <tr>
+                                    <td style="width: 6% " class="text-center">1</td>
+                                    <td></td>
+                                    <td style="padding:0 8px; vertical-align: top; width: 42%;"><b></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 6% " class="text-center">2</td>
+                                    <td></td>
+                                    <td style="padding:0 8px; vertical-align: top; width: 42%;"><b></td>
+                                </tr>
 
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">d. </td>
-                                        <td style="width: 95% ">Apakah sudah mencamtumkan tata cara pengukuran dan tata
-                                            cara pembayaran?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah</td>
-                            </tr>
+                            </table>
+                        </div>
 
-                        </table>
+                        <div>
+                            <p style="padding:16px 8px 8px 8px;"><b>Rekomendasi / Catatan Hasil Reviu:</b></p>
+
+                            <div class="table-border" style="width:100%; height:50px"></div>
+                        </div>
+
                     </div>
+                @endforeach
 
-                    <div>
-                        <p style="padding:16px 8px 8px 8px;"><b>Reviu klarifikasi tambahan dari Pokja Pemilihan terkalt
-                                Spesifikasi
-                                Teknis</b></p>
-
-                        <table class="table-border" style="width:100%">
-                            <tr>
-                                <th style="width: 6%">No.</th>
-                                <th style="width: 42%">Uraian / Pertanyaan</th>
-                                <th style="width: 42%">Catatan / Pembahasan</th>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center">1</td>
-                                <td></td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b></td>
-                            </tr>
-                            <tr>
-                                <td style="width: 6% " class="text-center">2</td>
-                                <td></td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b></td>
-                            </tr>
-
-                        </table>
-                    </div>
-
-                    <div>
-                        <p style="padding:16px 8px 8px 8px;"><b>Rekomendasi / Catatan Hasil Reviu:</b></p>
-
-                        <div class="table-border" style="width:100%; height:50px"></div>
-                    </div>
-
-                </div>
-                {{-- /end 1.C --}}
 
                 {{-- 1.I --}}
                 <div style="padding: 8px;">
@@ -728,286 +413,6 @@
 
             </div>
             {{-- /end sub bagian 1 --}}
-        </div>
-        {{-- /end bagian 1 --}}
-
-        {{-- bagian 1 --}}
-        <div>
-            <p style="padding: 8px; text-align: center;"><b>BAGIAN KEDUA</b></p>
-
-            {{-- sub bagian 2 --}}
-            <div>
-                <div style="padding: 4px;">
-                    <table>
-                        <tr>
-                            <td style="padding: 0 8px; vertical-align: top; width: 100%;" colspan="4">
-                                Telah
-                                mengadakan Reviu Dokumen Persiapan Pengadaan untuk :
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 0 8px; vertical-align: top; width: 2%">1. </td>
-                            <td style="padding: 0 8px; vertical-align: top; width: 33%;">Hari / Tanggal
-                            </td>
-                            <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-                            <td style="padding: 0 8px; vertical-align: top; width: 75%;">
-                                <b>REKONSTRUKSI JALAN DESA DESA BATU - BATU - DESA SALO CELLA ( BANKEU )</b>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td style="padding: 0 8px; vertical-align: top; width: 2%">2. </td>
-                            <td style="padding: 0 8px; vertical-align: top; width: 33%;">Tempat
-                            </td>
-                            <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-                            <td style="padding: 0 8px; vertical-align: top; width: 75%;">
-                                Sekertariat Daerah Kab Kutai, Kartanegara, Bagian Pengadaan Barang dan Jasa Gedung F
-                            </td>
-                        </tr>
-
-                    </table>
-                </div>
-
-                {{-- 2.A --}}
-                <div style="padding: 8px;">
-
-                    <li type="A" value="1" style="padding: 0 8px; font-weight: bold;">
-                        Reviu Spesifikasi Teknis
-                    </li>
-                    <div>
-                        <p style="padding: 0 8px;">Spesifikasi teknis untuk pengadaan Pekerjaan Konstruksi
-                            meliputi:
-                        </p>
-
-                        <table class="table-border" style="width:100%">
-                            <tr>
-                                <th style="width: 6%">No.</th>
-                                <th style="width: 42%">Uraian / Pertanyaan</th>
-                                <th style="width: 42%">Catatan / Pembahasan</th>
-                            </tr>
-
-                            <tr>
-                                <td style="vertical-align: top;" class="text-center"><b>1</b></td>
-                                <td style="padding:0 8px;"><b>Ruang lingkup Pekerjaan Konstruksi yang dibutuhkan</b>
-                                </td>
-                                <td></td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">a. </td>
-                                        <td style="width: 95% ">Apakah spesifikasi sudah memuat ruang lingkup Pekerjaan
-                                            Konstruksi yang
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;">Spesilikasi <b>sudah</b>
-                                    memuat
-                                    ruang lingkup Pekerjaan.</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">b. </td>
-                                        <td style="width: 95% ">Di bagian dokumen apa dimuat ruang lingkup Pekerjaan
-                                            Konstruksi yang dibutuhkan?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah,</b> terdapat di
-                                    Bagian
-                                    metode pelaksanaan pada dokumen spesifikasi teknis yang telah dibuat oleh PPK</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">c. </td>
-                                        <td style="width: 95% ">Apakah sudah mencamtumkan kriteria kinerja produk
-                                            <i>(output performance)</i> yang diinginkan?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">d. </td>
-                                        <td style="width: 95% ">Apakah sudah mencamtumkan tata cara pengukuran dan tata
-                                            cara pembayaran?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah</td>
-                            </tr>
-
-                        </table>
-                    </div>
-
-                    <div>
-                        <p style="padding:16px 8px 8px 8px;"><b>Reviu klarifikasi tambahan dari Pokja Pemilihan terkalt
-                                Spesifikasi
-                                Teknis</b></p>
-
-                        <table class="table-border" style="width:100%">
-                            <tr>
-                                <th style="width: 6%">No.</th>
-                                <th style="width: 42%">Uraian / Pertanyaan</th>
-                                <th style="width: 42%">Catatan / Pembahasan</th>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center">1</td>
-                                <td></td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b></td>
-                            </tr>
-                            <tr>
-                                <td style="width: 6% " class="text-center">2</td>
-                                <td></td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b></td>
-                            </tr>
-
-                        </table>
-                    </div>
-
-                    <div>
-                        <p style="padding:16px 8px 8px 8px;"><b>Rekomendasi / Catatan Hasil Reviu:</b></p>
-
-                        <div class="table-border" style="width:100%; height:50px"></div>
-                    </div>
-
-                </div>
-                {{-- /end 2.A --}}
-
-                {{-- 2.C --}}
-                <div style="padding: 8px;">
-
-                    <li type="A" value="3" style="padding: 0 8px; font-weight: bold;">
-                        Reviu Spesifikasi Teknis
-                    </li>
-                    <div>
-                        <p style="padding: 0 8px;">Spesifikasi teknis untuk pengadaan Pekerjaan Konstruksi
-                            meliputi:
-                        </p>
-
-                        <table class="table-border" style="width:100%">
-                            <tr>
-                                <th style="width: 6%">No.</th>
-                                <th style="width: 42%">Uraian / Pertanyaan</th>
-                                <th style="width: 42%">Catatan / Pembahasan</th>
-                            </tr>
-
-                            <tr>
-                                <td style="vertical-align: top;" class="text-center"><b>1</b></td>
-                                <td style="padding:0 8px;"><b>Ruang lingkup Pekerjaan Konstruksi yang dibutuhkan</b>
-                                </td>
-                                <td></td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">a. </td>
-                                        <td style="width: 95% ">Apakah spesifikasi sudah memuat ruang lingkup Pekerjaan
-                                            Konstruksi yang
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;">Spesilikasi <b>sudah</b>
-                                    memuat
-                                    ruang lingkup Pekerjaan.</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">b. </td>
-                                        <td style="width: 95% ">Di bagian dokumen apa dimuat ruang lingkup Pekerjaan
-                                            Konstruksi yang dibutuhkan?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah,</b> terdapat di
-                                    Bagian
-                                    metode pelaksanaan pada dokumen spesifikasi teknis yang telah dibuat oleh PPK</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">c. </td>
-                                        <td style="width: 95% ">Apakah sudah mencamtumkan kriteria kinerja produk
-                                            <i>(output performance)</i> yang diinginkan?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center"></td>
-                                <td>
-                                    <table class="table-clear">
-                                        <td style="padding:0 8px; width: 5%">d. </td>
-                                        <td style="width: 95% ">Apakah sudah mencamtumkan tata cara pengukuran dan tata
-                                            cara pembayaran?
-                                        </td>
-                                    </table>
-                                </td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b>Sudah</td>
-                            </tr>
-
-                        </table>
-                    </div>
-
-                    <div>
-                        <p style="padding:16px 8px 8px 8px;"><b>Reviu klarifikasi tambahan dari Pokja Pemilihan terkalt
-                                Spesifikasi
-                                Teknis</b></p>
-
-                        <table class="table-border" style="width:100%">
-                            <tr>
-                                <th style="width: 6%">No.</th>
-                                <th style="width: 42%">Uraian / Pertanyaan</th>
-                                <th style="width: 42%">Catatan / Pembahasan</th>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 6% " class="text-center">1</td>
-                                <td></td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b></td>
-                            </tr>
-                            <tr>
-                                <td style="width: 6% " class="text-center">2</td>
-                                <td></td>
-                                <td style="padding:0 8px; vertical-align: top; width: 42%;"><b></td>
-                            </tr>
-
-                        </table>
-                    </div>
-
-                    <div>
-                        <p style="padding:16px 8px 8px 8px;"><b>Rekomendasi / Catatan Hasil Reviu:</b></p>
-
-                        <div class="table-border" style="width:100%; height:50px"></div>
-                    </div>
-
-                </div>
-                {{-- /end 2.A --}}
-
-            </div>
-            {{-- /end sub bagian 2 --}}
         </div>
         {{-- /end bagian 1 --}}
 

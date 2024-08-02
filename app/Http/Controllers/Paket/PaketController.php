@@ -6,8 +6,11 @@ use App\Models\Master\Answer;
 use App\Models\Master\Jabatan;
 use App\Models\Master\JenisDokumen;
 use App\Models\Master\KategoriReview;
+use App\Models\Master\Opd;
 use App\Models\Master\Panitia;
 use App\Models\Master\Pokmil;
+use App\Models\Master\SumberDana;
+use App\Models\Paket\BeritaAcara;
 use App\Models\Paket\Komen;
 use App\Models\Paket\Paket;
 use App\Models\Paket\PaketDokumen;
@@ -91,6 +94,12 @@ class PaketController extends Controller
      */
     public function show(Paket $paket)
     {
+        if (! auth()->user()->hasRole('Kepala BPBJ') && ! auth()->user()->hasRole('Admin')) {
+            if (! $paket->ppk_id == auth()->user()->ppk_id && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id)) {
+                return abort(403);
+            }
+        }
+
         $title         = $paket->nama;
         $jenis_dokumen = JenisDokumen::orderBy('nama')->get();
         $crumbs        = [
@@ -104,8 +113,9 @@ class PaketController extends Controller
         $kategoriReviews = KategoriReview::orderBy('no_urut')->get();
         $kategoriReviews->load(['questions.answers.user.panitia']);
 
-        $user    = Auth::user();
-        $panitia = Panitia::where('user_id', $user->id)->first();
+        $user       = Auth::user();
+        $pokmil_ids = auth()->user()->pokmil_id;
+        $panitia    = Panitia::where('user_id', $user->id)->first();
 
         if (! $panitia) {
             $panitia          = new Panitia();
@@ -125,6 +135,24 @@ class PaketController extends Controller
         $berita_acara_3 = $paket->berita_acara_pengumuman;
 
         $progres = static::getProses($paket->status);
+        $tanggal = static::getTanggal();
+        $kode_ba = static::getKodeSurat('ba');
+        $kode_sa = static::getKodeSurat('sa');
+
+        $new_data    = SuratTugas::where('paket_id', $paket->id)->first();
+        $opd         = Opd::all();
+        $sumber_dana = SumberDana::all();
+
+        $pokmil = $paket->pokmil;
+
+        if ($pokmil) {
+            $panitiaSudahAcc = $pokmil->panitia()
+                ->wherePivot('panitia_id', $panitia->id)
+                ->wherePivot('approve', 1)
+                ->exists();
+        } else {
+            $panitiaSudahAcc = false;
+        }
 
         $timelines = [
             1 => 'Upload',
@@ -165,9 +193,56 @@ class PaketController extends Controller
             'berita_acara_3'   => $berita_acara_3,
             'progres'          => $progres,
             'status'           => $status,
+            'pokmil_ids'       => $pokmil_ids,
+            'new_data'         => $new_data,
+            'opd'              => $opd,
+            'sumber_dana'      => $sumber_dana,
+            'tanggal'          => $tanggal,
+            'panitiaSudahAcc'  => $panitiaSudahAcc,
+            'kode_ba'          => $kode_ba,
+            'kode_sa'          => $kode_sa,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
+    }
+
+    public static function getKodeSurat($type)
+    {
+        $tahun = Carbon::now()->year;
+        $kode  = 1;
+
+        if ($type === 'ba') {
+            $kodeList = BeritaAcara::whereYear('created_at', $tahun)
+                ->orderBy('kode', 'asc')
+                ->pluck('kode')
+                ->toArray();
+        } elseif ($type === 'sa') {
+            $kodeList = SuratTugas::whereYear('created_at', $tahun)
+                ->orderBy('kode', 'asc')
+                ->pluck('kode')
+                ->toArray();
+        }
+
+        if (! empty($kodeList)) {
+            $maxKode = max($kodeList);
+
+            $missingKode = false;
+
+            for ($i = 1; $i <= $maxKode; $i++) {
+                if (! in_array($i, $kodeList)) {
+                    $kode        = $i;
+                    $missingKode = true;
+
+                    break;
+                }
+            }
+
+            if (! $missingKode) {
+                $kode = $maxKode + 1;
+            }
+        }
+
+        return $kode;
     }
 
     /**
@@ -216,8 +291,10 @@ class PaketController extends Controller
 
         if ($request->ajax()) {
             if ($user->hasRole('Panitia') || $user->hasRole('PPK')) {
-                $query = Paket::where('ppk_id', Auth::user()->ppk_id)
-                    ->orWhereIn('pokmil_id', Auth::user()->pokmil_id);
+                if (! $user->hasRole('Kepala BPBJ')) {
+                    $query = Paket::where('ppk_id', Auth::user()->ppk_id)
+                        ->orWhereIn('pokmil_id', Auth::user()->pokmil_id);
+                }
             }
 
             if ($user->hasRole('Panitia') && $user->hasRole('PPK')) {
@@ -270,8 +347,8 @@ class PaketController extends Controller
                 $query->orderBy('status', 'desc');
             }
             $query->orderBy('created_at', 'desc');
-            //$data = $query->get();
-            $data = $query->limit(1000)->get();
+            $data = $query->get();
+            //$data = $query->limit(1000)->get();
 
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('nama_tahun', function ($row) {
@@ -474,18 +551,28 @@ class PaketController extends Controller
                 'tahun'           => $request->tahun,
             ]);
         } else {
-            $surat_tugas = SuratTugas::create([
-                'paket_id'        => $request->paket_id,
-                'kode'            => $request->kode,
-                'jenis_pekerjaan' => $request->jenis_pekerjaan,
-                'nama_paket'      => $request->nama_paket,
-                'nama_opd'        => $request->nama_opd,
-                'sumber_dana'     => $request->sumber_dana,
-                'pagu'            => $request->pagu,
-                'hps'             => $request->hps,
-                'dpa'             => $request->dpa,
-                'tahun'           => $request->tahun,
-            ]);
+            $tahun         = Carbon::now()->year;
+            $kode_duplikat = SuratTugas::whereYear('created_at', $tahun)
+                ->where('kode', $request->kode)->first();
+
+            if (! $kode_duplikat) {
+                $surat_tugas = SuratTugas::create([
+                    'paket_id'        => $request->paket_id,
+                    'kode'            => $request->kode,
+                    'jenis_pekerjaan' => $request->jenis_pekerjaan,
+                    'nama_paket'      => $request->nama_paket,
+                    'nama_opd'        => $request->nama_opd,
+                    'sumber_dana'     => $request->sumber_dana,
+                    'pagu'            => $request->pagu,
+                    'hps'             => $request->hps,
+                    'dpa'             => $request->dpa,
+                    'tahun'           => $request->tahun,
+                ]);
+            } else {
+                session()->flash('error', 'Kode surat sudah digunakan');
+
+                return redirect()->back();
+            }
         }
 
         $data = [
@@ -506,8 +593,96 @@ class PaketController extends Controller
             'surat_tugas' => $filePath,
             'status'      => '5',
         ]);
+        session()->flash('success', 'Surat Tugas berhasil dibuat');
 
         return redirect()->back()->with('surat_tugas', $pdfUrl);
+    }
+
+    public function generate_berita_acara(Request $request)
+    {
+        $tgl     = Carbon::now();
+        $tanggal = $tgl->locale('id')->translatedFormat('j F Y');
+        $tglkop  = $tgl->format('m/Y');
+
+        $paket     = Paket::find($request->paket_id);
+        $paketId   = $request->paket_id;
+        $kategoris = KategoriReview::with(['questions' => function ($query) use ($paketId) { // @phpstan-ignore-line
+            $query->with(['answers' => function ($query) use ($paketId) {
+                $query->where('paket_id', $paketId);
+            }]);
+        }])->get();
+
+        $berita_acara = BeritaAcara::where('paket_id', $request->paket_id)->first();
+
+        if ($berita_acara) {
+            $berita_acara->update([
+                'paket_id'        => $request->paket_id,
+                'kode'            => $request->kode,
+                'jenis_pekerjaan' => $request->jenis_pekerjaan,
+                'nama_paket'      => $request->nama_paket,
+                'nama_opd'        => $request->nama_opd,
+                'sumber_dana'     => $request->sumber_dana,
+                'pagu'            => $request->pagu,
+                'hps'             => $request->hps,
+                'dpa'             => $request->dpa,
+                'tahun'           => $request->tahun,
+                'lokasi'          => $request->lokasi,
+                'waktu'           => $request->waktu,
+                'uraian'          => $request->uraian,
+                'intro'           => $request->intro,
+                'outro'           => $request->outro,
+            ]);
+        } else {
+            $tahun         = Carbon::now()->year;
+            $kode_duplikat = BeritaAcara::whereYear('created_at', $tahun)
+                ->where('kode', $request->kode)->first();
+
+            if (! $kode_duplikat) {
+                $berita_acara = BeritaAcara::create([
+                    'paket_id'        => $request->paket_id,
+                    'kode'            => $request->kode,
+                    'jenis_pekerjaan' => $request->jenis_pekerjaan,
+                    'nama_paket'      => $request->nama_paket,
+                    'nama_opd'        => $request->nama_opd,
+                    'sumber_dana'     => $request->sumber_dana,
+                    'pagu'            => $request->pagu,
+                    'hps'             => $request->hps,
+                    'dpa'             => $request->dpa,
+                    'tahun'           => $request->tahun,
+                    'lokasi'          => $request->lokasi,
+                    'waktu'           => $request->waktu,
+                    'uraian'          => $request->uraian,
+                    'intro'           => $request->intro,
+                    'outro'           => $request->outro,
+                ]);
+            } else {
+                session()->flash('error', 'Kode surat sudah digunakan');
+
+                return redirect()->back();
+            }
+        }
+
+        $data = [
+            'tanggal'      => $tanggal,
+            'tglkop'       => $tglkop,
+            'paket'        => $paket,
+            'berita_acara' => $berita_acara,
+            'kategoris'    => $kategoris,
+        ];
+
+        $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
+
+        $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
+        Storage::disk('public')->put($filePath, $pdf->output());
+        $pdfUrl = url('storage/'.$filePath);
+
+        $paket->update([
+            'berita_acara_review' => $filePath,
+            'status'              => '8',
+        ]);
+        session()->flash('success', 'Berita acara berhasil dibuat');
+
+        return redirect()->back()->with('berita_acara_1', $pdfUrl);
     }
 
     public function review(Request $request)
@@ -563,41 +738,35 @@ class PaketController extends Controller
         return redirect()->back();
     }
 
-    public function generate_berita_acara(Request $request)
-    {
-        $tgl     = Carbon::now();
-        $tanggal = $tgl->locale('id')->translatedFormat('j F Y');
-        $tglkop  = $tgl->format('m/Y');
-
-        $paket = Paket::find($request->paket_id);
-
-        $data = [
-            'tanggal' => $tanggal,
-            'tglkop'  => $tglkop,
-            'paket'   => $paket,
-        ];
-
-        $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
-
-        $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
-        Storage::disk('public')->put($filePath, $pdf->output());
-        $pdfUrl = url('storage/'.$filePath);
-
-        $paket->update([
-            'berita_acara_review' => $filePath,
-            'status'              => '8',
-        ]);
-
-        return redirect()->back()->with('berita_acara_1', $pdfUrl);
-    }
-
     public function berita_acara_TTE_panitia(Request $request)
     {
-        $paket = Paket::where('id', $request->paket_id)->first();
-        $paket->update([
-            'status' => '9',
-        ]);
-        session()->flash('success', 'Paket diserahkan ke PPK');
+        $paket  = Paket::where('id', $request->paket_id)->first();
+        $pokmil = $paket->pokmil;
+
+        $panitiaSudahAcc = $pokmil->panitia()
+            ->wherePivot('panitia_id', $request->panitia_id)
+            ->wherePivot('approve', 1)
+            ->exists();
+
+        if ($panitiaSudahAcc) {
+            session()->flash('success', 'Anda sudah menyetujui berita acara');
+
+            return redirect()->back();
+        } else {
+            $pokmil->panitia()->updateExistingPivot($request->panitia_id, ['approve' => 1]);
+        }
+
+        $totalPanitia    = $pokmil->panitia()->count();
+        $totalPanitiaAcc = $pokmil->panitia()->wherePivot('approve', true)->count();
+
+        if ($totalPanitiaAcc >= $totalPanitia / 2) {
+            $paket->update([
+                'status' => '9',
+            ]);
+            session()->flash('success', 'Berhasil menyetujui berita acara dan paket diserahkan ke PPK');
+        } else {
+            session()->flash('success', 'Berhasil menyetujui berita acara');
+        }
 
         return redirect()->back();
     }
@@ -629,6 +798,92 @@ class PaketController extends Controller
         }
 
         return $proses;
+    }
+
+    public static function getTahun($tahun)
+    {
+        $angkaTerjemahan = [
+            1 => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima',
+            6 => 'Enam', 7 => 'Tujuh', 8 => 'Delapan', 9 => 'Sembilan',
+            0 => 'Nol',
+        ];
+
+        $tahun      = strval($tahun);
+        $tahunArray = str_split($tahun);
+
+        $terjemahan = '';
+
+        // Menambahkan "Dua Ribu" jika tahun adalah 2000-an
+        if (count($tahunArray) === 4 && $tahunArray[0] == 2 && $tahunArray[1] == 0) {
+            $terjemahan .= 'Dua Ribu ';
+        }
+
+        // Menambahkan angka terakhir
+        $terjemahan .= $angkaTerjemahan[intval($tahunArray[2])].' Ribu '.$angkaTerjemahan[intval($tahunArray[3])];
+
+        return $terjemahan;
+    }
+
+    public static function getTanggal()
+    {
+        $tgl = Carbon::now();
+        $tgl->locale('id');
+        $hari = $tgl->translatedFormat('l');
+
+        $tanggalTerjemahan = [
+            1  => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima',
+            6  => 'Enam', 7 => 'Tujuh', 8 => 'Delapan', 9 => 'Sembilan', 10 => 'Sepuluh',
+            11 => 'Sebelas', 12 => 'Dua Belas', 13 => 'Tiga Belas', 14 => 'Empat Belas', 15 => 'Lima Belas',
+            16 => 'Enam Belas', 17 => 'Tujuh Belas', 18 => 'Delapan Belas', 19 => 'Sembilan Belas', 20 => 'Dua Puluh',
+            21 => 'Dua Puluh Satu', 22 => 'Dua Puluh Dua', 23 => 'Dua Puluh Tiga', 24 => 'Dua Puluh Empat', 25 => 'Dua Puluh Lima',
+            26 => 'Dua Puluh Enam', 27 => 'Dua Puluh Tujuh', 28 => 'Dua Puluh Delapan', 29 => 'Dua Puluh Sembilan', 30 => 'Tiga Puluh',
+            31 => 'Tiga Puluh Satu',
+        ];
+
+        $tanggalAngka = $tgl->day;
+        $tanggal      = $tanggalTerjemahan[$tanggalAngka];
+        $bulan        = $tgl->translatedFormat('F');
+
+        $tahunAngka = $tgl->year;
+        $tahun      = static::getTahun($tahunAngka);
+
+        $data = [
+            'hari'    => $hari,
+            'tanggal' => $tanggal,
+            'bulan'   => $bulan,
+            'tahun'   => $tahun,
+        ];
+
+        return $data;
+    }
+
+    public function upload_berita_acara_1(Request $request)
+    {
+        $paket = Paket::find($request->paket_id);
+        $file  = $request->file('dokumen');
+
+        if ($file) {
+            if ($file->getMimeType() === 'application/pdf') {
+                $filename = 'berita_acara_review_'.$paket->id.'.pdf';
+                $file->storeAs('public/pdf', $filename);
+
+                $paket->update([
+                    'berita_acara_review' => 'pdf/'.$filename,
+                    'status'              => '8',
+                ]);
+
+                session()->flash('success', 'Dokumen Berhasil di-upload');
+
+                return redirect()->back();
+            } else {
+                session()->flash('error', 'Dokumen harus berupa file PDF.');
+
+                return redirect()->back();
+            }
+        }
+        session()->flash('error', 'Dokumen gagal di-upload');
+
+        return redirect()->back();
     }
 
     public function upload_berita_acara_2(Request $request)

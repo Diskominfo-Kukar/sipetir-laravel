@@ -44,7 +44,7 @@
         <script>
             $('#data-table').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 ajax: "{{ route($route . '.get-data') }}",
                 searchDelay: 1000,
                 columns: [{

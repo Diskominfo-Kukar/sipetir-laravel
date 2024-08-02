@@ -2,6 +2,7 @@
 
 namespace App\Models\Paket;
 
+use App\Models\Master\Answer;
 use App\Models\Master\JenisPengadaan;
 use App\Models\Master\Opd;
 use App\Models\Master\Panitia;
@@ -111,5 +112,10 @@ class Paket extends Model
     public function satuan_kerja(): BelongsTo
     {
         return $this->belongsTo(Satker::class, 'satker_id', 'id');
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
     }
 }

@@ -1,9 +1,4 @@
 <x-app-layout :title=$pageTitle :sub-title=$subTitle :icon=$icon :crumbs=$crumbs>
-@role(['Panitia','PPK'])
-    @unless($paket->ppk_id == auth()->user()->ppk_id || in_array($paket->pokmil_id, auth()->user()->pokmil_id))
-        {{ abort(403) }}
-    @endunless
-@endrole
     <div>
         @if ($paket->status != 0 && $paket->status != 10)
         <div class="row mb-5">
@@ -360,7 +355,7 @@
                                                         <div class="form-group row mb-3">
                                                             <label for="kode" class="col-sm-3 col-form-label text-right">Kode Surat</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="kode" class="form-control" required>
+                                                                <input type="number" name="kode" class="form-control" value="{{ $kode_sa }}" required>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-3">
@@ -378,13 +373,23 @@
                                                         <div class="form-group row mb-3">
                                                             <label for="nama_opd" class="col-sm-3 col-form-label text-right">Nama OPD</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" name="nama_opd" class="form-control" required>
+                                                                <select name="nama_opd" class="form-control" required>
+                                                                    <option value="" disabled selected></option>
+                                                                    @foreach($opd as $item)
+                                                                        <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-3">
                                                             <label for="sumber_dana" class="col-sm-3 col-form-label text-right">Sumber Dana</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" name="sumber_dana" class="form-control" required>
+                                                                <select name="sumber_dana" class="form-control" required>
+                                                                    <option value="" disabled selected></option>
+                                                                    @foreach($sumber_dana as $item)
+                                                                        <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-3">
@@ -424,7 +429,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -540,31 +544,177 @@
                     @elseif($status=="Berita Acara")
                         @role('Panitia')
                             <div class="col-12">
-                                <div class="border-0 shadow-sm card">
-                                    <div class="card-body">
-                                        <h5 class="mb-0">Berita Acara</h5>
-                                        <hr>
-                                        <div class="border shadow-none card">
-                                            <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                                                <div class="d-flex justify-content-center">
-                                                    @if (!$berita_acara_1)
-                                                    <form action="{{ route('paket.generate_berita_acara') }}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                        <button type="submit" class="btn btn-danger mx-2">
-                                                            <i class="fa fa-file-pdf"></i>
-                                                            Buat Berita Acara
-                                                        </button>
-                                                    </form>
-                                                    @endif
+                                    <div class="border-0 shadow-sm card">
+                                        <div class="card-body">
+                                            <ul class="nav nav-tabs" id="reviewTab" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link active" id="berita-acara-1-tab" data-bs-toggle="tab" href="#berita-acara-1" role="tab" aria-controls="berita-acara-1" aria-selected="true">
+                                                        Buat Berita Acara Review
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="berita-acara-2-tab" data-bs-toggle="tab" href="#berita-acara-2" role="tab" aria-controls="berita-acara-2" aria-selected="false">
+                                                        Upload Berita Acara Review
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            &nbsp;
+                                            <div class="tab-content" id="reviewTabContent">
+                                                <div class="tab-pane show active" id="berita-acara-1" role="tabpanel" aria-labelledby="berita-acara-1-tab">
+                                                    <div class="card-body">
+                                                        <div class="border shadow-none card">
+                                                            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                                                <div class="d-flex justify-content-center w-100">
+                                                                    <form action="{{ route('paket.generate_berita_acara') }}" method="POST" class="w-100">
+                                                                        @csrf
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="kode" class="col-sm-3 col-form-label text-right">Kode Surat</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="number" name="kode" class="form-control" value="{{ old('kode', $kode_ba) }}" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="nama_paket" class="col-sm-3 col-form-label text-right">Nama Paket</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="text" name="nama_paket" class="form-control" value="{{ old('nama_paket', $new_data->nama_paket) }}" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="jenis_pekerjaan" class="col-sm-3 col-form-label text-right">Jenis Pekerjaan</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="text" name="jenis_pekerjaan" class="form-control" value="{{ old('jenis_pekerjaan', $new_data->jenis_pekerjaan) }}" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="nama_opd" class="col-sm-3 col-form-label text-right">Nama OPD</label>
+                                                                            <div class="col-sm-9">
+                                                                                <select name="nama_opd" class="form-control" required>
+                                                                                    <option value="{{ old('nama_opd', $new_data->nama_opd) }}">{{ old('nama_opd', $new_data->nama_opd) }}</option>
+                                                                                    @foreach($opd as $item)
+                                                                                        <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="sumber_dana" class="col-sm-3 col-form-label text-right">Sumber Dana</label>
+                                                                            <div class="col-sm-9">
+                                                                                <select name="sumber_dana" class="form-control" required>
+                                                                                    <option value="{{ old('sumber_dana', $new_data->sumber_dana) }}">{{ old('sumber_dana', $new_data->sumber_dana) }}</option>
+                                                                                    @foreach($sumber_dana as $item)
+                                                                                        <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="pagu" class="col-sm-3 col-form-label text-right">Pagu</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="number" name="pagu" class="form-control" value="{{ old('pagu', $new_data->pagu) }}" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="hps" class="col-sm-3 col-form-label text-right">HPS</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="number" name="hps" class="form-control" value="{{ old('hps', $new_data->hps) }}" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="dpa" class="col-sm-3 col-form-label text-right">DPA</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="text" name="dpa" class="form-control" value="{{ old('dpa', $new_data->dpa) }}" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="tahun" class="col-sm-3 col-form-label text-right">Tahun</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="number" name="tahun" class="form-control" value="{{ old('tahun', $new_data->tahun) }}" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="lokasi" class="col-sm-3 col-form-label text-right">Lokasi Pekerjaan</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="text" name="lokasi" class="form-control" value="{{ old('lokasi', $new_data->lokasi) }}" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="waktu" class="col-sm-3 col-form-label text-right">Waktu Pelaksanaan</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="text" name="waktu" class="form-control" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="uraian" class="col-sm-3 col-form-label text-right">Uraian Pekerjaan</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="text" name="uraian" class="form-control" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="intro" class="col-sm-3 col-form-label text-right">Kalimat Pembuka</label>
+                                                                            <div class="col-sm-9">
+                                                                                <textarea name="intro" class="form-control" rows="5" required>
+                                                                                    <p style="padding: 8px; text-align: justify;">Pada hari ini <b>{{ $tanggal['hari'] }}</b> tanggal <b>{{ $tanggal['tanggal'] }}</b> bulan
+                                                                                        <b>{{ $tanggal['bulan'] }}</b> tahun
+                                                                                        <b>{{ $tanggal['tahun'] }}</b>, bertempat di Ruang Rapat Bagian Pengadaan Barang dan Jasa (BPBJ), kami
+                                                                                        yang bertandatangan di dalam dokumen Berita Acara ini <b>{{ $paket->pokmil->nama }}</b> Bagian
+                                                                                        Pengadaan Barang dan Jasa Sekretariat Daerah Kab. Kutai Kartanegara bersama Pejabat Pembuat
+                                                                                        Komitmen (PPK) :
+                                                                                    </p>
+                                                                                </textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="outro" class="col-sm-3 col-form-label text-right">Kalimat Penutup</label>
+                                                                            <div class="col-sm-9">
+                                                                                <textarea name="outro" class="form-control" rows="5" required>
+                                                                                    <p style="padding: 0 8px; text-align: justify;">Dalam pembahasan ini telah dilakukan reviu terhadap Dokumen
+                                                                                        Persiapan Pengadaan meliputi spesifikasi teknis dan DED, Harga Perkiraan Sendiri (HPS), Rancangan
+                                                                                        Kontrak, Dokumen Anggaran Belanja, ID, paket RUP, waktu penggunaan barang/jasa, analisis pasar serta
+                                                                                        Uraian pekerjaan, identifikasi bahaya dan penetapan resiko Pekerjaan Konstruksi terkait Keselamatan
+                                                                                        Konstruksi pada Pekerjaan Konstruksi.
+                                                                                        Dengan dokumentasi reviu sebagaimana terlampir.
+                                                                                    </p>
+                                                                                </textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                                        <div class="form-group row mt-4">
+                                                                            <div class="col-sm-12 text-center">
+                                                                                <button type="submit" class="btn btn-danger mx-2">
+                                                                                    <i class="fa fa-file-pdf"></i>
+                                                                                    Buat Berita Acara Review
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="berita-acara-2" role="tabpanel" aria-labelledby="berita-acara-2-tab">
+                                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                                        <div class="d-flex justify-content-center">
+                                                            <form action="{{ route('paket.upload_berita_acara_1') }}" enctype="multipart/form-data" method="POST" class="d-flex align-items-center">
+                                                                @csrf
+                                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                                <div class="input-group">
+                                                                    <input type="file" class="form-control" name="dokumen" style="max-width: 300px;">
+                                                                    <button type="submit" class="btn btn-danger">
+                                                                        <i class="fa fa-file-pdf"></i>
+                                                                        Upload Berita Acara Review
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                             </div>
                         @else
-                            @include('dashboard.paket.paket.components.beritaacaraTTE_panitia')
+                            @include('dashboard.paket.paket.components.beritaacara')
                         @endrole
 
                     @elseif($status=="TTE Berita Acara Panitia")
@@ -577,10 +727,12 @@
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
                                                 <div class="d-flex justify-content-center">
-                                                    @if ($berita_acara_1)
+                                                    @if ($berita_acara_1 && !$panitiaSudahAcc)
                                                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
                                                             <i class="bi bi-pen"></i>TTE
                                                         </a>
+                                                    @elseif($panitiaSudahAcc)
+                                                        Sudah menyetujui berita acara, menunggu panitia lain menyetujui berita acara ini.
                                                     @endif
                                                 </div>
                                                 @if ($berita_acara_1)
