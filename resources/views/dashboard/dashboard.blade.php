@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    {{-- 
+    {{--
         <div class="card shadow-sm radius-10 border-0 mb-3">
             <div class="card-body">
                 <h4>Info Paket Tayang</h4>
@@ -55,7 +55,7 @@
                 <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolorem saepe eligendi harum voluptas iusto rerum obcaecati totam doloremque commodi magni.</p>
                 <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolorem saepe eligendi harum voluptas iusto rerum obcaecati totam doloremque commodi magni.</p>
             </div>
-        </div> 
+        </div>
     --}}
 
     <div class="col-md-12 card">
@@ -85,7 +85,7 @@
                             @foreach ($pakets as $index => $paket)
                                 <tr>
                                     <td scope="col">{{ $index + 1 }}</td>
-                                    <td scope="col">{{ $paket->tahun ?? '-' }}</td>
+                                    <td scope="col">{{ \Carbon\Carbon::parse($paket->tgl_buat)->format('Y') }}</td>
                                     <td scope="col">{{ $paket->nama }}</td>
                                     <td scope="col">
                                         @php

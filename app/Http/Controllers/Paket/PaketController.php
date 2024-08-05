@@ -347,8 +347,8 @@ class PaketController extends Controller
                 $query->orderBy('status', 'desc');
             }
             $query->orderBy('tgl_buat', 'asc');
-            $data = $query->get();
-            //$data = $query->limit(1000)->get();
+            //$data = $query->get();
+            $data = $query->limit(1000)->get();
 
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('tgl_buat', function ($row) {

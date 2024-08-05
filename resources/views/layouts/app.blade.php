@@ -20,25 +20,9 @@
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <link href="{{ asset('assets/plugins/jquery-toast-plugin-master/src/jquery.toast.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script src="https://cdn.tiny.cloud/1/5ps1i1boa3tg20qfzwuk59h75b186ickj43d35pn8x1o4xy7/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
     <link rel="stylesheet" href="{{ asset('assets/css/import.css') }}" />
-    <script>
-        tinymce.init({
-            selector: 'textarea[name=intro], textarea[name=outro]',
-            height: 300,
-            menubar: false,
-            statusbar: false,
-            plugins: [
-                'advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste code help wordcount'
-            ],
-            toolbar: 'undo redo | formatselect | bold italic backcolor | \
-                      alignleft aligncenter alignright alignjustify | \
-                      bullist numlist outdent indent | removeformat | help'
-        });
-    </script>
+
     @stack('styles')
 
     @vite('resources/js/app.js')
