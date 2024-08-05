@@ -54,8 +54,8 @@
             value="{{ old('password') }}" />
     </x-ui.modal>
 
-    {{-- create user --}}
-    <x-ui.modal id="editModal" title="Edit {{ $pageTitle }}">
+    {{-- update user --}}
+    <x-ui.modal id="editModal" title="Edit {{ $pageTitle }}" formId="formEdit">
         <x-slot:button>
             <button type="submit" class="btn btn-dark submit"><i class="bx bx-refresh"></i> Update</button>
         </x-slot:button>
