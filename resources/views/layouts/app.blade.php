@@ -20,7 +20,8 @@
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <link href="{{ asset('assets/plugins/jquery-toast-plugin-master/src/jquery.toast.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script src="https://cdn.tiny.cloud/1/5ps1i1boa3tg20qfzwuk59h75b186ickj43d35pn8x1o4xy7/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/5ps1i1boa3tg20qfzwuk59h75b186ickj43d35pn8x1o4xy7/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
 
     <link rel="stylesheet" href="{{ asset('assets/css/import.css') }}" />
     <script>
@@ -35,8 +36,8 @@
                 'insertdatetime media table paste code help wordcount'
             ],
             toolbar: 'undo redo | formatselect | bold italic backcolor | \
-                      alignleft aligncenter alignright alignjustify | \
-                      bullist numlist outdent indent | removeformat | help'
+                                          alignleft aligncenter alignright alignjustify | \
+                                          bullist numlist outdent indent | removeformat | help'
         });
     </script>
     @stack('styles')
@@ -68,6 +69,7 @@
                 </div>
                 <div class="top-navbar-right ms-3">
                     <ul class="navbar-nav align-items-center">
+                        @include('layouts.notification')
                         <li class="nav-item dropdown dropdown-large">
                             <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#"
                                 data-bs-toggle="dropdown">
@@ -266,7 +268,7 @@
             $(document).ready(function() {
 
                 $('#{{ session()->get('edit-modal') }}').modal('show');
-                let action =  "{{ session()->get('action-modal') }}";
+                let action = "{{ session()->get('action-modal') }}";
                 let load_url = "{{ session()->get('load_url') }}";
                 $('#form')[0].reset();
                 $('#editModal').find('#action_url').val(action);
@@ -277,6 +279,23 @@
                 console.log("{{ $errors }}");
             });
         @endif
+
+        let notificationCount = 10;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const badge = document.querySelector(".badge.bg-danger");
+            if (notificationCount >= 10) {
+                badge.style.display = "inline-block";
+                badge.textContent = notificationCount;
+            }
+        });
+
+        document.getElementById("markAsRead").addEventListener("click", function(event) {
+            event.preventDefault();
+            notificationCount = 0;
+            const badge = document.querySelector(".badge.bg-danger");
+            badge.style.display = "none";
+        });
     </script>
 
     @stack('scripts')
