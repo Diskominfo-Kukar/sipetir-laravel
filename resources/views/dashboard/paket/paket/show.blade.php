@@ -887,6 +887,23 @@
     @endpush
 
     @push('scripts')
+        <script src="https://cdn.tiny.cloud/1/5ps1i1boa3tg20qfzwuk59h75b186ickj43d35pn8x1o4xy7/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea[name=intro], textarea[name=outro]',
+            height: 300,
+            menubar: false,
+            statusbar: false,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+            ],
+            toolbar: 'undo redo | for     matselect | bold italic backcolor | \
+                      alignleft aligncenter alignright alignjustify | \
+                      bullist numlist outdent indent | removeformat | help'
+        });
+    </script>
         <script>
         let isAnimating = false;
         let intervalId;
