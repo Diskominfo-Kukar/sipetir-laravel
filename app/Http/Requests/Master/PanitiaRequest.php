@@ -39,20 +39,25 @@ class PanitiaRequest extends FormRequest
         $user_id = Panitia::find($id)->value('user_id');
 
         //untuk update
-        return [
-            'nik'        => 'required|max:255|unique:panitia,nik,'.$id.',id,deleted_at,NULL',
-            'nip'        => 'required|max:255|unique:panitia,nip,'.$id.',id,deleted_at,NULL',
-            'nama'       => 'required',
-            'no_hp'      => 'required',
-            'jabatan_id' => 'required',
-            'username'   => 'required|min:5|unique:users,username,'.$user_id.',id,deleted_at,NULL',
-            'email'      => [
+        $rulesUpdate = [
+            // 'nik'        => 'required|max:255|unique:panitia,nik,'.$id.',id,deleted_at,NULL',
+            // 'nip'        => 'required|max:255|unique:panitia,nip,'.$id.',id,deleted_at,NULL',
+            // 'nama'       => 'required',
+            'no_hp' => 'required',
+            // 'jabatan_id' => 'required',
+            'username' => 'required|min:5|unique:users,username,'.$user_id.',id,deleted_at,NULL',
+            'email'    => [
                 'required',
                 'email',
                 Rule::unique('users')->ignore($user_id)->whereNull('deleted_at'),
             ],
-            'password' => 'nullable',
         ];
+
+        if ($this->input('password')) {
+            $rulesUpdate['password'] = 'required';
+        }
+
+        return $rulesUpdate;
     }
 
     public function messages()

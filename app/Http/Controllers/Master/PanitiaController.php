@@ -128,29 +128,32 @@ class PanitiaController extends Controller
     {
         // return $panitium;
         // $panitias = Panitia::find($panitia);
-        $validate   = $request->validated();
-        $jabatan_id = $validate['jabatan_id'];
+        $validate = $request->validated();
+        // $jabatan_id = $validate['jabatan_id'];
 
         $user_id      = $panitium->user_id;
         $validateUser = [
-            'name'     => $validate['nama'],
+            // 'name' => $validate['nama'],
             'username' => $validate['username'],
             'email'    => $validate['email'],
-            'password' => bcrypt($validate['password']),
         ];
 
-        $jabatan = Jabatan::find($jabatan_id);
-        $user    = User::find($user_id);
+        if ($request->filled('password')) {
+            $validateUser['password'] = bcrypt($validate['password']);
+        }
+
+        // $jabatan = Jabatan::find($jabatan_id);
+        $user = User::find($user_id);
         $user->update($validateUser);
-        $user->assignRole($jabatan->nama);
+        // $user->assignRole($jabatan->nama);
 
         $validatePanitia = [
-            'nik'        => $validate['nik'],
-            'nip'        => $validate['nip'],
-            'nama'       => $validate['nama'],
-            'no_hp'      => $validate['no_hp'],
-            'jabatan_id' => $validate['jabatan_id'],
-            'user_id'    => $user->id,
+            // 'nik' => $validate['nik'],
+            // 'nip' => $validate['nip'],
+            // 'nama' => $validate['nama'],
+            'telepon' => $validate['no_hp'],
+            // 'jabatan_id' => $validate['jabatan_id'],
+            'user_id' => $user->id,
         ];
         $panitium->update($validatePanitia);
 
@@ -194,11 +197,11 @@ class PanitiaController extends Controller
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            $data = Panitia::get();
+            $data = Panitia::with('user')->get();
 
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('jabatan', function ($row) {
-                    return ucwords($row->jabatan);
+                    return ucwords($row->jabatan->nama);
                 })
                 ->addColumn('no_hp_tampil', function ($row) {
                     return ucwords($row->no_hp_tampil);
