@@ -138,8 +138,8 @@ class UserController extends Controller
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::select('id', 'name', 'email', 'username')
-                ->whereNotIn('name', ['superadmin'])
+            $data = User::select('id', 'nama', 'email', 'username')
+                ->whereNotIn('nama', ['superadmin'])
                 ->with('roles')->get();
 
             return DataTables::of($data)->addIndexColumn()
@@ -160,7 +160,9 @@ class UserController extends Controller
 
                     return $actionBtn;
                 })
-
+                ->editColumn('email', function ($row) {
+                    return $row->email ?? '-';
+                })
                 ->rawColumns(['action'])
                 ->make(true);
         }
