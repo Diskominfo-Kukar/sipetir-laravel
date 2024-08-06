@@ -2,51 +2,27 @@
 
 namespace App\Traits;
 
-use App\Models\Master\Otp;
+use App\Models\Notifikasi as NotifikasiModel;
 
 trait Notifikasi
 {
-    public static function sendTo($tipe, $message)
+    public static function sendTo($panitiaId, $moduleClass, $moduleId, $targetUrl)
     {
-        switch ($tipe) {
-            case 'wa':
-                return self::whatsapp($message);
-                break;
-            case 'email':
-                return self::email($message);
-                break;
-            default:
-                return self::whatsapp($message);
-                break;
-        }
+        $notifikasi               = new NotifikasiModel();
+        $notifikasi->panitia_id   = $panitiaId;
+        $notifikasi->module_id    = $moduleId;
+        $notifikasi->module_class = $moduleClass;
+        $notifikasi->type         = null;
+        $notifikasi->message      = 'Isi message untuk content notifikasi';
+        $notifikasi->target_url   = $targetUrl;
+        $notifikasi->is_read      = false;
+        $notifikasi->save();
 
-        return 'Invalid tipe';
+        return $notifikasi;
     }
 
-    public static function sendOtpTo($tipe, $request)
+    public static function get($panitiaId)
     {
-        $kodeOtp = 1234;
-
-        Otp::create([
-            'modul_id'   => $request->modul_id,
-            'panitia_id' => $request->panitia_id,
-            'message'    => $request->message,
-            'tipe'       => $request->tipe,
-            'status'     => $request->status,
-        ]);
-
-        $otpMessage = 'Kode OTP Anda: '.$kodeOtp;
-
-        return self::sendTo($tipe, $otpMessage);
-    }
-
-    private static function whatsapp($message)
-    {
-        return 'Send from whatsapp: '.$message;
-    }
-
-    private static function email($message)
-    {
-        return 'Send from email: '.$message;
+        return NotifikasiModel::where('panitia_id', $panitiaId)->get();
     }
 }

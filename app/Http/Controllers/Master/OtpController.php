@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
-use App\Models\Master\Otp;
+use App\Models\Otp;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
