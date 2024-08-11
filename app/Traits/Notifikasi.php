@@ -2,27 +2,20 @@
 
 namespace App\Traits;
 
+use App\Jobs\KirimNotifikasiJob;
 use App\Models\Notifikasi as NotifikasiModel;
 
 trait Notifikasi
 {
-    public static function sendTo($panitiaId, $moduleClass, $moduleId, $targetUrl)
+    public static function sendTo($userId, $moduleClass, $moduleId, $targetUrl, $message = 'Ini adalah Notifikasi')
     {
-        $notifikasi               = new NotifikasiModel();
-        $notifikasi->panitia_id   = $panitiaId;
-        $notifikasi->module_id    = $moduleId;
-        $notifikasi->module_class = $moduleClass;
-        $notifikasi->type         = null;
-        $notifikasi->message      = 'Isi message untuk content notifikasi';
-        $notifikasi->target_url   = $targetUrl;
-        $notifikasi->is_read      = false;
-        $notifikasi->save();
+        dispatch(new KirimNotifikasiJob($userId, $moduleClass, $moduleId, $targetUrl, $message));
 
-        return $notifikasi;
+        return true;
     }
 
-    public static function get($panitiaId)
+    public static function get($userId)
     {
-        return NotifikasiModel::where('panitia_id', $panitiaId)->get();
+        return NotifikasiModel::where('panitia_id', $userId)->get();
     }
 }

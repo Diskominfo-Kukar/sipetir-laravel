@@ -36,8 +36,8 @@
                 'insertdatetime media table paste code help wordcount'
             ],
             toolbar: 'undo redo | formatselect | bold italic backcolor | \
-                                          alignleft aligncenter alignright alignjustify | \
-                                          bullist numlist outdent indent | removeformat | help'
+                                                  alignleft aligncenter alignright alignjustify | \
+                                                  bullist numlist outdent indent | removeformat | help'
         });
     </script>
     @stack('styles')
@@ -280,11 +280,11 @@
             });
         @endif
 
-        let notificationCount = 10;
+        let notificationCount = 1;
 
         document.addEventListener("DOMContentLoaded", function() {
             const badge = document.querySelector(".badge.bg-danger");
-            if (notificationCount >= 10) {
+            if (notificationCount >= 1) {
                 badge.style.display = "inline-block";
                 badge.textContent = notificationCount;
             }

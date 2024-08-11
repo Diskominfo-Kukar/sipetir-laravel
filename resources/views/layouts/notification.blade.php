@@ -6,46 +6,38 @@
     </a>
     <ul class="dropdown-menu dropdown-menu-end px-3">
         <!-- Notification Items -->
-        <li>
-            <a class="dropdown-item px-2" href="#">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-envelope me-2"></i>
-                    <div class="ms-2">
-                        <h6 class="mb-0">New Message</h6>
-                        <small class="text-secondary">You have a new message</small>
+        @if (session()->has('notifikasi'))
+            @forelse (session('notifikasi') as $notif)
+                <li>
+                    <a class="dropdown-item px-2" href="{{ $notif->target_url }}">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-envelope me-2"></i>
+                            <div class="ms-2">
+                                <h6 class="mb-0">{{ $notif->message }}</h6>
+                                <small class="text-secondary">{{ $notif->message }}</small>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            @empty
+                <li>
+                    <div class="dropdown-item px-2">
+                        <div class="d-flex align-items-center">
+                            <div class="ms-2">
+                                <h6 class="mb-0">Tidak ada Pemberitahuan Terbaru</h6>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </a>
-        </li>
-        <li>
-            <a class="dropdown-item p-2" href="#">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-person-plus me-2"></i>
-                    <div class="ms-2">
-                        <h6 class="mb-0">New Follower</h6>
-                        <small class="text-secondary">You have a new follower</small>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li>
-            <a class="dropdown-item p-2" href="#">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-check2-circle me-2"></i>
-                    <div class="ms-2">
-                        <h6 class="mb-0">Task Completed</h6>
-                        <small class="text-secondary">Your task is completed</small>
-                    </div>
-                </div>
-            </a>
-        </li>
+                </li>
+            @endforelse
+        @endif
         <!-- Mark as Read Button -->
         <li>
             <hr class="dropdown-divider">
         </li>
         <li>
             <a class="dropdown-item p-2 text-center" href="#" id="markAsRead">
-                Mark as Read
+                Tandai telah dibaca
             </a>
         </li>
     </ul>
