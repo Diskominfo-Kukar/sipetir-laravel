@@ -12,11 +12,12 @@ return new class extends Migration {
     {
         Schema::create('otp', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('modul_id');
+            $table->string('module_id');
+            $table->string('module_class');
             $table->string('panitia_id')->references('id')->on('panitia');
-            $table->text('message');
-            $table->unsignedTinyInteger('tipe')->comment('1: wa, 2: email');
-            $table->boolean('status')->comment('0: gagal, 1: terkirim');
+            $table->text('code');
+            $table->unsignedTinyInteger('type')->comment('1: wa, 2: email');
+            $table->boolean('status')->default(1)->comment('0: gagal, 1: pending, 2: terkirim');
             $table->timestamps();
         });
     }

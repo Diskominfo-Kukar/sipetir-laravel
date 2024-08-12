@@ -2,46 +2,58 @@
 
 namespace App\Traits;
 
+use App\Lib\Wappin;
 use App\Models\Otp as OtpModel;
 
 trait Otp
 {
-    public static function sendTo($tipe, $message)
+    public static function sendTo($tipe, $to, $request = null)
     {
+        $kodeOtp = self::generateOtp();
+
+        // OtpModel::create([
+        //     'module_id'    => $request->module_id,
+        //     'module_class' => $request->module_class,
+        //     'panitia_id'   => $request->panitia_id,
+        //     'message'      => $kodeOtp,
+        //     'tipe'         => $request->tipe,
+        //     'status'       => $request->status,
+        // ]);
+
+        $otpMessage = 'Kode OTP Anda: '.$kodeOtp;
+
         switch ($tipe) {
             case 'wa':
-                return self::whatsapp($message);
+                return self::whatsApp($to, $otpMessage);
             case 'email':
-                return self::email($message);
+                return self::email($to, $otpMessage);
             default:
                 return 'Invalid tipe';
         }
     }
 
-    public static function send($tipe, $request)
+    private static function whatsApp($phoneNumber, $message)
     {
-        $kodeOtp = 1234;
+        dispatch(function () use ($phoneNumber, $message) {
+            $wappin = new Wappin();
+            $wappin->sendMessage($phoneNumber, $message);
+        });
 
-        OtpModel::create([
-            'modul_id'   => $request->modul_id,
-            'panitia_id' => $request->panitia_id,
-            'message'    => $request->message,
-            'tipe'       => $request->tipe,
-            'status'     => $request->status,
-        ]);
-
-        $otpMessage = 'Kode OTP Anda: '.$kodeOtp;
-
-        return self::sendTo($tipe, $otpMessage);
+        return true;
     }
 
-    private static function whatsapp($message)
+    private static function email($emailAddress, $message)
     {
-        return 'Send from whatsapp: '.$message;
+        return 'Send to '.$emailAddress.' from email: '.$message;
     }
 
-    private static function email($message)
+    private static function generateOtp($length = 6)
     {
-        return 'Send from email: '.$message;
+        $otp = '';
+        for ($i = 0; $i < $length; $i++) {
+            $otp .= random_int(0, 9);
+        }
+
+        return $otp;
     }
 }
