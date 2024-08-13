@@ -10,8 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class GettingNotification
 {
-    use Notifikasi;
-
     /**
      * Handle an incoming request.
      *
@@ -21,7 +19,7 @@ class GettingNotification
     {
         if (Auth::check()) {
             $userId     = Auth::user()->id;
-            $notifikasi = self::get($userId);
+            $notifikasi = Notifikasi::get($userId);
 
             session(['notifikasi' => $notifikasi]);
         }
