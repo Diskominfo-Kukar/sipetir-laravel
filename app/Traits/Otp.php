@@ -5,7 +5,7 @@ namespace App\Traits;
 use App\Lib\Wappin;
 use App\Models\Otp as OtpModel;
 
-trait Otp
+class Otp
 {
     public static function sendTo($tipe, $to, $request = null)
     {
