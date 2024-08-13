@@ -10,12 +10,23 @@ class Wappin
 
     protected $authToken;
 
+    /**
+     * Initializes the Wappin class with base URL and authentication token.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->baseUrl   = config('wappin.base_url');
         $this->authToken = config('wappin.auth_key');
     }
 
+    /**
+     * Retrieves a token from the Wappin API.
+     *
+     * @throws \Illuminate\Http\Client\RequestException if the API request fails
+     * @return string|null The token if the API request is successful, otherwise null
+     */
     public function getToken()
     {
         $endpoint = '/users/login';
@@ -34,6 +45,14 @@ class Wappin
         return null;
     }
 
+    /**
+     * Sends a message to a specified phone number using the Wappin API.
+     *
+     * @param string $phoneNumber The phone number to send the message to.
+     * @param string $message The message to be sent.
+     * @throws \Illuminate\Http\Client\RequestException if the API request fails
+     * @return \Illuminate\Http\Client\Response|false The API response if successful, otherwise false
+     */
     public function sendMessage($phoneNumber, $message)
     {
         $endpoint    = '/messages';
@@ -75,6 +94,12 @@ class Wappin
         return false;
     }
 
+    /**
+     * Formats a phone number to a standardized format.
+     *
+     * @param string $phoneNumber The phone number to be formatted.
+     * @return string The formatted phone number.
+     */
     public function formatPhoneNumber($phoneNumber)
     {
         // Check if the phone number starts with '+62'
