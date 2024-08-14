@@ -21,8 +21,8 @@
     <link href="{{ asset('assets/plugins/jquery-toast-plugin-master/src/jquery.toast.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    <link rel="stylesheet" href="{{ asset('assets/css/import.css') }}" />
 
+    <link rel="stylesheet" href="{{ asset('assets/css/import.css') }}" />
     @stack('styles')
 
     @vite('resources/js/app.js')
@@ -52,6 +52,7 @@
                 </div>
                 <div class="top-navbar-right ms-3">
                     <ul class="navbar-nav align-items-center">
+                        @include('layouts.notification')
                         <li class="nav-item dropdown dropdown-large">
                             <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#"
                                 data-bs-toggle="dropdown">
@@ -250,7 +251,7 @@
             $(document).ready(function() {
 
                 $('#{{ session()->get('edit-modal') }}').modal('show');
-                let action =  "{{ session()->get('action-modal') }}";
+                let action = "{{ session()->get('action-modal') }}";
                 let load_url = "{{ session()->get('load_url') }}";
                 $('#form')[0].reset();
                 $('#editModal').find('#action_url').val(action);
@@ -261,6 +262,23 @@
                 console.log("{{ $errors }}");
             });
         @endif
+
+        let notificationCount = 1;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const badge = document.querySelector(".badge.bg-danger");
+            if (notificationCount >= 1) {
+                badge.style.display = "inline-block";
+                badge.textContent = notificationCount;
+            }
+        });
+
+        document.getElementById("markAsRead").addEventListener("click", function(event) {
+            event.preventDefault();
+            notificationCount = 0;
+            const badge = document.querySelector(".badge.bg-danger");
+            badge.style.display = "none";
+        });
     </script>
 
     @stack('scripts')
