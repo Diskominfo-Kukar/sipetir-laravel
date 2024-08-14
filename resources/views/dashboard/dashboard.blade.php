@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    {{-- 
+    {{--
         <div class="card shadow-sm radius-10 border-0 mb-3">
             <div class="card-body">
                 <h4>Info Paket Tayang</h4>
@@ -55,7 +55,7 @@
                 <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolorem saepe eligendi harum voluptas iusto rerum obcaecati totam doloremque commodi magni.</p>
                 <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolorem saepe eligendi harum voluptas iusto rerum obcaecati totam doloremque commodi magni.</p>
             </div>
-        </div> 
+        </div>
     --}}
 
     <div class="col-md-12 card">
@@ -84,50 +84,15 @@
                         <tbody>
                             @foreach ($pakets as $index => $paket)
                                 <tr>
-                                    <td scope="col">{{ $index + 1 }}</td>
-                                    <td scope="col">{{ $paket->tahun ?? '-' }}</td>
+                                    <td scope="col">{{ ($pakets->currentPage() - 1) * $pakets->perPage() + $index + 1 }}</td>
+                                    <td scope="col">{{ \Carbon\Carbon::parse($paket->tgl_buat)->format('Y') }}</td>
                                     <td scope="col">{{ $paket->nama }}</td>
                                     <td scope="col">
-                                        @php
-                                            $user = Auth::user();
-                                            $status = $paket->status;
-                                            $buttonText = 'Detail';
-                                            $buttonClass = 'btn-primary';
-
-                                            if ($user->hasRole('Panitia')) {
-                                                if ($status == 6 || $status == 7 || $status == 8) {
-                                                    $buttonText = 'Proses';
-                                                    $buttonClass = 'btn-warning';
-                                                }
-                                            }
-
-                                            if ($user->hasRole('PPK')) {
-                                                if ($status == 1 || $status == 11 || $status == 4 || $status == 9) {
-                                                    $buttonText = 'Proses';
-                                                    $buttonClass = 'btn-warning';
-                                                }
-                                            }
-
-                                            if ($user->hasRole('Admin')) {
-                                                if ($status == 2 || $status == 10) {
-                                                    $buttonText = 'Proses';
-                                                    $buttonClass = 'btn-warning';
-                                                }
-                                            }
-
-                                            if ($user->hasRole('Kepala BPBJ')) {
-                                                if ($status == 3 || $status == 5) {
-                                                    $buttonText = 'Proses';
-                                                    $buttonClass = 'btn-warning';
-                                                }
-                                            }
-                                        @endphp
                                         <div class="btn-group btn-sm">
-                                            <a title="{{ $buttonText }}" href="{{ route('paket.show', $paket->id) }}"
-                                                class="btn {{ $buttonClass }} btn-sm">
-                                                <i
-                                                    class="bx bx-{{ $buttonText == 'Proses' ? 'edit' : 'info-circle' }}"></i>
-                                                {{ $buttonText }}
+                                            <a title="{{ $paket->buttonText }}" href="{{ route('paket.show', $paket->id) }}"
+                                               class="btn {{ $paket->buttonClass }} btn-sm" style="width: 90px; text-align: center; display: inline-block;">
+                                                <i class="bx bx-{{ $paket->buttonText == 'Proses' ? 'edit' : 'info-circle' }}"></i>
+                                                {{ $paket->buttonText }}
                                             </a>
                                         </div>
                                     </td>

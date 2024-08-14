@@ -2,18 +2,51 @@
 
     <div class="mb-3 border-0 shadow-sm card radius-10">
         <div class="card-body">
-            <div class="table-responsive-sm">
-                <table class="table table-hover table-striped table-bordered" id="data-table" width="100%">
-                    <thead class="table-dark">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
+                        Showing {{ $pakets->firstItem() }} to {{ $pakets->lastItem() }} of {{ $pakets->total() }} entries
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group float-right">
+                        <input type="text" class="form-control form-control-sm" placeholder="Pencarian" id="searchInput">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-sm" type="button" id="searchButton">Cari</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-striped">
+                <thead class="bg-dark text-white">
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Tahun</th>
+                        <th scope="col">Nama</th>
+                        <th scope="col" width="120px">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($pakets as $index => $paket)
                         <tr>
-                            <th width="5%">No</th>
-                            <th width="5%">Tahun</th>
-                            <th>Nama</th>
-                            <th width="110px">Action</th>
+                            <td scope="col">{{ ($pakets->currentPage() - 1) * $pakets->perPage() + $index + 1 }}</td>
+                            <td scope="col">{{ \Carbon\Carbon::parse($paket->tgl_buat)->format('Y') }}</td>
+                            <td scope="col">{{ $paket->nama }}</td>
+                            <td scope="col">
+                                <div class="btn-group btn-sm">
+                                    <a title="{{ $paket->buttonText }}" href="{{ route('paket.show', $paket->id) }}"
+                                       class="btn {{ $paket->buttonClass }} btn-sm" style="width: 90px; text-align: center; display: inline-block;">
+                                        <i class="bx bx-{{ $paket->buttonText == 'Proses' ? 'edit' : 'info-circle' }}"></i>
+                                        {{ $paket->buttonText }}
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                    @endforeach
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-center">
+                {{ $pakets->links('pagination::bootstrap-4', ['class' => 'pagination-sm']) }}
             </div>
         </div>
     </div>
@@ -56,7 +89,7 @@
                     {
                         data: 'tgl_buat',
                         name: 'tgl_buat',
-                        
+
                     },
                     {
                         data: 'nama',
@@ -87,6 +120,19 @@
                 // $('#modal-loading').show();
                 $('#editModal').modal('show').find('form').attr('action', $(this).attr('action'));
                 $('#editModal').modal('show').find('.modal-body').load($(this).attr('href'), function() {});
+            });
+
+            //search
+            document.getElementById('searchButton').addEventListener('click', function () {
+                let query = document.getElementById('searchInput').value;
+                let url = new URL(window.location.href);
+                url.searchParams.set('search', query);
+                window.location.href = url.toString();
+            });
+            document.getElementById('searchInput').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('searchButton').click();
+                }
             });
         </script>
     @endpush

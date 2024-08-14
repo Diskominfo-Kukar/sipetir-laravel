@@ -67,62 +67,103 @@ class IndexController extends Controller
         $query = Paket::query();
 
         if ($user->hasRole('Panitia') || $user->hasRole('PPK')) {
-            $query = Paket::where('ppk_id', Auth::user()->ppk_id)
-                ->orWhereIn('pokmil_id', Auth::user()->pokmil_id);
+            if (! $user->hasRole('Kepala BPBJ')) {
+                $query = Paket::where('ppk_id', Auth::user()->ppk_id)
+                    ->orWhereIn('pokmil_id', Auth::user()->pokmil_id);
+            }
         }
 
         if ($user->hasRole('Panitia') && $user->hasRole('PPK')) {
             $query->orderByRaw(
                 'case
-                        when status = 11 then 1
-                        when status = 1 then 2
-                        when status = 6 then 3
-                        when status = 7 then 4
-                        when status = 8 then 5
-                        else 3
-                    end'
+                    when status = 11 then 1
+                    when status = 1 then 2
+                    when status = 6 then 3
+                    when status = 7 then 4
+                    when status = 8 then 5
+                    else 3
+                end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Panitia')) {
             $query->orderByRaw(
                 'case
-                        when status = 6 then 1
-                        when status = 7 then 2
-                        when status = 8 then 3
-                        else 3
-                    end'
+                    when status = 6 then 1
+                    when status = 7 then 2
+                    when status = 8 then 3
+                    else 3
+                end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('PPK')) {
             $query->orderByRaw(
                 'case
-                        when status = 11 then 1
-                        when status = 1 then 2
-                        when status = 4 then 3
-                        when status = 9 then 4
-                        else 3
-                    end'
+                    when status = 11 then 1
+                    when status = 1 then 2
+                    when status = 4 then 3
+                    when status = 9 then 4
+                    else 3
+                end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Admin')) {
             $query->orderByRaw(
                 'case
-                        when status = 10 then 1
-                        when status = 2 then 2
-                        else 3
-                    end'
+                    when status = 10 then 1
+                    when status = 2 then 2
+                    else 3
+                end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Kepala BPBJ')) {
             $query->orderByRaw(
                 'case
-                        when status = 3 then 1
-                        when status = 5 then 2
-                        else 3
-                    end'
+                    when status = 3 then 1
+                    when status = 5 then 2
+                    else 3
+                end'
             )->orderBy('status', 'desc');
         } else {
             $query->orderBy('status', 'desc');
         }
-        $query->orderBy('created_at', 'desc');
+        $query->orderBy('tgl_buat', 'asc');
 
-        $pakets = $query->limit(5)->get();
+        $pakets = $query->paginate(5);
+
+        $pakets->getCollection()->transform(function ($paket) use ($user) {
+            $status      = $paket->status;
+            $buttonText  = 'Detail';
+            $buttonClass = 'btn-primary';
+
+            if ($user->hasRole('Panitia')) {
+                if ($status == 6 || $status == 7 || $status == 8) {
+                    $buttonText  = 'Proses';
+                    $buttonClass = 'btn-warning';
+                }
+            }
+
+            if ($user->hasRole('PPK')) {
+                if ($status == 1 || $status == 11 || $status == 4 || $status == 9) {
+                    $buttonText  = 'Proses';
+                    $buttonClass = 'btn-warning';
+                }
+            }
+
+            if ($user->hasRole('Admin')) {
+                if ($status == 2 || $status == 10) {
+                    $buttonText  = 'Proses';
+                    $buttonClass = 'btn-warning';
+                }
+            }
+
+            if ($user->hasRole('Kepala BPBJ')) {
+                if ($status == 3 || $status == 5) {
+                    $buttonText  = 'Proses';
+                    $buttonClass = 'btn-warning';
+                }
+            }
+
+            $paket->buttonText  = $buttonText;
+            $paket->buttonClass = $buttonClass;
+
+            return $paket;
+        });
 
         $data = [
             'pageTitle'     => 'Dashboard',
