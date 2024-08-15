@@ -99,6 +99,13 @@ class Paket extends Model
         );
     }
 
+    public function namaPpk(): Attribute
+    {
+        return new Attribute(
+            get: fn () => isset($this->ppk) ? $this->ppk->nama : ''
+        );
+    }
+
     public function pokmil(): BelongsTo
     {
         return $this->belongsTo(Pokmil::class, 'pokmil_id', 'id');

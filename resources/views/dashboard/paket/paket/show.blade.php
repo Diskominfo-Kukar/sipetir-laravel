@@ -56,6 +56,10 @@
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                            PPK
+                            <span class="badge bg-primary rounded-pill">{{$paket->nama_ppk}}</span>
+                        </li>
+                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             Kode
                             <span class="badge bg-primary rounded-pill">{{$paket->kode}}</span>
                         </li>
