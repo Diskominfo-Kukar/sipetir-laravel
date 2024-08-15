@@ -66,30 +66,30 @@ class PaketController extends Controller
             $query->orderByRaw(
                 'case
                     when status = 11 then 1
-                    when status = 1 then 2
-                    when status = 6 then 3
-                    when status = 7 then 4
-                    when status = 8 then 5
-                    else 3
+                    when status = 8 then 2
+                    when status = 7 then 3
+                    when status = 6 then 4
+                    when status = 1 then 5
+                    else 6
                 end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Panitia')) {
             $query->orderByRaw(
                 'case
-                    when status = 6 then 1
+                    when status = 8 then 1
                     when status = 7 then 2
-                    when status = 8 then 3
-                    else 3
+                    when status = 6 then 3
+                    else 4
                 end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('PPK')) {
             $query->orderByRaw(
                 'case
                     when status = 11 then 1
-                    when status = 1 then 2
+                    when status = 9 then 2
                     when status = 4 then 3
-                    when status = 9 then 4
-                    else 3
+                    when status = 1 then 4
+                    else 5
                 end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Admin')) {
@@ -103,8 +103,8 @@ class PaketController extends Controller
         } elseif ($user->hasRole('Kepala BPBJ')) {
             $query->orderByRaw(
                 'case
-                    when status = 3 then 1
-                    when status = 5 then 2
+                    when status = 5 then 1
+                    when status = 3 then 2
                     else 3
                 end'
             )->orderBy('status', 'desc');
