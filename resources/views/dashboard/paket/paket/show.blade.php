@@ -349,7 +349,7 @@
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
-                                        <h5 class="mb-0">Surat Tugas</h5>
+                                        <h5 class="mb-0">Permohonan Surat Tugas</h5>
                                         <hr>
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
