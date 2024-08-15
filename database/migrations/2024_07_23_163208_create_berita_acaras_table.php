@@ -10,6 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        if (!Schema::hasTable('berita_acara')) {
         Schema::create('berita_acara', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->integer('kode')->nullable();
@@ -29,6 +30,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->unique(['kode', 'tahun']);
         });
+    }
     }
 
     /**

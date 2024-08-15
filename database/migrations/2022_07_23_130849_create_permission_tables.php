@@ -13,6 +13,7 @@ return new class extends Migration {
      */
     public function up()
     {
+
         $tableNames  = config('permission.table_names');
         $columnNames = config('permission.column_names');
         $teams       = config('permission.teams');
@@ -24,7 +25,7 @@ return new class extends Migration {
         if ($teams && empty($columnNames['team_foreign_key'] ?? null)) {
             throw new Exception('Error: team_foreign_key on config/permission.php not loaded. Run [php artisan config:clear] and try again.');
         }
-
+        
         Schema::create($tableNames['permissions'], function (Blueprint $table) {
             $table->uuid('id')->primary(); // permission id
             $table->string('name');       // For MySQL 8.0 use string('name', 125);

@@ -10,11 +10,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        if (!Schema::hasTable('sumber_dana')) {
         Schema::create('sumber_dana', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nama');
             $table->timestamps();
         });
+    }
     }
 
     /**

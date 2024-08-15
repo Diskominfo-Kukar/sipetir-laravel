@@ -12,6 +12,7 @@ return new class extends Migration {
      */
     public function up()
     {
+        if (!Schema::hasTable('users')) {
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->unsignedInteger('pegawai_id')->nullable()->unique();
@@ -24,6 +25,7 @@ return new class extends Migration {
             $table->softDeletes();
             $table->timestamps();
         });
+    }
     }
 
     /**
