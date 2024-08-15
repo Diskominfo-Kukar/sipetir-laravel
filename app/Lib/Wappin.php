@@ -24,8 +24,9 @@ class Wappin
     /**
      * Retrieves a token from the Wappin API.
      *
-     * @throws \Illuminate\Http\Client\RequestException if the API request fails
      * @return string|null The token if the API request is successful, otherwise null
+     *
+     * @throws \Illuminate\Http\Client\RequestException if the API request fails
      */
     public function getToken()
     {
@@ -37,6 +38,7 @@ class Wappin
 
         if ($response->successful()) {
             $responseData = $response->json();
+
             if (isset($responseData['users'][0]['token'])) {
                 return $responseData['users'][0]['token'];
             }
@@ -48,10 +50,11 @@ class Wappin
     /**
      * Sends a message to a specified phone number using the Wappin API.
      *
-     * @param string $phoneNumber The phone number to send the message to.
-     * @param string $message The message to be sent.
-     * @throws \Illuminate\Http\Client\RequestException if the API request fails
+     * @param  string  $phoneNumber  The phone number to send the message to.
+     * @param  string  $message  The message to be sent.
      * @return \Illuminate\Http\Client\Response|false The API response if successful, otherwise false
+     *
+     * @throws \Illuminate\Http\Client\RequestException if the API request fails
      */
     public function sendMessage($phoneNumber, $message)
     {
@@ -97,7 +100,7 @@ class Wappin
     /**
      * Formats a phone number to a standardized format.
      *
-     * @param string $phoneNumber The phone number to be formatted.
+     * @param  string  $phoneNumber  The phone number to be formatted.
      * @return string The formatted phone number.
      */
     public function formatPhoneNumber($phoneNumber)

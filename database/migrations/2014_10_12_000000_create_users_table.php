@@ -12,20 +12,20 @@ return new class extends Migration {
      */
     public function up()
     {
-        if (!Schema::hasTable('users')) {
-        Schema::create('users', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->unsignedInteger('pegawai_id')->nullable()->unique();
-            $table->string('nama');
-            $table->string('username')->unique();
-            $table->string('email')->nullable()->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->softDeletes();
-            $table->timestamps();
-        });
-    }
+        if (! Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+                $table->uuid('id')->primary();
+                $table->unsignedInteger('pegawai_id')->nullable()->unique();
+                $table->string('nama');
+                $table->string('username')->unique();
+                $table->string('email')->nullable()->unique();
+                $table->timestamp('email_verified_at')->nullable();
+                $table->string('password');
+                $table->rememberToken();
+                $table->softDeletes();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

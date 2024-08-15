@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Paket;
 
-use App\Traits\DokumenHanlderTrait;
 use App\Models\Master\Answer;
 use App\Models\Master\Jabatan;
 use App\Models\Master\JenisDokumen;
@@ -21,9 +20,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Http;
 use Yajra\DataTables\DataTables;
-
 
 class PaketController extends Controller
 {

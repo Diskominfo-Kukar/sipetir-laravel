@@ -49,10 +49,12 @@ class OtpController extends Controller
                     switch ($data->tipe) {
                         case 1:
                             $tipe = 'awdawd';
+
                             break;
 
                         default:
                             $tipe = 'awdawd default';
+
                             break;
                     }
 
@@ -63,10 +65,12 @@ class OtpController extends Controller
                     switch ($data->status) {
                         case true:
                             $status = 'awdawd';
+
                             break;
 
                         default:
                             $status = 'awdawd default';
+
                             break;
                     }
 
