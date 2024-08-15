@@ -69,29 +69,31 @@ class IndexController extends Controller
         if ($user->hasRole('Panitia') && $user->hasRole('PPK')) {
             $query->orderByRaw(
                 'case
-                    when status = 11 then 1
+                    when status = 10 then 1
                     when status = 8 then 2
                     when status = 7 then 3
                     when status = 6 then 4
-                    when status = 1 then 5
-                    else 6
+                    when status = 11 then 5
+                    when status = 1 then 6
+                    else 7
                 end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Panitia')) {
             $query->orderByRaw(
                 'case
-                    when status = 8 then 1
-                    when status = 7 then 2
-                    when status = 6 then 3
-                    else 4
+                    when status = 10 then 1
+                    when status = 8 then 2
+                    when status = 7 then 3
+                    when status = 6 then 4
+                    else 5
                 end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('PPK')) {
             $query->orderByRaw(
                 'case
-                    when status = 11 then 1
-                    when status = 9 then 2
-                    when status = 4 then 3
+                    when status = 9 then 1
+                    when status = 4 then 2
+                    when status = 11 then 3
                     when status = 1 then 4
                     else 5
                 end'
@@ -99,9 +101,8 @@ class IndexController extends Controller
         } elseif ($user->hasRole('Admin')) {
             $query->orderByRaw(
                 'case
-                    when status = 10 then 1
-                    when status = 2 then 2
-                    else 3
+                    when status = 2 then 1
+                    else 2
                 end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Kepala BPBJ')) {

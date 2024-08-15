@@ -787,7 +787,7 @@
 
                     @endif
 
-                    @if(($paket->status == 10) &&  auth()->user()->hasRole('Admin'))
+                    @if(($paket->status == 10) &&  auth()->user()->hasRole('Panitia'))
                         @if($berita_acara_2==null)
                             @include('dashboard.paket.paket.components.penetapan')
                         @elseif ($berita_acara_3==null)
