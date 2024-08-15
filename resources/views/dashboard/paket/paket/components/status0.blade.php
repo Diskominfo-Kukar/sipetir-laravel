@@ -7,11 +7,6 @@
                 <div class="card-header">
                     Paket selesai
                 </div>
-                <div class="card-body">
-                    <form class="row g-3">
-                        Paket telah selesai
-                    </form>
-                </div>
             </div>
         </div>
     </div>
