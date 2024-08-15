@@ -1038,6 +1038,7 @@ class PaketController extends Controller
 
                 $paket->update([
                     'berita_acara_pengumuman' => 'pdf/'.$filename,
+                    'status'                  => '0',
                 ]);
 
                 session()->flash('success', 'Dokumen Berhasil di-upload');
