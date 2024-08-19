@@ -27,6 +27,12 @@ class ResetUserPassword extends Command
      */
     public function handle()
     {
+        if (! $this->confirm('Apakah Anda yakin ingin mereset semua password user?')) {
+            $this->info('Operasi dibatalkan.');
+
+            return;
+        }
+
         $this->info('Memulai reset password user');
 
         $userData = User::all();

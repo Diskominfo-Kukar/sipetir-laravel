@@ -46,15 +46,15 @@ class ImportData extends Command
      */
     public function handle()
     {
-        // $this->importOpd();
-        // $this->importJabatanMaster();
-        // $this->importPegawaiMaster();
-        // $this->importSatker();
-        // $this->importPokmil();
-        // $this->importPanitiaPokmil();
-        // $this->importPpk();
+        $this->importOpd();
+        $this->importJabatanMaster();
+        $this->importPegawaiMaster();
+        $this->importSatker();
+        $this->importPokmil();
+        $this->importPanitiaPokmil();
+        $this->importPpk();
         $this->importPaket();
-        // $this->importSumberDana();
+        $this->importSumberDana();
     }
 
     public function importOpd()
