@@ -6,6 +6,7 @@ parameters:
   checkMissingIterableValueType: false
   noUnnecessaryCollectionCall: false
   reportUnmatchedIgnoredErrors: false
+  treatPhpDocTypesAsCertain: false
 
   paths:
     - app
@@ -13,7 +14,7 @@ parameters:
 
   # The level 9 is the highest level
   level: 5
-  
+
   ignoreErrors:
     - '#PHPDoc tag @var#'
     - '#Unsafe usage of new static#'

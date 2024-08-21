@@ -296,23 +296,24 @@ class ImportData extends Command
             $findPpk         = PPKInternal::where('ppk_id', $external->ppk_id)->first();
             $findSatuanKerja = SatkerInternal::where('stk_id', $external->stk_id)->first();
 
-            $statusPaket = null;
-
-            if ($external->is_tayang_kuppbj) {
+            $statusPaket    = null;
+            $isTayangKuppbj = $external->is_tayang_kuppbj == 't' || $external->is_tayang_kuppbj == 1;
+            if ($isTayangKuppbj) {
                 $statusPaket = StatusPaket::Selesai->value;
             } else {
                 $statusPaket = StatusPaket::Upload->value;
             }
 
             PaketInternal::create([
+                'pkt_id'           => $external->pkt_id,
                 'pokmil_id'        => $findPokmil->id ?? null,
                 'ppk_id'           => $findPpk->id ?? null,
                 'satker_id'        => $findSatuanKerja->id ?? null,
                 'nama'             => $external->pkt_nama,
                 'pagu'             => (float) $external->pkt_pagu,
                 'status'           => (int) $statusPaket,
-                'is_tayang_kuppbj' => (bool) $external->is_tayang_kuppbj,
-                'is_tayang_pokja'  => (bool) $external->is_tayang_pokja,
+                'is_tayang_kuppbj' => (int) $isTayangKuppbj,
+                'is_tayang_pokja'  => (int) $external->is_tayang_pokja,
                 'tgl_assign_ukpbj' => Carbon::parse($external->pkt_tgl_assign_ukpbj),
                 'tgl_assign_pokja' => Carbon::parse($external->pkt_tgl_assign_pokja),
                 'tgl_assign'       => Carbon::parse($external->pkt_tgl_assign),

@@ -55,7 +55,8 @@ class SyncData extends Command
 
             $statusPaket = null;
 
-            if ($external->is_tayang_kuppbj) {
+            $isTayangKuppbj = $external->is_tayang_kuppbj == 't' || $external->is_tayang_kuppbj == 1;
+            if ($isTayangKuppbj) {
                 $statusPaket = StatusPaket::Selesai->value;
             } else {
                 $statusPaket = StatusPaket::Upload->value;
@@ -63,7 +64,7 @@ class SyncData extends Command
 
             PaketInternal::updateOrCreate(
                 [
-                    'nama' => $external->pkt_nama,
+                    'pkt_id' => $external->pkt_id,
                 ],
                 [
                     'pokmil_id'        => $findPokmil->id ?? null,
@@ -72,8 +73,8 @@ class SyncData extends Command
                     'nama'             => $external->pkt_nama,
                     'pagu'             => (float) $external->pkt_pagu,
                     'status'           => (int) $statusPaket,
-                    'is_tayang_kuppbj' => (bool) $external->is_tayang_kuppbj,
-                    'is_tayang_pokja'  => (bool) $external->is_tayang_pokja,
+                    'is_tayang_kuppbj' => (int) $isTayangKuppbj,
+                    'is_tayang_pokja'  => (int) $external->is_tayang_pokja,
                     'tgl_assign_ukpbj' => Carbon::parse($external->pkt_tgl_assign_ukpbj),
                     'tgl_assign_pokja' => Carbon::parse($external->pkt_tgl_assign_pokja),
                     'tgl_assign'       => Carbon::parse($external->pkt_tgl_assign),

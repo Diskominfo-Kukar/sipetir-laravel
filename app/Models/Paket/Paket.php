@@ -28,6 +28,7 @@ class Paket extends Model
     protected $logOnly = ['*'];
 
     protected $fillable = [
+        'pkt_id',
         'nama',
         'nik',
         'nip',
