@@ -66,12 +66,14 @@ class PaketController extends Controller
             $query->orderByRaw(
                 'case
                     when status = 10 then 1
-                    when status = 8 then 2
-                    when status = 7 then 3
-                    when status = 6 then 4
-                    when status = 11 then 5
-                    when status = 1 then 6
-                    else 7
+                    when status = 9 then 2
+                    when status = 8 then 3
+                    when status = 7 then 4
+                    when status = 6 then 5
+                    when status = 4 then 6
+                    when status = 11 then 7
+                    when status = 1 then 8
+                    else 9
                 end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Panitia')) {
@@ -206,7 +208,7 @@ class PaketController extends Controller
      */
     public function show(Paket $paket)
     {
-        if (! auth()->user()->hasRole('Kepala BPBJ') && ! auth()->user()->hasRole('Admin')) {
+        if (! auth()->user()->hasRole('Kepala BPBJ') && ! auth()->user()->hasRole('Admin') && ! auth()->user()->hasRole('superadmin')) {
             if (! $paket->ppk_id == auth()->user()->ppk_id && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id)) {
                 return abort(403);
             }
