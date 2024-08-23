@@ -3,11 +3,13 @@
 namespace App\Console\Commands;
 
 use App\Models\External\Epns\Paket as PaketExternal;
+use App\Models\External\Epns\PPK as PPKExternal;
 use App\Models\Lib\SyncDataStatus;
 use App\Models\Master\Pokmil as PokmilInternal;
 use App\Models\Master\Ppk as PPKInternal;
 use App\Models\Master\Satker as SatkerInternal;
 use App\Models\Paket\Paket as PaketInternal;
+use App\Models\User;
 use App\Traits\StatusPaket;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -49,8 +51,11 @@ class SyncData extends Command
         $bar->start();
 
         foreach ($paketExternal->get() as $external) {
-            $findPokmil      = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
-            $findPpk         = PPKInternal::where('ppk_id', $external->ppk_id)->first();
+            $findPokmil = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
+            $findPpk    = PPKInternal::where('ppk_id', $external->ppk_id)->first();
+            if ($findPpk === null) {
+                $findPpk = $this->ppkBaru($external->ppk_id);
+            }
             $findSatuanKerja = SatkerInternal::where('stk_id', $external->stk_id)->first();
 
             $statusPaket = null;
@@ -96,5 +101,27 @@ class SyncData extends Command
         ]);
 
         $this->info('Sinkronisasi Data Paket Berhasil');
+    }
+
+    public function ppkBaru($externalPpkId)
+    {
+        $externalPpk = PPKExternal::where('ppk_id', $externalPpkId)->first();
+        if (is_null($externalPpk)) {
+            return null;
+        }
+
+        $user = User::with('panitia')->where('pegawai_id', $externalPpk->peg_id)->first();
+        if (! is_null($user)) {
+            $newPpk = PPKInternal::create([
+                'ppk_id'     => $externalPpk->ppk_id,
+                'panitia_id' => $user->panitia->id,
+            ]);
+
+            $user->assignRole('PPK');
+
+            return $newPpk->id;
+        }
+
+        return null;
     }
 }
