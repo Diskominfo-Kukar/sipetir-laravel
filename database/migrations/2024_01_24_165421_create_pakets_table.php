@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('paket', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->unsignedBigInteger('pkt_id');
             $table->string('pokmil_id')->references('id')->on('pokmil')->nullable();
             $table->string('ppk_id')->references('id')->on('ppk')->nullable();
             $table->string('satker_id')->references('id')->on('satuan_kerja')->nullable();

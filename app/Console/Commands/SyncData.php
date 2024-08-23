@@ -3,15 +3,16 @@
 namespace App\Console\Commands;
 
 use App\Models\External\Epns\Paket as PaketExternal;
+use App\Models\External\Epns\PPK as PPKExternal;
 use App\Models\Lib\SyncDataStatus;
 use App\Models\Master\Pokmil as PokmilInternal;
 use App\Models\Master\Ppk as PPKInternal;
 use App\Models\Master\Satker as SatkerInternal;
 use App\Models\Paket\Paket as PaketInternal;
+use App\Models\User;
 use App\Traits\StatusPaket;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class SyncData extends Command
 {
@@ -39,51 +40,52 @@ class SyncData extends Command
 
     public function syncPaket()
     {
-        $dataPaketTerakhir = SyncDataStatus::whereModel(PaketInternal::class)->first();
-
-        $paketBaru = PaketExternal::where(DB::raw("to_char(pkt_tgl_buat, 'YYYY-MM-DD HH24:MI:SS')"), '>', $dataPaketTerakhir->last_synced)->orderBy('pkt_tgl_buat');
-
-        if (! $paketBaru->exists()) {
-            $this->info('Tidak ada data paket baru yang perlu disikronisasi');
-
-            return;
-        }
-
         $this->info('Memulai Sinkronisasi Data Paket');
 
-        $totalRecords = $paketBaru->count();
+        $paketExternal = PaketExternal::query();
+
+        $totalRecords = $paketExternal->count();
         $bar          = $this->output->createProgressBar($totalRecords);
 
         $this->info('Memulai Sinkronisasi Data Paket (Jumlah Data: '.$totalRecords.' Paket)');
         $bar->start();
 
-        foreach ($paketBaru->get() as $external) {
-            $findPokmil      = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
-            $findPpk         = PPKInternal::where('ppk_id', $external->ppk_id)->first();
+        foreach ($paketExternal->get() as $external) {
+            $findPokmil = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
+            $findPpk    = PPKInternal::where('ppk_id', $external->ppk_id)->first();
+            if ($findPpk === null) {
+                $findPpk = $this->ppkBaru($external->ppk_id);
+            }
             $findSatuanKerja = SatkerInternal::where('stk_id', $external->stk_id)->first();
 
             $statusPaket = null;
 
-            if ($external->is_tayang_kuppbj) {
+            $isTayangKuppbj = $external->is_tayang_kuppbj == 't' || $external->is_tayang_kuppbj == 1;
+            if ($isTayangKuppbj) {
                 $statusPaket = StatusPaket::Selesai->value;
             } else {
                 $statusPaket = StatusPaket::Upload->value;
             }
 
-            PaketInternal::create([
-                'pokmil_id'        => $findPokmil->id ?? null,
-                'ppk_id'           => $findPpk->id ?? null,
-                'satker_id'        => $findSatuanKerja->id ?? null,
-                'nama'             => $external->pkt_nama,
-                'pagu'             => (float) $external->pkt_pagu,
-                'status'           => (int) $statusPaket,
-                'is_tayang_kuppbj' => (bool) $external->is_tayang_kuppbj,
-                'is_tayang_pokja'  => (bool) $external->is_tayang_pokja,
-                'tgl_assign_ukpbj' => Carbon::parse($external->pkt_tgl_assign_ukpbj),
-                'tgl_assign_pokja' => Carbon::parse($external->pkt_tgl_assign_pokja),
-                'tgl_assign'       => Carbon::parse($external->pkt_tgl_assign),
-                'tgl_buat'         => Carbon::parse($external->pkt_tgl_buat),
-            ]);
+            PaketInternal::updateOrCreate(
+                [
+                    'pkt_id' => $external->pkt_id,
+                ],
+                [
+                    'pokmil_id'        => $findPokmil->id ?? null,
+                    'ppk_id'           => $findPpk->id ?? null,
+                    'satker_id'        => $findSatuanKerja->id ?? null,
+                    'nama'             => $external->pkt_nama,
+                    'pagu'             => (float) $external->pkt_pagu,
+                    'status'           => (int) $statusPaket,
+                    'is_tayang_kuppbj' => (int) $isTayangKuppbj,
+                    'is_tayang_pokja'  => (int) $external->is_tayang_pokja,
+                    'tgl_assign_ukpbj' => Carbon::parse($external->pkt_tgl_assign_ukpbj),
+                    'tgl_assign_pokja' => Carbon::parse($external->pkt_tgl_assign_pokja),
+                    'tgl_assign'       => Carbon::parse($external->pkt_tgl_assign),
+                    'tgl_buat'         => Carbon::parse($external->pkt_tgl_buat),
+                ]
+            );
             $bar->advance();
         }
 
@@ -99,5 +101,27 @@ class SyncData extends Command
         ]);
 
         $this->info('Sinkronisasi Data Paket Berhasil');
+    }
+
+    public function ppkBaru($externalPpkId)
+    {
+        $externalPpk = PPKExternal::where('ppk_id', $externalPpkId)->first();
+        if (is_null($externalPpk)) {
+            return null;
+        }
+
+        $user = User::with('panitia')->where('pegawai_id', $externalPpk->peg_id)->first();
+        if (! is_null($user)) {
+            $newPpk = PPKInternal::create([
+                'ppk_id'     => $externalPpk->ppk_id,
+                'panitia_id' => $user->panitia->id,
+            ]);
+
+            $user->assignRole('PPK');
+
+            return $newPpk->id;
+        }
+
+        return null;
     }
 }
