@@ -117,6 +117,8 @@ class QuestionController extends Controller
         $data = [
             'question'    => $question,
             'kategori_id' => $kategori_id,
+            // @phpstan-ignore-next-line
+            'parent_id' => $question?->parent_id,
         ];
 
         return view('dashboard.master.'.$this->route.'.edit', $data);
@@ -185,6 +187,10 @@ class QuestionController extends Controller
             $data = $query->orderBy('no_urut')->get();
 
             return DataTables::of($data)->addIndexColumn()
+                ->editColumn('deskripsi', function ($data) {
+                    // @phpstan-ignore-next-line
+                    return $data?->deskripsi ?? '-';
+                })
                 ->addColumn('action', function ($row) use ($KategoriReview) {
                     $actionBtn = '
                         <div class="btn-group btn-sm">

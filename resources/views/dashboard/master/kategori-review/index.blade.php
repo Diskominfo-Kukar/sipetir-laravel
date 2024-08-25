@@ -12,6 +12,7 @@
                         <tr>
                             <th>No</th>
                             <th>Nama</th>
+                            <th>Deskripsi</th>
                             <th width="100px">Action</th>
                         </tr>
                     </thead>
@@ -25,6 +26,16 @@
     <x-ui.modal id="addModal" title="Tambah {{ $pageTitle }}" :action="route($route . '.store')" :fallback="true">
         <x-ui.input label="Nama " id="nama" name="nama" required placeholder="Nama"
             value="{{ old('nama') }}" />
+        <div class="mb-2">
+            <label for="deskripsi" class="form-label">Deskripsi</label>
+            <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="3"
+                placeholder="deskripsi" required>{{ old('deskripsi') }}</textarea>
+            @error('deskripsi')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
     </x-ui.modal>
 
     {{-- create user --}}
@@ -59,6 +70,10 @@
                     {
                         data: 'nama',
                         name: 'nama'
+                    },
+                    {
+                        data: 'deskripsi',
+                        name: 'deskripsi'
                     },
                     {
                         data: 'action',

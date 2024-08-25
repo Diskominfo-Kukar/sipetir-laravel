@@ -140,6 +140,10 @@ class KategoriReviewController extends Controller
             $data = KategoriReview::orderBy('no_urut')->get();
 
             return DataTables::of($data)->addIndexColumn()
+                ->editColumn('deskripsi', function ($data) {
+                    // @phpstan-ignore-next-line
+                    return $data?->deskripsi ?? '-';
+                })
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
                         <div class="btn-group btn-sm">

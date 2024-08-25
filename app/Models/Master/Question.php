@@ -18,7 +18,7 @@ class Question extends Model
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['nama', 'kategori_id', 'parent_id'];
+    protected $fillable = ['nama', 'kategori_id', 'parent_id', 'deskripsi'];
 
     public function setNamaAttribute($value)
     {

@@ -25,22 +25,25 @@ class KategoriReviewRequest extends FormRequest
         if ($request->isMethod('post')) {
             return [
 
-                'nama' => 'required|min:1|unique:kategori_review,nama,NULL,id,deleted_at,NULL',
+                'nama'      => 'required|min:1|unique:kategori_review,nama,NULL,id,deleted_at,NULL',
+                'deskripsi' => 'required',
             ];
         }
         $id = $request->kategori_review->id;
 
         //untuk update
         return [
-            'nama' => 'required|max:255|unique:kategori_review,nama,'.$id.',id,deleted_at,NULL',
+            'nama'      => 'required|max:255|unique:kategori_review,nama,'.$id.',id,deleted_at,NULL',
+            'deskripsi' => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            'nama.required' => 'Kategori Wajib Diisi',
-            'nama.unique'   => 'Kategori Harus berbeda dengan data yang lain',
+            'nama.required'      => 'Kategori Wajib Diisi',
+            'nama.unique'        => 'Kategori Harus berbeda dengan data yang lain',
+            'deskripsi.required' => 'Deskripsi Wajib Diisi',
         ];
     }
 
