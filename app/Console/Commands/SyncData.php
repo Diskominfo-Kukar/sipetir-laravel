@@ -53,6 +53,7 @@ class SyncData extends Command
         foreach ($paketExternal->get() as $external) {
             $findPokmil = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
             $findPpk    = PPKInternal::where('ppk_id', $external->ppk_id)->first();
+
             if ($findPpk === null) {
                 $findPpk = $this->ppkBaru($external->ppk_id);
             }
@@ -61,6 +62,7 @@ class SyncData extends Command
             $statusPaket = null;
 
             $isTayangKuppbj = $external->is_tayang_kuppbj == 't' || $external->is_tayang_kuppbj == 1;
+
             if ($isTayangKuppbj) {
                 $statusPaket = StatusPaket::Selesai->value;
             } else {
@@ -106,11 +108,13 @@ class SyncData extends Command
     public function ppkBaru($externalPpkId)
     {
         $externalPpk = PPKExternal::where('ppk_id', $externalPpkId)->first();
+
         if (is_null($externalPpk)) {
             return null;
         }
 
         $user = User::with('panitia')->where('pegawai_id', $externalPpk->peg_id)->first();
+
         if (! is_null($user)) {
             $newPpk = PPKInternal::create([
                 'ppk_id'     => $externalPpk->ppk_id,

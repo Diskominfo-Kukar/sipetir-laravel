@@ -21,7 +21,7 @@ class KategoriReview extends Model
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['nama'];
+    protected $fillable = ['nama', 'no_urut'];
 
     public function setNamaAttribute($value)
     {

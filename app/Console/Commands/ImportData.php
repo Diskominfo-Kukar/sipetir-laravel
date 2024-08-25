@@ -298,6 +298,7 @@ class ImportData extends Command
 
             $statusPaket    = null;
             $isTayangKuppbj = $external->is_tayang_kuppbj == 't' || $external->is_tayang_kuppbj == 1;
+
             if ($isTayangKuppbj) {
                 $statusPaket = StatusPaket::Selesai->value;
             } else {

@@ -62,6 +62,9 @@ class KategoriReviewController extends Controller
     {
         $validate = $request->validated();
         DB::transaction(function () use ($validate) {
+            $incrementNoUrut     = KategoriReview::max('no_urut');
+            $validate['no_urut'] = $incrementNoUrut + 1;
+
             KategoriReview::create($validate);
         });
 

@@ -25,7 +25,8 @@
     <x-ui.modal id="addModal" title="Tambah {{ $pageTitle }}" :action="route($route . '.store')" :fallback="true">
         <x-ui.input label="Nama " id="nama" name="nama" required placeholder="Nama"
             value="{{ old('nama') }}" />
-        <x-ui.input id="kategori_id" type="hidden" name="kategori_id" value="{{ $kategori_id }}" />
+        <input id="kategori_id" type="hidden" name="kategori_id" value="{{ $kategori_id }}" />
+        <input id="parent_id" type="hidden" name="parent_id" value="{{ $question }}">
     </x-ui.modal>
 
     {{-- create user --}}
@@ -49,7 +50,7 @@
             $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route($route . '.get-data') }}?kategori={{ $kategori_slug }}",
+                ajax: "{{ route($route . '.get-data') }}?kategori={{ $kategori_slug }}&question={{ $question }}",
                 searchDelay: 1000,
                 columns: [{
                         data: 'DT_RowIndex',
