@@ -4,6 +4,7 @@ namespace App\Http\Requests\Master;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class QuestionRequest extends FormRequest
 {
@@ -24,15 +25,50 @@ class QuestionRequest extends FormRequest
     {
         if ($request->isMethod('post')) {
             return [
-                'nama'        => 'required|min:1|unique:question,nama,NULL,id,deleted_at,NULL',
+                'nama' => [
+                    'required',
+                    'min:1',
+                    Rule::unique('question')->where(function ($query) {
+                        $parentId = request()->input('parent_id');
+
+                        if ($parentId) {
+                            return $query->where('parent_id', $parentId)
+                                ->where('kategori_id', request()->input('kategori_id'))
+                                ->where('deleted_at', null);
+                        } else {
+                            return $query->whereNull('parent_id')
+                                ->where('kategori_id', request()->input('kategori_id'))
+                                ->where('deleted_at', null);
+                        }
+                    }),
+                ],
+                'deskripsi'   => 'required',
                 'kategori_id' => 'required',
+                'parent_id'   => 'sometimes',
             ];
         }
         $id = $request->question->id;
 
         //untuk update
         return [
-            'nama'        => 'required|max:255|unique:question,nama,'.$id.',id,deleted_at,NULL',
+            'nama' => [
+                'required',
+                'min:1',
+                Rule::unique('question')->ignore($id)->where(function ($query) {
+                    $parentId = request()->input('parent_id');
+
+                    if ($parentId) {
+                        return $query->where('parent_id', $parentId)
+                            ->where('kategori_id', request()->input('kategori_id'))
+                            ->where('deleted_at', null);
+                    } else {
+                        return $query->whereNull('parent_id')
+                            ->where('kategori_id', request()->input('kategori_id'))
+                            ->where('deleted_at', null);
+                    }
+                }),
+            ],
+            'deskripsi'   => 'required',
             'kategori_id' => 'required',
         ];
     }

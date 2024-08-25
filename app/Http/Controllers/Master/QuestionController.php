@@ -38,6 +38,10 @@ class QuestionController extends Controller
             return redirect()->route('kategori-review.index');
         }
 
+        if ($request->filled('question')) {
+            $question = $request->question;
+        }
+
         $title  = $this->title.' - '.$KategoriReview->nama;
         $crumbs = [
             'Dashboard'          => route('dashboard'),
@@ -53,6 +57,7 @@ class QuestionController extends Controller
             'crumbs'        => $crumbs,
             'kategori_id'   => $KategoriReview->id,
             'kategori_slug' => $KategoriReview->slug,
+            'question'      => $question ?? null,
         ];
 
         return view('dashboard.master.'.$this->route.'.index', $data);
@@ -76,6 +81,7 @@ class QuestionController extends Controller
     public function store(QuestionRequest $request)
     {
         $validate = $request->validated();
+
         DB::transaction(function () use ($validate) {
             Question::create($validate);
         });
@@ -83,7 +89,8 @@ class QuestionController extends Controller
         $KategoriReview = KategoriReview::find($request->kategori_id);
         session()->flash('success', $this->title.' Berhasil Ditambahkan');
 
-        return redirect()->route($this->route.'.index', ['kategori' => $KategoriReview->slug])->with('kategori', $KategoriReview->slug);
+        // @phpstan-ignore-next-line
+        return redirect()->route($this->route.'.index', ['kategori' => $KategoriReview->slug, 'question' => $request?->parent_id])->with('kategori', $KategoriReview->slug);
     }
 
     /**
@@ -110,6 +117,8 @@ class QuestionController extends Controller
         $data = [
             'question'    => $question,
             'kategori_id' => $kategori_id,
+            // @phpstan-ignore-next-line
+            'parent_id' => $question?->parent_id,
         ];
 
         return view('dashboard.master.'.$this->route.'.edit', $data);
@@ -166,12 +175,28 @@ class QuestionController extends Controller
     {
         if ($request->ajax()) {
             $KategoriReview = KategoriReview::whereSlug($request->kategori)->first();
-            $data           = Question::where('kategori_id', $KategoriReview->id)->orderBy('no_urut')->get();
+            $query          = Question::where('kategori_id', $KategoriReview->id);
+
+            if ($request->filled('question')) {
+                $question = $request->question;
+                $query    = $query->find($question)->childrenQuestions();
+            } else {
+                $query = $query->where('parent_id', null);
+            }
+
+            $data = $query->orderBy('no_urut')->get();
 
             return DataTables::of($data)->addIndexColumn()
-                ->addColumn('action', function ($row) {
+                ->editColumn('deskripsi', function ($data) {
+                    // @phpstan-ignore-next-line
+                    return $data?->deskripsi ?? '-';
+                })
+                ->addColumn('action', function ($row) use ($KategoriReview) {
                     $actionBtn = '
                         <div class="btn-group btn-sm">
+                            <a title="Question" href="'.route('question.index').'?kategori='.$KategoriReview->slug.'&question='.$row->id.'" class="btn btn-success btn-sm">
+                                    <i class="bx bx-help-circle"></i>
+                            </a>
                             <a title="edit" href="'.route($this->route.'.edit', $row->id).'" action="'.route($this->route.'.update', $row->id).'" class="btn btn-warning btn-sm remote-modal">
                                 <i class="bx bx-edit"></i>
                             </a>
