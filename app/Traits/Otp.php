@@ -33,6 +33,24 @@ trait Otp
         }
     }
 
+    public static function verify($type, $code, $moduleId, $moduleClass, $panitiaId)
+    {
+        $otp = OtpModel::where('type', $type)
+            ->where('code', $code)
+            ->where('module_id', $moduleId)
+            ->where('module_class', $moduleClass)
+            ->where('panitia_id', $panitiaId)
+            ->where('status', '!=', 3)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (! $otp) {
+            return false;
+        }
+
+        return true;
+    }
+
     private static function whatsApp($phoneNumber, $message)
     {
         dispatch(function () use ($phoneNumber, $message) {
