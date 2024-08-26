@@ -5,30 +5,31 @@ namespace App\Traits;
 use App\Lib\Wappin;
 use App\Models\Otp as OtpModel;
 
-class Otp
+trait Otp
 {
-    public static function sendTo($tipe, $to, $request = null)
+    public static function sendTo($type, $to, $moduleId, $moduleClass, $panitiaId)
     {
         $kodeOtp = self::generateOtp();
 
-        // OtpModel::create([
-        //     'module_id'    => $request->module_id,
-        //     'module_class' => $request->module_class,
-        //     'panitia_id'   => $request->panitia_id,
-        //     'message'      => $kodeOtp,
-        //     'tipe'         => $request->tipe,
-        //     'status'       => $request->status,
-        // ]);
+        OtpModel::create([
+            'module_id'    => $moduleId,
+            'module_class' => $moduleClass,
+            'panitia_id'   => $panitiaId,
+            'type'         => $type,
+            'to'           => $to,
+            'code'         => $kodeOtp,
+            'status'       => 2, //Terkirim
+        ]);
 
         $otpMessage = 'Kode OTP Anda: '.$kodeOtp;
 
-        switch ($tipe) {
+        switch ($type) {
             case 'wa':
                 return self::whatsApp($to, $otpMessage);
             case 'email':
                 return self::email($to, $otpMessage);
             default:
-                return 'Invalid tipe';
+                return 'Invalid type';
         }
     }
 

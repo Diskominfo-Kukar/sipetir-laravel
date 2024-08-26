@@ -15,9 +15,10 @@ return new class extends Migration {
             $table->string('module_id');
             $table->string('module_class');
             $table->string('panitia_id')->references('id')->on('panitia');
+            $table->enum('type', ['wa', 'email'])->default('wa');
+            $table->string('to')->nullable();
             $table->text('code');
-            $table->unsignedTinyInteger('type')->comment('1: wa, 2: email');
-            $table->boolean('status')->default(1)->comment('0: gagal, 1: pending, 2: terkirim');
+            $table->unsignedTinyInteger('status')->default(1)->comment('0: gagal, 1: pending, 2: terkirim', '3: terpakai');
             $table->timestamps();
         });
     }

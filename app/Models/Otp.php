@@ -11,10 +11,11 @@ class Otp extends Model
 
     protected $table = 'otp';
 
-    protected $fillable = ['modul_id', 'panitia_id', 'message', 'tipe', 'status'];
+    protected $fillable = [
+        'module_id', 'module_class', 'panitia_id', 'type', 'to', 'code', 'status',
+    ];
 
     protected $casts = [
-        'tipe'   => 'integer',
-        'status' => 'boolean',
+        'status' => 'integer',
     ];
 }
