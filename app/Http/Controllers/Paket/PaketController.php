@@ -212,6 +212,9 @@ class PaketController extends Controller
             if (! $paket->ppk_id == auth()->user()->ppk_id && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id)) {
                 return abort(403);
             }
+            //if ($paket->status==7 && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id)) {
+            //    return abort(403);
+            //}
         }
 
         $title         = $paket->nama;
@@ -659,8 +662,8 @@ class PaketController extends Controller
                 'nama_paket'      => $request->nama_paket,
                 'nama_opd'        => $request->nama_opd,
                 'sumber_dana'     => $request->sumber_dana,
-                'pagu'            => $request->pagu,
-                'hps'             => $request->hps,
+                'pagu'            => str_replace('.', '', $request->pagu),
+                'hps'             => str_replace('.', '', $request->hps),
                 'dpa'             => $request->dpa,
                 'tahun'           => $request->tahun,
             ]);
@@ -677,8 +680,8 @@ class PaketController extends Controller
                     'nama_paket'      => $request->nama_paket,
                     'nama_opd'        => $request->nama_opd,
                     'sumber_dana'     => $request->sumber_dana,
-                    'pagu'            => $request->pagu,
-                    'hps'             => $request->hps,
+                    'pagu'            => str_replace('.', '', $request->pagu),
+                    'hps'             => str_replace('.', '', $request->hps),
                     'dpa'             => $request->dpa,
                     'tahun'           => $request->tahun,
                 ]);
@@ -736,8 +739,8 @@ class PaketController extends Controller
                 'nama_paket'      => $request->nama_paket,
                 'nama_opd'        => $request->nama_opd,
                 'sumber_dana'     => $request->sumber_dana,
-                'pagu'            => $request->pagu,
-                'hps'             => $request->hps,
+                'pagu'            => str_replace('.', '', $request->pagu),
+                'hps'             => str_replace('.', '', $request->hps),
                 'dpa'             => $request->dpa,
                 'tahun'           => $request->tahun,
                 'lokasi'          => $request->lokasi,
@@ -759,8 +762,8 @@ class PaketController extends Controller
                     'nama_paket'      => $request->nama_paket,
                     'nama_opd'        => $request->nama_opd,
                     'sumber_dana'     => $request->sumber_dana,
-                    'pagu'            => $request->pagu,
-                    'hps'             => $request->hps,
+                    'pagu'            => str_replace('.', '', $request->pagu),
+                    'hps'             => str_replace('.', '', $request->hps),
                     'dpa'             => $request->dpa,
                     'tahun'           => $request->tahun,
                     'lokasi'          => $request->lokasi,

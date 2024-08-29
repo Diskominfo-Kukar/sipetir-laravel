@@ -22,6 +22,7 @@ return new class extends Migration {
                 $table->decimal('pagu', '25', 2)->default(0);
                 $table->decimal('hps', '25', 2)->default(0);
                 $table->text('dpa')->nullable();
+                $table->integer('tahun')->nullable();
                 $table->text('lokasi')->nullable();
                 $table->text('waktu')->nullable();
                 $table->text('uraian')->nullable();

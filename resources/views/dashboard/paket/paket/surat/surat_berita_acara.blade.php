@@ -165,7 +165,7 @@
     <div class="body">
         <p class="text-center">
             <strong>BERITA ACARA REVIU DOKUMEN PERSIAPAN PENGADAAN<br>
-                DAN KERTAS KERJA PERSIAPAN PEMILIHAN<br>
+                JASA KONSULTAN<br>
                 <u>TAHUN ANGGARAN {{ date('Y', strtotime($tanggal)) }}</u>
             </strong><br>
             Nomor: {{ $berita_acara->kode }}/BA.R/25651198/{{ $tglkop }}
@@ -176,13 +176,13 @@
         <table style="border-collapse: collapse; width: 100%;">
 
             <tr>
-                <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nama PPK</td>
+                <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nama Paket Pengadaan</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;"><b>{{ $paket->ppk->nama }}</b>
+                <td style="padding: 0; vertical-align: top; width: 75%;"><b>{{ $paket->nama }}</b>
                 </td>
             </tr>
             <tr>
-                <td style="padding: 0 8px; vertical-align: top; width: 35%;">SKPD/OPD</td>
+                <td style="padding: 0 8px; vertical-align: top; width: 35%;">Satuan Kerja</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
                 <td style="padding: 0; vertical-align: top; width: 75%; ">-
                     </td>

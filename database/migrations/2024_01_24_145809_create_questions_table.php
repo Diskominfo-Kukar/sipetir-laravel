@@ -14,8 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->text('nama');
             $table->text('slug');
-            $table->char('no_urut');
-
+            $table->char('no_urut')->nullable();
             $table->string('kategori_id')->references('id')->on('kategori_review');
             $table->softDeletes();
             $table->timestamps();

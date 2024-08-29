@@ -399,13 +399,13 @@
                                                         <div class="form-group row mb-3">
                                                             <label for="pagu" class="col-sm-3 col-form-label text-right">Pagu</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="pagu" class="form-control" value="{{ $paket->pagu }}" required>
+                                                                <input type="text" name="pagu" class="form-control input-rupiah" value="{{ formatRupiah($paket->pagu) }}" required>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-3">
                                                             <label for="hps" class="col-sm-3 col-form-label text-right">HPS</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number" name="hps" class="form-control" value="{{ $paket->hps }}" required>
+                                                                <input type="text" name="hps" class="form-control input-rupiah" value="{{ formatRupiah($paket->hps) }}" required>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-3">
@@ -614,19 +614,19 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label for="pagu" class="col-sm-3 col-form-label text-right">Pagu</label>
                                                                             <div class="col-sm-9">
-                                                                                <input type="number" name="pagu" class="form-control" value="{{ old('pagu', $new_data->pagu) }}" required>
+                                                                                <input type="text" name="pagu" class="form-control input-rupiah" value="{{ old('pagu', formatRupiah($new_data->pagu)) }}" required>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
                                                                             <label for="hps" class="col-sm-3 col-form-label text-right">HPS</label>
                                                                             <div class="col-sm-9">
-                                                                                <input type="number" name="hps" class="form-control" value="{{ old('hps', $new_data->hps) }}" required>
+                                                                                <input type="text" name="hps" class="form-control input-rupiah" value="{{ old('hps', formatRupiah($new_data->hps)) }}" required>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
                                                                             <label for="dpa" class="col-sm-3 col-form-label text-right">DPA</label>
                                                                             <div class="col-sm-9">
-                                                                                <input type="text" name="dpa" class="form-control" value="{{ old('dpa', $new_data->dpa) }}" required>
+                                                                                <input type="text" name="dpa" class="form-control " value="{{ old('dpa', $new_data->dpa) }}" required>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
@@ -659,10 +659,8 @@
                                                                                 <textarea name="intro" class="form-control" rows="5" required>
                                                                                     <p style="padding: 8px; text-align: justify;">Pada hari ini <b>{{ $tanggal['hari'] }}</b> tanggal <b>{{ $tanggal['tanggal'] }}</b> bulan
                                                                                         <b>{{ $tanggal['bulan'] }}</b> tahun
-                                                                                        <b>{{ $tanggal['tahun'] }}</b>, bertempat di Ruang Rapat Bagian Pengadaan Barang dan Jasa (BPBJ), kami
-                                                                                        yang bertandatangan di dalam dokumen Berita Acara ini <b>{{ $paket->pokmil->nama }}</b> Bagian
-                                                                                        Pengadaan Barang dan Jasa Sekretariat Daerah Kab. Kutai Kartanegara bersama Pejabat Pembuat
-                                                                                        Komitmen (PPK) :
+                                                                                        <b>{{ $tanggal['tahun'] }}</b>, bertempat di <b>Kantor Bagian Pengadaan Barang dan Jasa Sekertariat Daerah Kabupaten
+                                                                                            Kartanegara</b> telah dilaksanakan kegiatan Reviu Dokumen Persiapan Pengadaan untuk:
                                                                                     </p>
                                                                                 </textarea>
                                                                             </div>
@@ -671,12 +669,7 @@
                                                                             <label for="outro" class="col-sm-3 col-form-label text-right">Kalimat Penutup</label>
                                                                             <div class="col-sm-9">
                                                                                 <textarea name="outro" class="form-control" rows="5" required>
-                                                                                    <p style="padding: 0 8px; text-align: justify;">Dalam pembahasan ini telah dilakukan reviu terhadap Dokumen
-                                                                                        Persiapan Pengadaan meliputi spesifikasi teknis dan DED, Harga Perkiraan Sendiri (HPS), Rancangan
-                                                                                        Kontrak, Dokumen Anggaran Belanja, ID, paket RUP, waktu penggunaan barang/jasa, analisis pasar serta
-                                                                                        Uraian pekerjaan, identifikasi bahaya dan penetapan resiko Pekerjaan Konstruksi terkait Keselamatan
-                                                                                        Konstruksi pada Pekerjaan Konstruksi.
-                                                                                        Dengan dokumentasi reviu sebagaimana terlampir.
+                                                                                    <p style="padding: 0 8px; text-align: justify;">-
                                                                                     </p>
                                                                                 </textarea>
                                                                             </div>
@@ -891,6 +884,14 @@
     @endpush
 
     @push('scripts')
+    <script>
+
+        $('.input-rupiah').on("input", function() {
+            let val = formatRupiah(this.value, '');
+            $(this).val(val);
+        });
+
+        </script>
         <script src="https://cdn.tiny.cloud/1/5ps1i1boa3tg20qfzwuk59h75b186ickj43d35pn8x1o4xy7/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
@@ -953,6 +954,7 @@
                 document.getElementById('process-button').classList.add('d-none');
             }
         });
+
         </script>
     @endpush
 </x-app-layout>
