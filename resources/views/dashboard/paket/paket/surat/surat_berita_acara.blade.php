@@ -178,7 +178,7 @@
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nama Paket Pengadaan</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;"><b>{{ $paket->nama }}</b>
+                <td style="padding: 0; vertical-align: top; width: 75%;"><b>{{ $berita_acara->nama_paket }}</b>
                 </td>
             </tr>
             <tr>
@@ -188,39 +188,16 @@
                     </td>
             </tr>
             <tr>
-                <td style="padding: 0 8px; vertical-align: top; width: 35%;">No. SK</td>
-                <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">
-                    {{ $paket->ppk->panitia->no_sk }}</td>
-            </tr>
-
-            <tr>
-                <td style="padding: 10px 8px 0 8px; vertical-align: top; width: 100%;" colspan="3">Telah
-                    mengadakan Reviu Dokumen Persiapan Pengadaan untuk :
+                <td style="padding: 0 8px; vertical-align: top; width: 35%;">Tahun Anggaran
                 </td>
-            </tr>
-            <tr>
-                <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nama Paket Pengadaan</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">
-                    <b>{{ $berita_acara->nama_paket }} </b>
-                </td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->tahun }}</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Lokasi Pekerjaan
                 </td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
                 <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->lokasi }}</td>
-            </tr>
-            <tr>
-                <td style="padding: 0 8px; vertical-align: top; width: 35%;">Waktu Pelaksanaan</td>
-                <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->waktu }} Hari Kalender</td>
-            </tr>
-            <tr>
-                <td style="padding: 0 8px; vertical-align: top; width: 35%;">Uraian Pekerjaan</td>
-                <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->uraian }}</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Sumber Dana</td>
@@ -230,30 +207,35 @@
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nilai Pagu Anggaran</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. {{ $berita_acara->pagu }},-</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. {{ formatRupiah($berita_acara->pagu) }},00 ({{ terbilang($berita_acara->pagu) }} rupiah)</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nilai HPS</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. {{ $berita_acara->hps }},-</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. {{ formatRupiah($berita_acara->hps) }},00 ({{ terbilang($berita_acara->pagu) }} rupiah)</td>
             </tr>
+            <tr>
+                <td style="padding: 0 8px; vertical-align: top; width: 35%;">Jenis Pengadaan
+                </td>
+                <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->jenis_pekerjaan }}</td>
+            </tr>
+
+
+
+
+            <tr>
+                <td style="padding: 0 8px; vertical-align: top; width: 35%;">No. SK</td>
+                <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">
+                    {{ $paket->ppk->panitia->no_sk }}</td>
+            </tr>
+
         </table>&nbsp;
 
-        {!! $berita_acara->outro !!}
-
-        <p style="padding:16px 8px;" class="text-center">
-            <strong>PEJABAT PEMBUAT KOMITMEN
-                <br>{{ $berita_acara->nama_paket }}
-                <br>-
-            </strong>
-        </p>
-
-        <p style="padding:70px 8px;" class="text-center">
-            <strong><u>{{ $paket->ppk->nama }}</u></strong>
-            <br>NIP. {{ $paket->ppk->panitia->nip }}
-        </p>
-
     </div>
+
+    Reviu dimulai Pada Pukul 10.00 Wita. Yang dihadiri Oleh :
 
     <footer>
         <table width="100%">

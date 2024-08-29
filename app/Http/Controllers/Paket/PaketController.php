@@ -212,9 +212,6 @@ class PaketController extends Controller
             if (! $paket->ppk_id == auth()->user()->ppk_id && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id)) {
                 return abort(403);
             }
-            //if ($paket->status==7 && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id)) {
-            //    return abort(403);
-            //}
         }
 
         $title         = $paket->nama;
@@ -729,6 +726,9 @@ class PaketController extends Controller
             }]);
         }])->get();
 
+        $pokmil  = Pokmil::find($paket->pokmil_id);
+        $panitia = $pokmil->panitia;
+
         $berita_acara = BeritaAcara::where('paket_id', $request->paket_id)->first();
 
         if ($berita_acara) {
@@ -744,10 +744,7 @@ class PaketController extends Controller
                 'dpa'             => $request->dpa,
                 'tahun'           => $request->tahun,
                 'lokasi'          => $request->lokasi,
-                'waktu'           => $request->waktu,
-                'uraian'          => $request->uraian,
                 'intro'           => $request->intro,
-                'outro'           => $request->outro,
             ]);
         } else {
             $tahun         = Carbon::now()->year;
@@ -767,10 +764,7 @@ class PaketController extends Controller
                     'dpa'             => $request->dpa,
                     'tahun'           => $request->tahun,
                     'lokasi'          => $request->lokasi,
-                    'waktu'           => $request->waktu,
-                    'uraian'          => $request->uraian,
                     'intro'           => $request->intro,
-                    'outro'           => $request->outro,
                 ]);
             } else {
                 session()->flash('error', 'Kode surat sudah digunakan');
@@ -785,6 +779,7 @@ class PaketController extends Controller
             'paket'        => $paket,
             'berita_acara' => $berita_acara,
             'kategoris'    => $kategoris,
+            'panitia'      => $panitia,
         ];
 
         $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);

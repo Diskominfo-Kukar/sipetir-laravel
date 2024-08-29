@@ -473,6 +473,9 @@
 
                     @elseif($status=="Review")
                         @role('Panitia')
+                            @if (! in_array($paket->pokmil_id, auth()->user()->pokmil_id))
+                                @include('dashboard.paket.paket.components.review')
+                            @else
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -541,12 +544,16 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         @else
                             @include('dashboard.paket.paket.components.review')
                         @endrole
 
                     @elseif($status=="Berita Acara")
                         @role('Panitia')
+                            @if (! in_array($paket->pokmil_id, auth()->user()->pokmil_id))
+                                @include('dashboard.paket.paket.components.beritaacara')
+                            @else
                             <div class="col-12">
                                     <div class="border-0 shadow-sm card">
                                         <div class="card-body">
@@ -642,18 +649,6 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
-                                                                            <label for="waktu" class="col-sm-3 col-form-label text-right">Waktu Pelaksanaan</label>
-                                                                            <div class="col-sm-9">
-                                                                                <input type="text" name="waktu" class="form-control" required>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group row mb-3">
-                                                                            <label for="uraian" class="col-sm-3 col-form-label text-right">Uraian Pekerjaan</label>
-                                                                            <div class="col-sm-9">
-                                                                                <input type="text" name="uraian" class="form-control" required>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group row mb-3">
                                                                             <label for="intro" class="col-sm-3 col-form-label text-right">Kalimat Pembuka</label>
                                                                             <div class="col-sm-9">
                                                                                 <textarea name="intro" class="form-control" rows="5" required>
@@ -661,15 +656,6 @@
                                                                                         <b>{{ $tanggal['bulan'] }}</b> tahun
                                                                                         <b>{{ $tanggal['tahun'] }}</b>, bertempat di <b>Kantor Bagian Pengadaan Barang dan Jasa Sekertariat Daerah Kabupaten
                                                                                             Kartanegara</b> telah dilaksanakan kegiatan Reviu Dokumen Persiapan Pengadaan untuk:
-                                                                                    </p>
-                                                                                </textarea>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group row mb-3">
-                                                                            <label for="outro" class="col-sm-3 col-form-label text-right">Kalimat Penutup</label>
-                                                                            <div class="col-sm-9">
-                                                                                <textarea name="outro" class="form-control" rows="5" required>
-                                                                                    <p style="padding: 0 8px; text-align: justify;">-
                                                                                     </p>
                                                                                 </textarea>
                                                                             </div>
@@ -710,6 +696,7 @@
                                         </div>
                                     </div>
                             </div>
+                            @endif
                         @else
                             @include('dashboard.paket.paket.components.beritaacara')
                         @endrole

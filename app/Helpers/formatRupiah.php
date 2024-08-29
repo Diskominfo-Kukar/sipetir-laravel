@@ -14,7 +14,7 @@ if (! function_exists('formatRupiah')) {
         $terbilang = '';
 
         if ($angka < 12) {
-            $terbilang = ' '.$baca[$angka];
+            $terbilang = ''.$baca[$angka];
         } elseif ($angka < 20) {
             $terbilang = terbilang($angka - 10).' belas';
         } elseif ($angka < 100) {
