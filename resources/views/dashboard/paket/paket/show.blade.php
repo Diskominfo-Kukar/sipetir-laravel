@@ -377,7 +377,7 @@
                                                         <div class="form-group row mb-3">
                                                             <label for="nama_opd" class="col-sm-3 col-form-label text-right">Nama OPD</label>
                                                             <div class="col-sm-9">
-                                                                <select name="nama_opd" class="form-control" required>
+                                                                <select name="nama_opd" class="form-control select2" required>
                                                                     <option value="" disabled selected></option>
                                                                     @foreach($opd as $item)
                                                                         <option value="{{ $item->nama }}">{{ $item->nama }}</option>
@@ -388,7 +388,7 @@
                                                         <div class="form-group row mb-3">
                                                             <label for="sumber_dana" class="col-sm-3 col-form-label text-right">Sumber Dana</label>
                                                             <div class="col-sm-9">
-                                                                <select name="sumber_dana" class="form-control" required>
+                                                                <select name="sumber_dana" class="form-control select2" required>
                                                                     <option value="" disabled selected></option>
                                                                     @foreach($sumber_dana as $item)
                                                                         <option value="{{ $item->nama }}">{{ $item->nama }}</option>
@@ -599,7 +599,7 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label for="satker" class="col-sm-3 col-form-label text-right">Satuan Kerja</label>
                                                                             <div class="col-sm-9">
-                                                                                <select name="satker" class="form-control" required>
+                                                                                <select name="satker" class="form-control select2" required>
                                                                                     <option value="{{ old('satker', $new_data->satker) }}">{{ old('satker', $new_data->satker) }}</option>
                                                                                     @foreach($satker as $item)
                                                                                         <option value="{{ $item->nama }}">{{ $item->nama }}</option>
@@ -610,7 +610,7 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label for="nama_opd" class="col-sm-3 col-form-label text-right">Nama OPD</label>
                                                                             <div class="col-sm-9">
-                                                                                <select name="nama_opd" class="form-control" required>
+                                                                                <select name="nama_opd" class="form-control select2" required>
                                                                                     <option value="{{ old('nama_opd', $new_data->nama_opd) }}">{{ old('nama_opd', $new_data->nama_opd) }}</option>
                                                                                     @foreach($opd as $item)
                                                                                         <option value="{{ $item->nama }}">{{ $item->nama }}</option>
@@ -621,7 +621,7 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label for="sumber_dana" class="col-sm-3 col-form-label text-right">Sumber Dana</label>
                                                                             <div class="col-sm-9">
-                                                                                <select name="sumber_dana" class="form-control" required>
+                                                                                <select name="sumber_dana" class="form-control select2" required>
                                                                                     <option value="{{ old('sumber_dana', $new_data->sumber_dana) }}">{{ old('sumber_dana', $new_data->sumber_dana) }}</option>
                                                                                     @foreach($sumber_dana as $item)
                                                                                         <option value="{{ $item->nama }}">{{ $item->nama }}</option>
@@ -896,6 +896,11 @@
             background: #4caf50;
             }
 
+            .select2-container--bootstrap-5 .select2-results__option {
+                color: black;
+            }
+
+
         </style>
     @endpush
 
@@ -905,6 +910,12 @@
         $('.input-rupiah').on("input", function() {
             let val = formatRupiah(this.value, '');
             $(this).val(val);
+        });
+
+        $(document).ready(function() {
+        $('.select2').select2({
+                theme: 'bootstrap-5',
+            });
         });
 
         </script>
@@ -970,6 +981,7 @@
                 document.getElementById('process-button').classList.add('d-none');
             }
         });
+
 
         </script>
     @endpush
