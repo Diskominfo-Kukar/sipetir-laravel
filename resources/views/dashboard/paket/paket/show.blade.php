@@ -452,7 +452,7 @@
                                                 <div class="d-flex justify-content-center">
                                                     @if ($surat_tugas)
                                                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
-                                                            <i class="bi bi-pen"></i>TTE
+                                                            <i class="bi bi-pen"></i>Tandatangani
                                                         </a>
                                                     @endif
                                                 </div>
@@ -473,7 +473,7 @@
 
                     @elseif($status=="Review")
                         @role('Panitia')
-                            @if (! in_array($paket->pokmil_id, auth()->user()->pokmil_id))
+                            @if (! auth()->user()->hasRole(['Kepala BPBJ','Superadmin']) && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id))
                                 @include('dashboard.paket.paket.components.review')
                             @else
                             <div class="col-12">
@@ -551,7 +551,7 @@
 
                     @elseif($status=="Berita Acara")
                         @role('Panitia')
-                            @if (! in_array($paket->pokmil_id, auth()->user()->pokmil_id))
+                            @if (! auth()->user()->hasRole(['Kepala BPBJ','Superadmin']) && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id))
                                 @include('dashboard.paket.paket.components.beritaacara')
                             @else
                             <div class="col-12">
@@ -594,6 +594,17 @@
                                                                             <label for="jenis_pekerjaan" class="col-sm-3 col-form-label text-right">Jenis Pekerjaan</label>
                                                                             <div class="col-sm-9">
                                                                                 <input type="text" name="jenis_pekerjaan" class="form-control" value="{{ old('jenis_pekerjaan', $new_data->jenis_pekerjaan) }}" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="satker" class="col-sm-3 col-form-label text-right">Satuan Kerja</label>
+                                                                            <div class="col-sm-9">
+                                                                                <select name="satker" class="form-control" required>
+                                                                                    <option value="{{ old('satker', $new_data->satker) }}">{{ old('satker', $new_data->satker) }}</option>
+                                                                                    @foreach($satker as $item)
+                                                                                        <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                                                    @endforeach
+                                                                                </select>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
@@ -645,7 +656,7 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label for="lokasi" class="col-sm-3 col-form-label text-right">Lokasi Pekerjaan</label>
                                                                             <div class="col-sm-9">
-                                                                                <input type="text" name="lokasi" class="form-control" value="{{ old('lokasi', $new_data->lokasi) }}" required>
+                                                                                <input type="text" name="lokasi" class="form-control" value="-" required>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
@@ -658,6 +669,24 @@
                                                                                             Kartanegara</b> telah dilaksanakan kegiatan Reviu Dokumen Persiapan Pengadaan untuk:
                                                                                     </p>
                                                                                 </textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="lokasi_ba" class="col-sm-3 col-form-label text-right">Lokasi Berita Acara</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="text" name="lokasi_ba" class="form-control" value="Tenggarong" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="jam_mulai" class="col-sm-3 col-form-label text-right">Jam Mulai Rapat</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="text" name="jam_mulai" class="form-control" value="10.00 Wita" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="jam_berakhir" class="col-sm-3 col-form-label text-right">Jam Berakhir Rapat</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="text" name="jam_berakhir" class="form-control" value="11.30 Wita" required>
                                                                             </div>
                                                                         </div>
                                                                         <input type="hidden" name="paket_id" value="{{ $paket->id }}">
@@ -713,7 +742,7 @@
                                                 <div class="d-flex justify-content-center">
                                                     @if ($berita_acara_1 && !$panitiaSudahAcc)
                                                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
-                                                            <i class="bi bi-pen"></i>TTE
+                                                            <i class="bi bi-pen"></i>Tandatangani
                                                         </a>
                                                     @elseif($panitiaSudahAcc)
                                                         Sudah menyetujui berita acara, menunggu panitia lain menyetujui berita acara ini.
@@ -746,7 +775,7 @@
                                                 <div class="d-flex justify-content-center">
                                                     @if ($berita_acara_1)
                                                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-tte">
-                                                            <i class="bi bi-pen"></i>TTE
+                                                            <i class="bi bi-pen"></i>Tandatangani
                                                         </a>
                                                     @endif
                                                 </div>

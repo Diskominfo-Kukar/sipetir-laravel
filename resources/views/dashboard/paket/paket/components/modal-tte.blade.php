@@ -13,7 +13,7 @@
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">
-                        <i class="bx bx-file"></i> <span id="judul">Tandatangan Secara Elektronik</span>
+                        <i class="bx bx-file"></i> <span id="judul">Tandatangan</span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -67,7 +67,7 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     <input type="hidden" name="paket_id" value="{{ $paket->id }}">
                     <input type="hidden" name="panitia_id" value="{{ $panitia->id }}">
-                    <button type="submit" class="btn btn-success mx-2">Proses TTE</button>
+                    <button type="submit" class="btn btn-success mx-2">Proses</button>
                 </div>
             </form>
         </div>

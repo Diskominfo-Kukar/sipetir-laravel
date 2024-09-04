@@ -9,6 +9,7 @@ use App\Models\Master\KategoriReview;
 use App\Models\Master\Opd;
 use App\Models\Master\Panitia;
 use App\Models\Master\Pokmil;
+use App\Models\Master\Satker;
 use App\Models\Master\SumberDana;
 use App\Models\Paket\BeritaAcara;
 use App\Models\Paket\Komen;
@@ -256,6 +257,7 @@ class PaketController extends Controller
         $new_data    = SuratTugas::where('paket_id', $paket->id)->first();
         $opd         = Opd::all();
         $sumber_dana = SumberDana::all();
+        $satker = Satker::all();
 
         $pokmil = $paket->pokmil;
 
@@ -315,6 +317,7 @@ class PaketController extends Controller
             'panitiaSudahAcc'  => $panitiaSudahAcc,
             'kode_ba'          => $kode_ba,
             'kode_sa'          => $kode_sa,
+            'satker' => $satker,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -745,6 +748,10 @@ class PaketController extends Controller
                 'tahun'           => $request->tahun,
                 'lokasi'          => $request->lokasi,
                 'intro'           => $request->intro,
+                'lokasi_ba'          => $request->lokasi_ba,
+                'jam_mulai'          => $request->jam_mulai,
+                'jam_berakhir'          => $request->jam_berakhir,
+                'satker'          => $request->satker,
             ]);
         } else {
             $tahun         = Carbon::now()->year;
@@ -765,6 +772,10 @@ class PaketController extends Controller
                     'tahun'           => $request->tahun,
                     'lokasi'          => $request->lokasi,
                     'intro'           => $request->intro,
+                    'lokasi_ba'          => $request->lokasi_ba,
+                    'jam_mulai'          => $request->jam_mulai,
+                    'jam_berakhir'          => $request->jam_berakhir,
+                    'satker'          => $request->satker,
                 ]);
             } else {
                 session()->flash('error', 'Kode surat sudah digunakan');

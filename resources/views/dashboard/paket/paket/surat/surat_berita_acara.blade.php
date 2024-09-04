@@ -184,8 +184,7 @@
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Satuan Kerja</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%; ">-
-                    </td>
+                <td style="padding: 0; vertical-align: top; width: 75%; ">{{ $berita_acara->satker }}</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Tahun Anggaran
@@ -220,22 +219,40 @@
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
                 <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->jenis_pekerjaan }}</td>
             </tr>
-
-
-
-
-            <tr>
-                <td style="padding: 0 8px; vertical-align: top; width: 35%;">No. SK</td>
-                <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">
-                    {{ $paket->ppk->panitia->no_sk }}</td>
-            </tr>
-
         </table>&nbsp;
+
+        <p style="margin-top: 10px; margin-left: 10px;">
+            Reviu dimulai Pada Pukul {{ $berita_acara->jam_mulai }}. Yang dihadiri Oleh :
+        </p>
+
+        <table style="border-collapse: collapse;">
+            <tr>
+                <td colspan="2" style="padding: 8px; vertical-align: top;">1.</td>
+                <td style="padding: 8px; vertical-align: top;">{{ $paket->pokmil->nama }}</td>
+            </tr>
+            @foreach($panitia as $p)
+            <tr>
+                <td colspan="2"></td>
+                <td style="padding: 0 8px;">- {{ $p->nama }}</td>
+            </tr>
+            @endforeach
+            <tr>
+                <td colspan="2" style="padding: 8px; vertical-align: top;">2.</td>
+                <td style="padding: 8px; vertical-align: top;">Pejabat Pembuat Komitmen Pekerjaan {{ $berita_acara->nama_paket }}
+                    <br>Yang diwakili oleh:
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td style="padding: 0 8px;">- {{ $paket->ppk->nama }}</td>
+            </tr>
+        </table>&nbsp;&nbsp;
 
     </div>
 
-    Reviu dimulai Pada Pukul 10.00 Wita. Yang dihadiri Oleh :
+
+
+
 
     <footer>
         <table width="100%">
@@ -398,6 +415,38 @@
         </div>
         {{-- /end bagian 1 --}}
 
+        <p style="margin-top: 10px; margin-left: 10px; margin-bottom: 10px;">
+            Reviu ditutup Pada Pukul {{ $berita_acara->jam_berakhir }}. Dan Berita Acara ini merupakan bagian yang tidak terpisahkan dari Proses Pemilihan
+            <br>&nbsp;<br>
+            Disusun di : <strong>{{ $berita_acara->lokasi_ba }}</strong> Tanggal: <strong>{{ $tanggal }}</strong>
+        </p>
+
+        <table class="table-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th style="padding: 8px; vertical-align: top;">No.</th>
+                    <th style="padding: 8px; vertical-align: top;">Nama</th>
+                    <th style="padding: 8px; vertical-align: top;">Penugasan/Jabatan</th>
+                    <th style="padding: 8px; vertical-align: top;">Tandatangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="height: 50px;">
+                    <td style="padding: 16px; font-size: 16px;">1.</td>
+                    <td style="padding: 16px; font-size: 16px;">{{ $paket->ppk->nama }}</td>
+                    <td style="padding: 16px; font-size: 16px; vertical-align: top;">PPK</td>
+                    <td style="padding: 16px; font-size: 16px; vertical-align: top;"></td>
+                </tr>
+                @foreach($panitia as $p)
+                <tr style="height: 50px;">
+                    <td style="padding: 16px; font-size: 16px;">{{ $loop->index + 2 }}.</td>
+                    <td style="padding: 16px; font-size: 16px;">{{ $p->nama }}</td>
+                    <td style="padding: 16px; font-size: 16px; vertical-align: top;">{{ $paket->pokmil->nama }}</td>
+                    <td style="padding: 16px; font-size: 16px; vertical-align: top;"></td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 
     <footer>
