@@ -257,7 +257,7 @@ class PaketController extends Controller
         $new_data    = SuratTugas::where('paket_id', $paket->id)->first();
         $opd         = Opd::all();
         $sumber_dana = SumberDana::all();
-        $satker = Satker::all();
+        $satker      = Satker::all();
 
         $pokmil = $paket->pokmil;
 
@@ -317,7 +317,7 @@ class PaketController extends Controller
             'panitiaSudahAcc'  => $panitiaSudahAcc,
             'kode_ba'          => $kode_ba,
             'kode_sa'          => $kode_sa,
-            'satker' => $satker,
+            'satker'           => $satker,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -748,9 +748,9 @@ class PaketController extends Controller
                 'tahun'           => $request->tahun,
                 'lokasi'          => $request->lokasi,
                 'intro'           => $request->intro,
-                'lokasi_ba'          => $request->lokasi_ba,
-                'jam_mulai'          => $request->jam_mulai,
-                'jam_berakhir'          => $request->jam_berakhir,
+                'lokasi_ba'       => $request->lokasi_ba,
+                'jam_mulai'       => $request->jam_mulai,
+                'jam_berakhir'    => $request->jam_berakhir,
                 'satker'          => $request->satker,
             ]);
         } else {
@@ -772,9 +772,9 @@ class PaketController extends Controller
                     'tahun'           => $request->tahun,
                     'lokasi'          => $request->lokasi,
                     'intro'           => $request->intro,
-                    'lokasi_ba'          => $request->lokasi_ba,
-                    'jam_mulai'          => $request->jam_mulai,
-                    'jam_berakhir'          => $request->jam_berakhir,
+                    'lokasi_ba'       => $request->lokasi_ba,
+                    'jam_mulai'       => $request->jam_mulai,
+                    'jam_berakhir'    => $request->jam_berakhir,
                     'satker'          => $request->satker,
                 ]);
             } else {
