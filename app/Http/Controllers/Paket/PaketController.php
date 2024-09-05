@@ -863,6 +863,11 @@ class PaketController extends Controller
 
     public function berita_acara_TTE_panitia(Request $request)
     {
+        if (auth()->user()->hasRole('Kepala BPBJ') || auth()->user()->hasRole('Admin') || auth()->user()->hasRole('superadmin')) {
+            session()->flash('error', 'Anda tidak bisa menyetujui berita acara');
+            return redirect()->back();
+        }
+
         $paket  = Paket::where('id', $request->paket_id)->first();
         $pokmil = $paket->pokmil;
 
@@ -896,6 +901,11 @@ class PaketController extends Controller
 
     public function berita_acara_TTE_ppk(Request $request)
     {
+        if (auth()->user()->hasRole('Kepala BPBJ') || auth()->user()->hasRole('Admin') || auth()->user()->hasRole('superadmin')) {
+            session()->flash('error', 'Anda tidak bisa menyetujui berita acara');
+            return redirect()->back();
+        }
+
         $paket = Paket::where('id', $request->paket_id)->first();
 
         if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
