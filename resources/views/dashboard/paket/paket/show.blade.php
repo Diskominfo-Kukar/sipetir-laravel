@@ -124,6 +124,9 @@
 
                     @if($status=="Upload")
                         @role('PPK')
+                            @if (! auth()->user()->hasRole(['Kepala BPBJ','Superadmin']) && ! $paket->ppk_id == auth()->user()->ppk_id)
+                                @include('dashboard.paket.paket.components.upload')
+                            @else
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -175,12 +178,16 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         @else
                             @include('dashboard.paket.paket.components.upload')
                         @endrole
 
                     @elseif($status=="Upload Ulang")
                         @role('PPK')
+                            @if (! auth()->user()->hasRole(['Kepala BPBJ','Superadmin']) && ! $paket->ppk_id == auth()->user()->ppk_id)
+                                @include('dashboard.paket.paket.components.upload')
+                            @else
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -242,6 +249,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         @else
                             @include('dashboard.paket.paket.components.upload')
                         @endrole
@@ -732,6 +740,9 @@
 
                     @elseif($status=="TTE Berita Acara Panitia")
                         @role('Panitia')
+                            @if (! auth()->user()->hasRole(['Kepala BPBJ','Superadmin']) && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id))
+                                @include('dashboard.paket.paket.components.beritaacaraTTE_panitia')
+                            @else
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -759,12 +770,16 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         @else
                             @include('dashboard.paket.paket.components.beritaacaraTTE_panitia')
                         @endrole
 
                     @elseif($status=="TTE Berita Acara PPK")
                         @role('PPK')
+                            @if (! auth()->user()->hasRole(['Kepala BPBJ','Superadmin']) && ! $paket->ppk_id == auth()->user()->ppk_id)
+                                @include('dashboard.paket.paket.components.beritaacaraTTE_ppk')
+                            @else
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -790,6 +805,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         @else
                             @include('dashboard.paket.paket.components.beritaacaraTTE_ppk')
                         @endrole
