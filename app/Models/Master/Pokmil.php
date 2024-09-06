@@ -27,6 +27,8 @@ class Pokmil extends Model
 
     public function panitia(): BelongsToMany
     {
-        return $this->belongsToMany(Panitia::class, 'panitia_pokmil_pivot', 'pokmil_id', 'panitia_id', 'id', 'id')->withTimestamps();
+        return $this->belongsToMany(Panitia::class, 'panitia_pokmil_pivot', 'pokmil_id', 'panitia_id', 'id', 'id')
+            ->withPivot('approve')
+            ->withTimestamps();
     }
 }

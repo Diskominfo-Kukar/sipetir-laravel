@@ -443,7 +443,7 @@
                     <td style="padding: 16px; font-size: 16px;">{{ $p->nama }}</td>
                     <td style="padding: 16px; font-size: 16px; vertical-align: top;">{{ $paket->pokmil->nama }}</td>
                     <td style="padding: 16px; font-size: 16px; vertical-align: top;">
-                        @if ($p->ttd)
+                        @if ($p->pivot->approve == 1 && $p->ttd)
                             <img src="{{ asset('storage/'.$p->ttd) }}" alt="Tanda Tangan" width="100" height="100">
                         @endif
                     </td>
