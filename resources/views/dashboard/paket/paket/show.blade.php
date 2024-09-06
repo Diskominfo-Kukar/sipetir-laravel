@@ -46,6 +46,38 @@
                             Proses
                             <span class="badge bg-secondary rounded-pill">{{ $progres }}%</span>
                         </li>
+                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                            Surat Tugas
+                            @if($surat_tugas)
+                                <span class="badge bg-success rounded-pill">Sudah</span>
+                            @else
+                                <span class="badge bg-danger rounded-pill">Belum</span>
+                            @endif
+                        </li>
+                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                            Berita Acara Review
+                            @if($berita_acara_1)
+                                <span class="badge bg-success rounded-pill">Sudah</span>
+                            @else
+                                <span class="badge bg-danger rounded-pill">Belum</span>
+                            @endif
+                        </li>
+                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                            Berita Acara Penetapan
+                            @if($berita_acara_2)
+                                <span class="badge bg-success rounded-pill">Sudah</span>
+                            @else
+                                <span class="badge bg-danger rounded-pill">Belum</span>
+                            @endif
+                        </li>
+                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                            Berita Acara Pengumuman
+                            @if($berita_acara_3)
+                                <span class="badge bg-success rounded-pill">Sudah</span>
+                            @else
+                                <span class="badge bg-danger rounded-pill">Belum</span>
+                            @endif
+                        </li>
                     </ul>
                 </div>
                 <div class="overflow-hidden border-0 shadow-sm card">
@@ -60,21 +92,33 @@
                             <span class="badge bg-primary rounded-pill">{{$paket->nama_ppk}}</span>
                         </li>
                         <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                            Kode
-                            <span class="badge bg-primary rounded-pill">{{$paket->kode}}</span>
+                            Pokmil
+                            <span class="badge bg-primary rounded-pill">{{$paket->pokmil->pokmil_id}}</span>
                         </li>
                         <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             Tahun
-                            <span class="badge bg-info rounded-pill">{{$paket->tahun}}</span>
+                            <span class="badge bg-primary rounded-pill">{{ \Carbon\Carbon::parse($paket->tgl_buat)->format('Y') }}</span>
                         </li>
-                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                            Kategori
-                            <span class="badge bg-success rounded-pill">{{$paket->spesifikasi_pekerjaan}}</span>
-                        </li>
-                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                        @foreach ([
+                            'jenis_pekerjaan' => 'Jenis Pekerjaan',
+                            'nama_opd' => 'Nama Opd',
+                            'sumber_dana' => 'Sumber Dana',
+                            'dpa' => 'DPA',
+                            'pagu' => 'Pagu',
+                            'hps' => 'Hps',
+                            'lokasi' => 'Lokasi'
+                        ] as $field => $label)
+                            @if(isset($data->$field))
+                                <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                                    {{ $label }}
+                                    <span class="badge bg-primary rounded-pill">{{ $data->$field }}</span>
+                                </li>
+                            @endif
+                        @endforeach
+                        <!--li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             RUP
                             <span class="badge bg-danger rounded-pill">112093019</span>
-                        </li>
+                        </!--li-->
                     </ul>
                 </div>
                 <div class="overflow-hidden border-0 shadow-sm card">

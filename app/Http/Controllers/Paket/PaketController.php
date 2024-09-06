@@ -255,9 +255,11 @@ class PaketController extends Controller
         $kode_sa = static::getKodeSurat('sa');
 
         $new_data    = SuratTugas::where('paket_id', $paket->id)->first();
+        $new_data2   = BeritaAcara::where('paket_id', $paket->id)->first();
         $opd         = Opd::all();
         $sumber_dana = SumberDana::all();
         $satker      = Satker::all();
+        $data        = $new_data2 ?? $new_data ?? $paket;
 
         $pokmil = $paket->pokmil;
 
@@ -311,6 +313,7 @@ class PaketController extends Controller
             'status'           => $status,
             'pokmil_ids'       => $pokmil_ids,
             'new_data'         => $new_data,
+            'new_data2'        => $new_data2,
             'opd'              => $opd,
             'sumber_dana'      => $sumber_dana,
             'tanggal'          => $tanggal,
@@ -318,6 +321,7 @@ class PaketController extends Controller
             'kode_ba'          => $kode_ba,
             'kode_sa'          => $kode_sa,
             'satker'           => $satker,
+            'data'             => $data,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
