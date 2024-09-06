@@ -435,7 +435,11 @@
                     <td style="padding: 16px; font-size: 16px;">1.</td>
                     <td style="padding: 16px; font-size: 16px;">{{ $paket->ppk->nama }}</td>
                     <td style="padding: 16px; font-size: 16px; vertical-align: top;">PPK</td>
-                    <td style="padding: 16px; font-size: 16px; vertical-align: top;"></td>
+                    <td style="padding: 16px; font-size: 16px; vertical-align: top;">
+                        @if (isset($ppk))
+                            <img src="{{ asset('storage/'.$ppk->ttd) }}" alt="Tanda Tangan" width="100" height="100">
+                        @endif
+                    </td>
                 </tr>
                 @foreach($panitia as $p)
                 <tr style="height: 50px;">
@@ -443,7 +447,7 @@
                     <td style="padding: 16px; font-size: 16px;">{{ $p->nama }}</td>
                     <td style="padding: 16px; font-size: 16px; vertical-align: top;">{{ $paket->pokmil->nama }}</td>
                     <td style="padding: 16px; font-size: 16px; vertical-align: top;">
-                        @if ($p->pivot->approve == 1 && $p->ttd)
+                        @if ($p->pivot->approve == 1)
                             <img src="{{ asset('storage/'.$p->ttd) }}" alt="Tanda Tangan" width="100" height="100">
                         @endif
                     </td>

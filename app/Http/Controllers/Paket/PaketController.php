@@ -938,7 +938,6 @@ class PaketController extends Controller
                 $pdf      = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
                 $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
                 Storage::disk('public')->put($filePath, $pdf->output());
-                $pdfUrl = url('storage/'.$filePath);
 
                 $paket->update([
                     'berita_acara_review' => $filePath,
@@ -974,19 +973,54 @@ class PaketController extends Controller
         }
 
         $paket = Paket::where('id', $request->paket_id)->first();
+        $ppk   = $paket->ppk;
+        $ppk   = Panitia::find($ppk->panitia_id);
 
-        if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
-            $paket->update([
-                'status' => '0',
-            ]);
+        if ($ppk->ttd) {
+            if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
+                $paket->update([
+                    'status' => '0',
+                ]);
+            } else {
+                $paket->update([
+                    'status' => '10',
+                ]);
+            }
+
+            $pokmil       = $paket->pokmil;
+            $panitia      = $pokmil->panitia;
+            $berita_acara = BeritaAcara::where('paket_id', $paket->id)->first();
+            $tgl          = $berita_acara->created_at;
+            $tanggal      = $tgl->locale('id')->translatedFormat('j F Y');
+            $tglkop       = $tgl->format('m/Y');
+            $paketId      = $berita_acara->paket_id;
+            $kategoris    = KategoriReview::with(['questions' => function ($query) use ($paketId) { // @phpstan-ignore-line
+                $query->with(['answers' => function ($query) use ($paketId) {
+                    $query->where('paket_id', $paketId);
+                }]);
+            }])->get();
+
+            $data = [
+                'tanggal'      => $tanggal,
+                'tglkop'       => $tglkop,
+                'paket'        => $paket,
+                'berita_acara' => $berita_acara,
+                'kategoris'    => $kategoris,
+                'panitia'      => $panitia,
+                'ppk'          => $ppk,
+            ];
+            $pdf      = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
+            $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
+            Storage::disk('public')->put($filePath, $pdf->output());
+
+            session()->flash('success', 'Paket Selesai');
+
+            return redirect()->back();
         } else {
-            $paket->update([
-                'status' => '10',
-            ]);
-        }
-        session()->flash('success', 'Paket Selesai');
+            session()->flash('info', 'Upload Ttd terlebih dahulu');
 
-        return redirect()->back();
+            return redirect()->back();
+        }
     }
 
     public static function getProses($status)
