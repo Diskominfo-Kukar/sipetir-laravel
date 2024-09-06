@@ -87,6 +87,7 @@ Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Panitia|PPK|Kepa
     Route::controller(PaketController::class)->name('paket.')->group(function () {
         Route::get('/paket-get-data', 'getData')->name('get-data');
         Route::post('/upload-berkas', 'uploadBerkas')->name('uploadBerkas');
+        Route::post('/upload-ttd', 'uploadTtd')->name('uploadTtd');
         Route::post('/upload-berkas-submit', 'uploadAllBerkas')->name('uploadAllBerkas');
         Route::post('/upload-berkas-verif', 'VerifBerkas')->name('VerifBerkas');
         Route::get('/roll', 'roll')->name('roll');

@@ -442,7 +442,11 @@
                     <td style="padding: 16px; font-size: 16px;">{{ $loop->index + 2 }}.</td>
                     <td style="padding: 16px; font-size: 16px;">{{ $p->nama }}</td>
                     <td style="padding: 16px; font-size: 16px; vertical-align: top;">{{ $paket->pokmil->nama }}</td>
-                    <td style="padding: 16px; font-size: 16px; vertical-align: top;"></td>
+                    <td style="padding: 16px; font-size: 16px; vertical-align: top;">
+                        @if ($p->ttd)
+                            <img src="{{ asset('storage/'.$p->ttd) }}" alt="Tanda Tangan" width="100" height="100">
+                        @endif
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

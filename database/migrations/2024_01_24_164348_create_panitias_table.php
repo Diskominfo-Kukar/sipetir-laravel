@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->string('masa_berlaku')->nullable();
             $table->string('nik')->nullable();
             $table->char('slug')->nullable();
+            $table->longText('ttd')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

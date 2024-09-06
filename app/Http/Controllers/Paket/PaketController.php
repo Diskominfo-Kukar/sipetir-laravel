@@ -522,6 +522,34 @@ class PaketController extends Controller
         return abort(404);
     }
 
+    public function uploadTtd(Request $request)
+    {
+        if (auth()->user()->hasRole('Admin') || auth()->user()->hasRole('superadmin')) {
+            session()->flash('error', 'Anda tidak bisa memperbarui Ttd');
+
+            return redirect()->back();
+        }
+
+        $file  = $request->file('ttd');
+        $check = Panitia::where('id', $request->panitia_id)->first();
+
+        if ($file && $file->isValid()) {
+            $filename = 'ttd_'.$request->panitia_id.'.png';
+            $file->storeAs('public/ttd', $filename);
+            Storage::delete('public/'.$check->file);
+            $check->update([
+                'ttd' => 'ttd/'.$filename,
+            ]);
+            session()->flash('success', 'Ttd Berhasil diubah');
+
+            return redirect()->back();
+        }
+
+        session()->flash('error', 'Ttd Gagal diubah');
+
+        return redirect()->back();
+    }
+
     public function uploadBerkas(Request $request)
     {
         $file      = $request->file('dokumen');
@@ -865,44 +893,83 @@ class PaketController extends Controller
     {
         if (auth()->user()->hasRole('Kepala BPBJ') || auth()->user()->hasRole('Admin') || auth()->user()->hasRole('superadmin')) {
             session()->flash('error', 'Anda tidak bisa menyetujui berita acara');
+
             return redirect()->back();
         }
+        $check = Panitia::where('id', $request->panitia_id)->first();
 
-        $paket  = Paket::where('id', $request->paket_id)->first();
-        $pokmil = $paket->pokmil;
+        if ($check->ttd) {
+            $paket  = Paket::where('id', $request->paket_id)->first();
+            $pokmil = $paket->pokmil;
 
-        $panitiaSudahAcc = $pokmil->panitia()
-            ->wherePivot('panitia_id', $request->panitia_id)
-            ->wherePivot('approve', 1)
-            ->exists();
+            $panitiaSudahAcc = $pokmil->panitia()
+                ->wherePivot('panitia_id', $request->panitia_id)
+                ->wherePivot('approve', 1)
+                ->exists();
 
-        if ($panitiaSudahAcc) {
-            session()->flash('success', 'Anda sudah menyetujui berita acara');
+            if ($panitiaSudahAcc) {
+                session()->flash('success', 'Anda sudah menyetujui berita acara');
+
+                return redirect()->back();
+            } else {
+                $pokmil->panitia()->updateExistingPivot($request->panitia_id, ['approve' => 1]);
+
+                $panitia      = $pokmil->panitia;
+                $berita_acara = BeritaAcara::where('paket_id', $paket->id)->first();
+                $tgl          = $berita_acara->created_at;
+                $tanggal      = $tgl->locale('id')->translatedFormat('j F Y');
+                $tglkop       = $tgl->format('m/Y');
+                $paketId      = $berita_acara->paket_id;
+                $kategoris    = KategoriReview::with(['questions' => function ($query) use ($paketId) { // @phpstan-ignore-line
+                    $query->with(['answers' => function ($query) use ($paketId) {
+                        $query->where('paket_id', $paketId);
+                    }]);
+                }])->get();
+
+                $data = [
+                    'tanggal'      => $tanggal,
+                    'tglkop'       => $tglkop,
+                    'paket'        => $paket,
+                    'berita_acara' => $berita_acara,
+                    'kategoris'    => $kategoris,
+                    'panitia'      => $panitia,
+                ];
+
+                $pdf      = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
+                $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
+                Storage::disk('public')->put($filePath, $pdf->output());
+                $pdfUrl = url('storage/'.$filePath);
+
+                $paket->update([
+                    'berita_acara_review' => $filePath,
+                ]);
+            }
+
+            $totalPanitia    = $pokmil->panitia()->count();
+            $totalPanitiaAcc = $pokmil->panitia()->wherePivot('approve', true)->count();
+
+            if ($totalPanitiaAcc >= $totalPanitia / 2) {
+                $paket->update([
+                    'status' => '9',
+                ]);
+                session()->flash('success', 'Berhasil menyetujui berita acara dan paket diserahkan ke PPK');
+            } else {
+                session()->flash('success', 'Berhasil menyetujui berita acara');
+            }
 
             return redirect()->back();
         } else {
-            $pokmil->panitia()->updateExistingPivot($request->panitia_id, ['approve' => 1]);
+            session()->flash('info', 'Upload Ttd terlebih dahulu');
+
+            return redirect()->back();
         }
-
-        $totalPanitia    = $pokmil->panitia()->count();
-        $totalPanitiaAcc = $pokmil->panitia()->wherePivot('approve', true)->count();
-
-        if ($totalPanitiaAcc >= $totalPanitia / 2) {
-            $paket->update([
-                'status' => '9',
-            ]);
-            session()->flash('success', 'Berhasil menyetujui berita acara dan paket diserahkan ke PPK');
-        } else {
-            session()->flash('success', 'Berhasil menyetujui berita acara');
-        }
-
-        return redirect()->back();
     }
 
     public function berita_acara_TTE_ppk(Request $request)
     {
         if (auth()->user()->hasRole('Kepala BPBJ') || auth()->user()->hasRole('Admin') || auth()->user()->hasRole('superadmin')) {
             session()->flash('error', 'Anda tidak bisa menyetujui berita acara');
+
             return redirect()->back();
         }
 
