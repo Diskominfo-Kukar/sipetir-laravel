@@ -9,6 +9,7 @@ use App\Models\Master\KategoriReview;
 use App\Models\Master\Opd;
 use App\Models\Master\Panitia;
 use App\Models\Master\Pokmil;
+use App\Models\Master\Question;
 use App\Models\Master\Satker;
 use App\Models\Master\SumberDana;
 use App\Models\Paket\BeritaAcara;
@@ -249,10 +250,11 @@ class PaketController extends Controller
         $berita_acara_2 = $paket->berita_acara_penetapan;
         $berita_acara_3 = $paket->berita_acara_pengumuman;
 
-        $progres = static::getProses($paket->status);
-        $tanggal = static::getTanggal();
-        $kode_ba = static::getKodeSurat('ba');
-        $kode_sa = static::getKodeSurat('sa');
+        $progres         = static::getProses($paket->status);
+        $tanggal         = static::getTanggal();
+        $kode_ba         = static::getKodeSurat('ba');
+        $kode_sa         = static::getKodeSurat('sa');
+        $all_done_review = static::checkAnswer($paket->id);
 
         $new_data    = SuratTugas::where('paket_id', $paket->id)->first();
         $new_data2   = BeritaAcara::where('paket_id', $paket->id)->first();
@@ -322,6 +324,7 @@ class PaketController extends Controller
             'kode_sa'          => $kode_sa,
             'satker'           => $satker,
             'data'             => $data,
+            'all_done'         => $all_done_review,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -880,6 +883,25 @@ class PaketController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public static function checkAnswer($paketId)
+    {
+        $kategori_reviews = KategoriReview::with('questions')->get(); // @phpstan-ignore-line
+
+        $answeredQuestions  = Answer::where('paket_id', $paketId)->pluck('question_id')->toArray();
+        $excludedKategoriId = 'd2a077f6-96e3-4fc2-9aeb-19830a737f52'; // Kategori Lain-lain
+
+        $allQuestions = Question::whereHas('kategoriReview', function ($query) use ($kategori_reviews, $excludedKategoriId) { // @phpstan-ignore-line
+            $query->whereIn('kategori_id', $kategori_reviews->pluck('id')->toArray())
+                ->where('kategori_id', '!=', $excludedKategoriId);
+        })->pluck('id')->toArray();
+
+        $unansweredQuestions = array_diff($allQuestions, $answeredQuestions);
+
+        $all_done = count($unansweredQuestions) === 0;
+
+        return $all_done;
     }
 
     public function progres_berita_acara(Request $request)

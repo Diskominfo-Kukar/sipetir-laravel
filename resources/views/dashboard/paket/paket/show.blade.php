@@ -586,11 +586,16 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @if (!$all_done)
+                                                <div class="alert alert-warning">
+                                                    Anda belum menjawab semua pertanyaan. Harap jawab semua pertanyaan sebelum melanjutkan.
+                                                </div>
+                                            @endif
                                         <div class="d-flex justify-content-center mt-3">
                                             <form action="{{ route('paket.progres_berita_acara') }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                <button type="submit" class="btn btn-success mx-2">Selesai Review</button>
+                                                <button type="submit" class="btn btn-success mx-2" {{ $all_done ? '' : 'disabled' }}>Selesai Review</button>
                                             </form>
                                         </div><br>
                                     </div>
