@@ -612,7 +612,7 @@
                                         </div>
                                         @if (!$all_done)
                                                 <div class="alert alert-warning">
-                                                    Anda belum menjawab semua pertanyaan. Harap jawab semua pertanyaan sebelum melanjutkan.
+                                                    Anda belum menjawab semua pertanyaan. Harap jawab semua pertanyaan dan hasil catatan review sebelum melanjutkan.
                                                 </div>
                                             @endif
                                         <div class="d-flex justify-content-center mt-3">

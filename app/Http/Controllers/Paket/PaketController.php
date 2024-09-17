@@ -939,7 +939,12 @@ class PaketController extends Controller
 
         $all_done = count($unansweredQuestions) === 0;
 
-        return $all_done;
+        $reviewCategories = KategoriReview::whereNotIn('id', [$excludedKategoriId])->get();
+        $chr_done         = $reviewCategories->every(function ($kategori) use ($paketId) {
+            return $kategori->answerCHR()->where('paket_id', $paketId)->exists();
+        });
+
+        return $all_done && $chr_done;
     }
 
     public function progres_berita_acara(Request $request)
