@@ -33,4 +33,9 @@ class KategoriReview extends Model
     {
         return $this->hasMany(Question::class, 'kategori_id');
     }
+
+    public function answerChr()
+    {
+        return $this->hasMany(AnswerChr::class, 'kategori_id');
+    }
 }

@@ -559,11 +559,14 @@
                                                                             @if ($answer)
                                                                                 Jawaban: {{ $answer->review }}
                                                                                 @if ($answer->user->panitia)
-                                                                                    (Dijawab oleh {{ $answer->user->panitia->nama }}) - {{ \Carbon\Carbon::parse($answer->updated_at)->locale('id')->translatedFormat('d F Y H:i') }}
+                                                                                    <small>(Dijawab oleh {{ $answer->user->panitia->nama }}) - {{ \Carbon\Carbon::parse($answer->updated_at)->locale('id')->translatedFormat('d F Y H:i') }}</small>
                                                                                 @endif
                                                                             @else
                                                                                 &nbsp;<br>[ Belum ada jawaban ]
                                                                             @endif
+                                                                        </div>
+                                                                        <div>
+
                                                                         </div>
                                                                         <div>
                                                                             <form method="POST" action="{{ route('paket.answer_question') }}" class="d-flex flex-row align-items-center">
@@ -579,6 +582,27 @@
                                                                         @endif
                                                                     </li>
                                                                 @endforeach
+                                                                @php
+                                                                    $answerChr = $kategori->answerChr->firstWhere('paket_id', $paket->id);
+                                                                @endphp
+                                                                <div>&nbsp;<hr>
+                                                                    Catatan Hasil Review untuk {{ $kategori->nama }}<br>
+                                                                    @if ($answerChr)
+                                                                        <div>
+                                                                            Catatan: {{ $answerChr->review }}
+                                                                            <small>(Dijawab oleh {{ $answerChr->user->nama }}) - {{ \Carbon\Carbon::parse($answerChr->updated_at)->locale('id')->translatedFormat('d F Y H:i') }}</small>
+                                                                        </div>
+                                                                    @else
+                                                                        <div>[ Belum ada Catatan Hasil Review ]</div>
+                                                                    @endif
+                                                                    <form method="POST" action="{{ route('paket.answer_chr') }}" class="d-flex flex-column">
+                                                                        @csrf
+                                                                        <input type="hidden" name="kategori_id" value="{{ $kategori->id }}">
+                                                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                                        <textarea name="review" class="form-control mb-2" rows="3" placeholder="Tulis Catatan Hasil Review di sini"></textarea>
+                                                                        <button type="submit" class="btn btn-primary">Simpan Catatan Hasil Review</button>
+                                                                    </form>
+                                                                </div>
                                                             </ul>
                                                         </div>
                                                     @endforeach

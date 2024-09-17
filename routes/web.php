@@ -95,6 +95,7 @@ Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Panitia|PPK|Kepa
         Route::post('/upload-surat_tugas', 'generate_surat_tugas')->name('generate_surat_tugas');
         Route::post('/review', 'review')->name('review');
         Route::post('/answer_question', 'answer_question')->name('answer_question');
+        Route::post('/answer_chr', 'answer_chr')->name('answer_chr');
         Route::post('/progres-berita_acara', 'progres_berita_acara')->name('progres_berita_acara');
         Route::post('/berita_acara_TTE_panitia', 'berita_acara_TTE_panitia')->name('berita_acara_TTE_panitia');
         Route::post('/berita_acara_TTE_ppk', 'berita_acara_TTE_ppk')->name('berita_acara_TTE_ppk');

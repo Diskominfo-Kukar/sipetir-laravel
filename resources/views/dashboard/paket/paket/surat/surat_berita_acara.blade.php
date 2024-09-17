@@ -300,7 +300,7 @@
                                         <td style="padding:0 8px;">{{ $question->nama }}</td>
                                         <td>
                                             @foreach ($question->answers as $answer)
-                                                {{ $answer->review }}
+                                                &nbsp;{{ $answer->review }}
                                             @endforeach
                                         </td>
                                     </tr>
@@ -335,8 +335,11 @@
 
                         <div>
                             <p style="padding:16px 8px 8px 8px;"><b>Rekomendasi / Catatan Hasil Reviu:</b></p>
-
-                            <div class="table-border" style="width:100%; height:50px"></div>
+                            <div class="table-border" style="width:100%; height:50px">
+                                @if ($kategori->answerChr->isNotEmpty())
+                                    &nbsp;{{ $kategori->answerChr->first()->review }}
+                                @endif
+                            </div>
                         </div>
 
                     </div>

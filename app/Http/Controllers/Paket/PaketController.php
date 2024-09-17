@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Paket;
 
 use App\Models\Master\Answer;
+use App\Models\Master\AnswerChr;
 use App\Models\Master\Jabatan;
 use App\Models\Master\JenisDokumen;
 use App\Models\Master\KategoriReview;
@@ -228,6 +229,7 @@ class PaketController extends Controller
 
         $kategoriReviews = KategoriReview::orderBy('no_urut')->get();
         $kategoriReviews->load(['questions.answers.user.panitia']);
+        $kategoriReviews->load(['answerChr']);
 
         $user       = Auth::user();
         $pokmil_ids = auth()->user()->pokmil_id;
@@ -758,11 +760,16 @@ class PaketController extends Controller
 
         $paket     = Paket::find($request->paket_id);
         $paketId   = $request->paket_id;
-        $kategoris = KategoriReview::with(['questions' => function ($query) use ($paketId) { // @phpstan-ignore-line
-            $query->with(['answers' => function ($query) use ($paketId) {
+        $kategoris = KategoriReview::with([ // @phpstan-ignore-line
+            'questions' => function ($query) use ($paketId) { // @phpstan-ignore-line
+                $query->with(['answers' => function ($query) use ($paketId) {
+                    $query->where('paket_id', $paketId);
+                }]);
+            },
+            'answerCHR' => function ($query) use ($paketId) { // @phpstan-ignore-line
                 $query->where('paket_id', $paketId);
-            }]);
-        }])->get();
+            },
+        ])->get();
 
         $pokmil  = Pokmil::find($paket->pokmil_id);
         $panitia = $pokmil->panitia;
@@ -878,6 +885,37 @@ class PaketController extends Controller
             }
 
             session()->flash('success', 'Sukses menambahkan jawaban');
+        } else {
+            //session()->flash('success', 'Gagal menambahkan jawaban');
+        }
+
+        return redirect()->back();
+    }
+
+    public function answer_chr(Request $request)
+    {
+        $answer = AnswerChr::where('paket_id', $request->paket_id)
+            ->where('kategori_id', $request->kategori_id)
+            ->first();
+
+        if ($request->review !== null) {
+            if ($answer) {
+                $answer->update([
+                    'user_id'     => Auth::id(),
+                    'paket_id'    => $request->paket_id,
+                    'kategori_id' => $request->kategori_id,
+                    'review'      => $request->review,
+                ]);
+            } else {
+                AnswerChr::create([
+                    'user_id'     => Auth::id(),
+                    'paket_id'    => $request->paket_id,
+                    'kategori_id' => $request->kategori_id,
+                    'review'      => $request->review,
+                ]);
+            }
+
+            session()->flash('success', 'Sukses menambahkan catatan');
         } else {
             //session()->flash('success', 'Gagal menambahkan jawaban');
         }
