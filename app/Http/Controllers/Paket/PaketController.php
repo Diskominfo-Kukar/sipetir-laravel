@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Paket;
 
 use App\Models\Master\Answer;
 use App\Models\Master\AnswerChr;
+use App\Models\Master\AnswerHistory;
 use App\Models\Master\Jabatan;
 use App\Models\Master\JenisDokumen;
 use App\Models\Master\KategoriReview;
@@ -62,7 +63,7 @@ class PaketController extends Controller
             if (! $user->hasRole('Kepala BPBJ')) {
                 $query->where(function ($q) use ($user) {
                     $q->where('ppk_id', $user->ppk_id)
-                      ->orWhereIn('pokmil_id', $user->pokmil_id);
+                        ->orWhereIn('pokmil_id', $user->pokmil_id);
                 });
             }
         }
@@ -869,27 +870,30 @@ class PaketController extends Controller
             ->where('question_id', $request->question_id)
             ->first();
 
-        if ($request->review !== null) {
-            if ($answer) {
-                $answer->update([
-                    'user_id'     => Auth::id(),
-                    'paket_id'    => $request->paket_id,
-                    'question_id' => $request->question_id,
-                    'review'      => $request->review,
-                ]);
-            } else {
-                Answer::create([
-                    'user_id'     => Auth::id(),
-                    'paket_id'    => $request->paket_id,
-                    'question_id' => $request->question_id,
-                    'review'      => $request->review,
-                ]);
-            }
+        $newReview = $request->review;
 
-            session()->flash('success', 'Sukses menambahkan jawaban');
+        if ($answer) {
+            AnswerHistory::create([
+                'answer_id'  => $answer->id,
+                'user_id'    => $answer->user_id,
+                'old_review' => $answer->review,
+                'tanggal'    => $answer->updated_at,
+            ]);
+
+            $answer->update([
+                'review'  => $newReview,
+                'user_id' => auth()->id(),
+            ]);
         } else {
-            //session()->flash('success', 'Gagal menambahkan jawaban');
+            Answer::create([
+                'user_id'     => auth()->id(),
+                'paket_id'    => $request->paket_id,
+                'question_id' => $request->question_id,
+                'review'      => $newReview,
+            ]);
         }
+
+        session()->flash('success', 'Jawaban berhasil disimpan.');
 
         return redirect()->back();
     }

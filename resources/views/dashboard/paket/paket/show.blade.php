@@ -561,6 +561,17 @@
                                                                                 @if ($answer->user->panitia)
                                                                                     <small>(Dijawab oleh {{ $answer->user->panitia->nama }}) - {{ \Carbon\Carbon::parse($answer->updated_at)->locale('id')->translatedFormat('d F Y H:i') }}</small>
                                                                                 @endif
+                                                                                @if($answer->histories->isNotEmpty())
+                                                                                    <br>Riwayat Jawaban:
+                                                                                    <ul style="list-style-type: none; padding-left: 0; font-size: 0.85em; line-height: 1.2;">
+                                                                                        @foreach($answer->histories as $history)
+                                                                                            <li style="margin-bottom: 5px;">
+                                                                                                - {{ $history->old_review }}
+                                                                                                <small>(Dijawab oleh {{ $history->user->nama }} pada {{ \Carbon\Carbon::parse($history->tanggal)->locale('id')->translatedFormat('d F Y H:i') }})</small>
+                                                                                            </li>
+                                                                                        @endforeach
+                                                                                    </ul>
+                                                                                @endif
                                                                             @else
                                                                                 &nbsp;<br>[ Belum ada jawaban ]
                                                                             @endif
