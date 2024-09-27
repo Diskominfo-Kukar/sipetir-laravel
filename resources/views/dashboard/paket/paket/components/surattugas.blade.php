@@ -9,7 +9,7 @@
                 </div>
                 <div class="card-body">
                     <form class="row g-3">
-                        PPK sedang membuat surat tugas untuk paket ini.
+                        PPK sedang membuat pengajuan surat tugas untuk paket ini.
                     </form>
                 </div>
             </div>
