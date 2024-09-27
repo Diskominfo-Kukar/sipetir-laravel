@@ -60,8 +60,10 @@ class PaketController extends Controller
 
         if ($user->hasRole('Panitia') || $user->hasRole('PPK')) {
             if (! $user->hasRole('Kepala BPBJ')) {
-                $query = Paket::where('ppk_id', Auth::user()->ppk_id)
-                    ->orWhereIn('pokmil_id', Auth::user()->pokmil_id);
+                $query->where(function ($q) use ($user) {
+                    $q->where('ppk_id', $user->ppk_id)
+                      ->orWhereIn('pokmil_id', $user->pokmil_id);
+                });
             }
         }
 
