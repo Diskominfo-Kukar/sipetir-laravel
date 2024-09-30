@@ -210,13 +210,13 @@
                                             </div>
                                         </div>
                                         <div class="text-start">
-                                            @if($completed)
+                                            {{--@if($completed)--}}
                                                 <form action="{{ route('paket.uploadAllBerkas') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="paket_id" value="{{ $paket->id }}">
                                                     <button type="submit" class="btn btn-primary mx-auto d-block">Kirimkan berkas</button>
                                                 </form>
-                                            @endif
+                                            {{--@endif--}}
                                         </div>
 
                                     </div>
