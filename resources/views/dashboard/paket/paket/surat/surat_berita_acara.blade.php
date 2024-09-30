@@ -286,6 +286,10 @@
                         <li type="A" value="{{ $loop->iteration }}" style="padding: 0 8px; font-weight: bold;">
                             {{ $kategori->nama }}&nbsp;<br>&nbsp;
                         </li>
+                        <p>
+                            {{ $kategori->deskripsi }}
+                        </p>
+                        <br>&nbsp;
                         <div>
                             <table class="table-border" style="width:100%">
                                 <tr>
