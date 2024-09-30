@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->text('nama');
             $table->text('slug');
             $table->char('no_urut')->nullable();
+            $table->string('paket_id')->nullable();
+            $table->string('parent_id')->nullable();
             $table->string('kategori_id')->references('id')->on('kategori_review');
             $table->softDeletes();
             $table->timestamps();
