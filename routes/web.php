@@ -103,6 +103,8 @@ Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Panitia|PPK|Kepa
         Route::post('/upload-berita_acara_1', 'upload_berita_acara_1')->name('upload_berita_acara_1');
         Route::post('/upload-berita_acara_2', 'upload_berita_acara_2')->name('upload_berita_acara_2');
         Route::post('/upload-berita_acara_3', 'upload_berita_acara_3')->name('upload_berita_acara_3');
+        Route::post('/tambah-pertanyaan-paket', 'tambahPertanyaanPaket')->name('tambah_pertanyaan_paket');
+        Route::post('/question/{id}', 'deleteQuestion')->name('delete_question');
     });
 });
 

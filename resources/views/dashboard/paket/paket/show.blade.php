@@ -550,6 +550,7 @@
                                                         <div class="tab-pane fade {{ $index == 0 ? 'show active' : '' }}" id="tab{{ $kategori->id }}" role="tabpanel" aria-labelledby="tab{{ $kategori->id }}-tab">
                                                             <ul>
                                                                 @foreach ($kategori->questions as $question)
+                                                                    @if ($question->paket_id == $paket->id || $question->paket_id == NULL)
                                                                     @php
                                                                         $answer = $question->answers->firstWhere('paket_id', $paket->id);
                                                                     @endphp
@@ -576,23 +577,37 @@
                                                                                 &nbsp;<br>[ Belum ada jawaban ]
                                                                             @endif
                                                                         </div>
-                                                                        <div>
 
-                                                                        </div>
-                                                                        <div>
-                                                                            <form method="POST" action="{{ route('paket.answer_question') }}" class="d-flex flex-row align-items-center">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <form method="POST" action="{{ route('paket.answer_question') }}" class="d-flex flex-row align-items-center flex-grow-1 me-2">
                                                                                 @csrf
                                                                                 <input type="hidden" name="question_id" value="{{ $question->id }}">
                                                                                 <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                                                <input type="text" name="review" class="form-control me-2" placeholder="{{ $panitia->nama }} menjawab">
-                                                                                <button type="submit" class="btn btn-danger">Kirim</button>
+                                                                                <input type="text" name="review" class="form-control me-2 flex-grow-1" placeholder="{{ $panitia->nama }} menjawab">
+                                                                                <button type="submit" class="btn btn-primary">Kirim</button>
                                                                             </form>
+                                                                            @if ($question->paket_id != NULL)
+                                                                            <form method="POST" action="{{ route('paket.delete_question', $question->id) }}">
+                                                                                @csrf
+                                                                                <button type="submit" class="btn btn-danger">Hapus</button>
+                                                                            </form>
+                                                                            @endif
                                                                         </div>
                                                                         @if (!$loop->last)
                                                                             &nbsp;<hr>
                                                                         @endif
                                                                     </li>
+                                                                    @endif
                                                                 @endforeach
+                                                                <div>&nbsp;<hr>
+                                                                    <form method="POST" action="{{ route('paket.tambah_pertanyaan_paket') }}"  class="d-flex flex-column">
+                                                                        @csrf
+                                                                        <input type="hidden" name="kategori_id" value="{{ $kategori->id }}">
+                                                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                                        <input type="text" name="question" class="form-control" placeholder="Tambahkan pertanyaan khusus untuk paket ini (Opsional)">
+                                                                        <button type="submit" class="btn btn-primary mt-2">Tambahkan Pertanyaan</button>
+                                                                    </form>
+                                                                </div>
                                                                 @php
                                                                     $answerChr = $kategori->answerChr->firstWhere('paket_id', $paket->id);
                                                                 @endphp

@@ -2,6 +2,7 @@
 
 namespace App\Models\Master;
 
+use App\Models\Paket\Paket;
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,7 @@ class Question extends Model
 
     protected $logOnly = ['*'];
 
-    protected $fillable = ['nama', 'kategori_id', 'parent_id', 'deskripsi'];
+    protected $fillable = ['nama', 'kategori_id', 'parent_id', 'paket_id', 'deskripsi'];
 
     public function setNamaAttribute($value)
     {
@@ -39,6 +40,11 @@ class Question extends Model
     public function parentQuestion()
     {
         return $this->belongsTo(self::class, 'parent_id', 'id');
+    }
+
+    public function pakets()
+    {
+        return $this->belongsTo(Paket::class, 'paket_id', 'id');
     }
 
     public function childrenQuestions()

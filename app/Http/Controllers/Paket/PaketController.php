@@ -1251,4 +1251,24 @@ class PaketController extends Controller
 
         return redirect()->back();
     }
+
+    public function tambahPertanyaanPaket(Request $request)
+    {
+        $pertanyaanPaket              = new Question();
+        $pertanyaanPaket->nama        = $request->question;
+        $pertanyaanPaket->kategori_id = $request->kategori_id;
+        $pertanyaanPaket->paket_id    = $request->paket_id;
+        $pertanyaanPaket->save();
+
+        return back()->with('success', 'Pertanyaan berhasil ditambahkan untuk paket ini.');
+    }
+
+    public function deleteQuestion($id)
+    {
+        $question = Question::findOrFail($id);
+        $question->answers()->delete();
+        $question->delete();
+
+        return redirect()->back()->with('success', 'Pertanyaan berhasil dihapus.');
+    }
 }
