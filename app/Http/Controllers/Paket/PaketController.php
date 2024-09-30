@@ -866,6 +866,10 @@ class PaketController extends Controller
 
     public function answer_question(Request $request)
     {
+        $request->validate([
+            'review' => 'required|string|max:255',
+        ]);
+
         $answer = Answer::where('paket_id', $request->paket_id)
             ->where('question_id', $request->question_id)
             ->first();
@@ -900,6 +904,10 @@ class PaketController extends Controller
 
     public function answer_chr(Request $request)
     {
+        $request->validate([
+            'review' => 'required|string|max:255',
+        ]);
+
         $answer = AnswerChr::where('paket_id', $request->paket_id)
             ->where('kategori_id', $request->kategori_id)
             ->first();
@@ -1254,6 +1262,13 @@ class PaketController extends Controller
 
     public function tambahPertanyaanPaket(Request $request)
     {
+        $request->validate([
+            'question' => 'required|string|max:255',
+        ], [
+            'question.required' => 'Pertanyaan harus diisi.',
+            'question.max'      => 'Pertanyaan tidak boleh lebih dari 255 karakter.',
+        ]);
+
         $pertanyaanPaket              = new Question();
         $pertanyaanPaket->nama        = $request->question;
         $pertanyaanPaket->kategori_id = $request->kategori_id;
