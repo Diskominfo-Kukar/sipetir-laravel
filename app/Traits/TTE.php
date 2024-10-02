@@ -15,7 +15,9 @@ class TTE
         $dokumenOpen = fopen(public_path($dokumen), 'r');
 
         if (! $dokumenOpen) {
-            return self::logError('Gagal Membuka File', 'Gagal membuka dokumen untuk penandatanganan.');
+            self::logError('Gagal Membuka File', 'Gagal membuka dokumen untuk penandatanganan.');
+
+            return false;
         }
 
         try {
@@ -34,13 +36,15 @@ class TTE
         }
 
         if ($response->successful()) {
-            return self::handleSuccess($response, $dokumen);
+            return self::handleSuccess($response, $dokumen, $namaFile);
         }
 
-        return self::handleError($response);
+        self::handleError($response);
+
+        return false;
     }
 
-    private static function handleSuccess($response, $dokumen)
+    private static function handleSuccess($response, $dokumen, $namaFile)
     {
         $dokumenId   = $response->header('id_dokumen');
         $newDokumen  = str_replace('/storage', '', $dokumen);
@@ -53,15 +57,24 @@ class TTE
             ->get($urlDownload);
 
         if ($responseDownload->successful()) {
-            Storage::disk('local')->put('public/'.$newDokumen, $responseDownload);
+            // Extract the file extension and rename the file
+            $fileExtension  = pathinfo($namaFile, PATHINFO_EXTENSION);
+            $signedFileName = pathinfo($namaFile, PATHINFO_FILENAME).'_signed.'.$fileExtension;
 
-            return self::logSuccess('TTE Berhasil', 'Berhasil Menandatangani Dokumen Secara Digital');
+            $filePath = 'public/'.$signedFileName; // Save with new name
+            Storage::disk('local')->put($filePath, $responseDownload);
+
+            self::logSuccess('TTE Berhasil', 'Berhasil Menandatangani Dokumen Secara Digital');
+
+            return Storage::disk('local')->path($filePath);
         }
 
-        return self::logError('Gagal Mengunduh Dokumen', 'Gagal mengunduh dokumen yang telah ditandatangani.');
+        self::logError('Gagal Mengunduh Dokumen', 'Gagal mengunduh dokumen yang telah ditandatangani.');
+
+        return false;
     }
 
-    private static function handleError($response)
+    private static function handleError($response): void
     {
         $code         = $response->status();
         $body         = $response->json();
@@ -69,11 +82,14 @@ class TTE
 
         switch ($code) {
             case 404:
-                return self::logError('Server Tidak Ditemukan', 'Server Tidak Ditemukan');
+                self::logError('Server Tidak Ditemukan', 'Server Tidak Ditemukan');
+                break;
             case 500:
-                return self::logError('Server Maintenance', 'Server Sedang Dalam Perbaikan');
+                self::logError('Server Maintenance', 'Server Sedang Dalam Perbaikan');
+                break;
             default:
-                return self::logError('TTE Gagal (code: '.$code.')', $errorMessage);
+                self::logError('TTE Gagal (code: '.$code.')', $errorMessage);
+                break;
         }
     }
 
