@@ -864,8 +864,8 @@ class PaketController extends Controller
         $fileNameSuratTugas  = basename($paket->surat_tugas);
         $fileNameBeritaAcara = basename($paket->berita_acara_review);
 
-        $tteSuksesSuratTugas  = TTE::sign($suratTugasFile, $fileNameSuratTugas);
-        $tteSuksesBeritaAcara = TTE::sign($beritaAcaraFile, $fileNameBeritaAcara);
+        $tteSuksesSuratTugas  = TTE::signDocument($suratTugasFile, $fileNameSuratTugas);
+        $tteSuksesBeritaAcara = TTE::signDocument($beritaAcaraFile, $fileNameBeritaAcara);
 
         if ($tteSuksesSuratTugas && $tteSuksesBeritaAcara) {
             $paket->update([
