@@ -868,10 +868,10 @@ class PaketController extends Controller
         $tteSuksesBeritaAcara = TTE::signDocument($beritaAcaraFile, $fileNameBeritaAcara);
 
         if ($tteSuksesSuratTugas && $tteSuksesBeritaAcara) {
-            $paket->surat_tugas         = $tteSuksesSuratTugas;
-            $paket->berita_acara_review = $tteSuksesBeritaAcara;
             $paket->update([
-                'status' => '6',
+                'surat_tugas'         => $tteSuksesSuratTugas,
+                'berita_acara_review' => $tteSuksesBeritaAcara,
+                'status'              => '6',
             ]);
             session()->flash('success', 'Paket diserahkan kepada panitia untuk di review');
         } else {
