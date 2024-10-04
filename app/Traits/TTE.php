@@ -29,9 +29,11 @@ class TTE
         }
 
         if ($response->successful()) {
-            $dokumenId      = $response->header('id_dokumen');
-            $fileExtension  = pathinfo($fileName, PATHINFO_EXTENSION);
-            $signedFileName = $dokumenId.'-'.pathinfo($fileName, PATHINFO_FILENAME).'_signed.'.$fileExtension;
+            $dokumenId     = $response->header('id_dokumen');
+            $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+
+            $signedFilePathStore = 'documents/signed/';
+            $signedFileName      = $signedFilePathStore.$dokumenId.'-'.pathinfo($fileName, PATHINFO_FILENAME).'_signed.'.$fileExtension;
 
             Storage::disk('public')->put($signedFileName, $response->body());
 
