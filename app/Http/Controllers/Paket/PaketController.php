@@ -19,6 +19,7 @@ use App\Models\Paket\Komen;
 use App\Models\Paket\Paket;
 use App\Models\Paket\PaketDokumen;
 use App\Models\Paket\SuratTugas;
+use App\Traits\TTE;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -857,11 +858,20 @@ class PaketController extends Controller
     {
         $paket = Paket::where('id', $request->paket_id)->first();
 
-        $responseCode = 0;
+        $suratTugasFile  = Storage::disk('public')->get($paket->surat_tugas);
+        $beritaAcaraFile = Storage::disk('public')->get($paket->berita_acara_review);
 
-        if ($responseCode == 200) {          // # jika kirim tte nya berhasil maka ini ----------------------------------- @phpstan-ignore-line
+        $fileNameSuratTugas  = basename($paket->surat_tugas);
+        $fileNameBeritaAcara = basename($paket->berita_acara_review);
+
+        $tteSuksesSuratTugas  = TTE::signDocument($suratTugasFile, $fileNameSuratTugas);
+        $tteSuksesBeritaAcara = TTE::signDocument($beritaAcaraFile, $fileNameBeritaAcara);
+
+        if ($tteSuksesSuratTugas && $tteSuksesBeritaAcara) {
             $paket->update([
-                'status' => '6',
+                'surat_tugas'         => $tteSuksesSuratTugas,
+                'berita_acara_review' => $tteSuksesBeritaAcara,
+                'status'              => '6',
             ]);
             session()->flash('success', 'Paket diserahkan kepada panitia untuk di review');
         } else {
