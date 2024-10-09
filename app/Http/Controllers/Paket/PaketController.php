@@ -608,6 +608,10 @@ class PaketController extends Controller
         $paket = Paket::where('id', $request->paket_id)->first();
 
         //TODO: notif wa disini [Berkas untuk paket $paket->nama telah dikirim ke admin]
+
+        // TODO: Penerima wa
+        // $paket->ppk_id == auth()->user()->ppk_id --------------------- PPK paket tsb
+        // in_array($paket->pokmil_id, auth()->user()->pokmil_id) ------- Semua Panitia paket tsb
         $paket->update([
             'status' => '2',
         ]);
