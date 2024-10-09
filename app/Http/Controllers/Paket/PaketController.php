@@ -870,23 +870,28 @@ class PaketController extends Controller
     {
         $paket = Paket::where('id', $request->paket_id)->first();
 
-        //TODO: tte disini ------------- @phpstan-ignore-line
+        //TODO: tte disini ------------- ini hanya surat tugas
 
-        $suratTugasFile  = Storage::disk('public')->get($paket->surat_tugas);
-        $beritaAcaraFile = Storage::disk('public')->get($paket->berita_acara_review);
+        //TODO: ini kirim juga $nip dan $passphrase nya
+        // $request->nip
+        // $request->passphrase
 
-        $fileNameSuratTugas  = basename($paket->surat_tugas);
-        $fileNameBeritaAcara = basename($paket->berita_acara_review);
+        $suratTugasFile = Storage::disk('public')->get($paket->surat_tugas);
+        //$beritaAcaraFile = Storage::disk('public')->get($paket->berita_acara_review);
 
-        $tteSuksesSuratTugas  = TTE::signDocument($suratTugasFile, $fileNameSuratTugas);
-        $tteSuksesBeritaAcara = TTE::signDocument($beritaAcaraFile, $fileNameBeritaAcara);
+        $fileNameSuratTugas = basename($paket->surat_tugas);
+        //$fileNameBeritaAcara = basename($paket->berita_acara_review);
 
-        if ($tteSuksesSuratTugas && $tteSuksesBeritaAcara) {
+        $tteSuksesSuratTugas = TTE::signDocument($suratTugasFile, $fileNameSuratTugas);
+        //$tteSuksesBeritaAcara = TTE::signDocument($beritaAcaraFile, $fileNameBeritaAcara);
+
+        //if ($tteSuksesSuratTugas && $tteSuksesBeritaAcara) {
+        if ($tteSuksesSuratTugas) {
             //TODO: notif wa disini [Surat tugas paket $paket->nama telah disetujui oleh Kepala BPBJ]
             $paket->update([
-                'surat_tugas'         => $tteSuksesSuratTugas,
-                'berita_acara_review' => $tteSuksesBeritaAcara,
-                'status'              => '6',
+                'surat_tugas' => $tteSuksesSuratTugas,
+                //'berita_acara_review' => $tteSuksesBeritaAcara,
+                'status' => '6',
             ]);
             session()->flash('success', 'Paket diserahkan kepada panitia untuk di review');
         } else {
@@ -1016,12 +1021,16 @@ class PaketController extends Controller
 
         $responseCode = 0;
 
-        //TODO: tte disini
-        if ($responseCode == 200) { // # jika kirim tte nya berhasil maka ini ------------- @phpstan-ignore-line
-            if ($check->ttd) {
-                $paket  = Paket::where('id', $request->paket_id)->first();
-                $pokmil = $paket->pokmil;
+        //TODO: tte disini ------------- ini hanya berita acara
 
+        //TODO: ini kirim juga $nip dan $passphrase nya
+        // $request->nip
+        // $request->passphrase
+
+        if ($check->ttd) {
+            if ($responseCode == 200) { // # jika kirim tte nya berhasil maka ini ------------- @phpstan-ignore-line
+                $paket           = Paket::where('id', $request->paket_id)->first();
+                $pokmil          = $paket->pokmil;
                 $panitiaSudahAcc = $pokmil->panitia()
                     ->wherePivot('panitia_id', $request->panitia_id)
                     ->wherePivot('approve', 1)
@@ -1033,7 +1042,6 @@ class PaketController extends Controller
                     return redirect()->back();
                 } else {
                     $pokmil->panitia()->updateExistingPivot($request->panitia_id, ['approve' => 1]);
-
                     $panitia      = $pokmil->panitia;
                     $berita_acara = BeritaAcara::where('paket_id', $paket->id)->first();
                     $tgl          = $berita_acara->created_at;
@@ -1045,7 +1053,6 @@ class PaketController extends Controller
                             $query->where('paket_id', $paketId);
                         }]);
                     }])->get();
-
                     $data = [
                         'tanggal'      => $tanggal,
                         'tglkop'       => $tglkop,
@@ -1054,16 +1061,13 @@ class PaketController extends Controller
                         'kategoris'    => $kategoris,
                         'panitia'      => $panitia,
                     ];
-
                     $pdf      = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
                     $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
                     Storage::disk('public')->put($filePath, $pdf->output());
-
                     $paket->update([
                         'berita_acara_review' => $filePath,
                     ]);
                 }
-
                 $totalPanitia    = $pokmil->panitia()->count();
                 $totalPanitiaAcc = $pokmil->panitia()->wherePivot('approve', true)->count();
 
@@ -1079,12 +1083,12 @@ class PaketController extends Controller
 
                 return redirect()->back();
             } else {
-                session()->flash('info', 'Upload Ttd terlebih dahulu');
+                session()->flash('error', 'Paket gagal di TTE');
 
                 return redirect()->back();
             }
         } else {
-            session()->flash('error', 'Paket gagal di TTE');
+            session()->flash('info', 'Upload Ttd terlebih dahulu');
 
             return redirect()->back();
         }
@@ -1104,9 +1108,14 @@ class PaketController extends Controller
 
         $responseCode = 0;
 
-        //TODO: tte disini
-        if ($responseCode == 200) { // # jika kirim tte nya berhasil maka ini ----------------- @phpstan-ignore-line
-            if ($ppk->ttd) {
+        //TODO: tte disini ------------- ini hanya berita acara
+
+        //TODO: ini kirim juga $nip dan $passphrase nya
+        // $request->nip
+        // $request->passphrase
+
+        if ($ppk->ttd) {
+            if ($responseCode == 200) { // # jika kirim tte nya berhasil maka ini ----------------- @phpstan-ignore-line
                 //TODO: notif wa disini [Paket $paket->nama telah selesai]
                 if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
                     $paket->update([
@@ -1148,12 +1157,12 @@ class PaketController extends Controller
 
                 return redirect()->back();
             } else {
-                session()->flash('info', 'Upload Ttd terlebih dahulu');
+                session()->flash('error', 'Paket gagal di TTE');
 
                 return redirect()->back();
             }
         } else {
-            session()->flash('error', 'Paket gagal di TTE');
+            session()->flash('info', 'Upload Ttd terlebih dahulu');
 
             return redirect()->back();
         }
