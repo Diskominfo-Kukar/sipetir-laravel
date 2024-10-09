@@ -606,6 +606,8 @@ class PaketController extends Controller
     public function uploadAllBerkas(Request $request)
     {
         $paket = Paket::where('id', $request->paket_id)->first();
+
+        //TODO: notif wa disini [Berkas untuk paket $paket->nama telah dikirim ke admin]
         $paket->update([
             'status' => '2',
         ]);
@@ -636,6 +638,7 @@ class PaketController extends Controller
             }
 
             $paket = Paket::where('id', $request->paket_id)->first();
+            //TODO: notif wa disini [Berkas untuk paket $paket->nama telah dikembalikan ke PPK untuk diperbaiki]
             $paket->update([
                 'status' => '11',
             ]);
@@ -646,10 +649,12 @@ class PaketController extends Controller
             $paket = Paket::where('id', $request->paket_id)->first();
 
             if (! $paket->pokmil_id) {
+                //TODO: notif wa disini [Paket $paket->nama telah sampai ke Kepala BPBJ untuk proses pemilihan pokmil]
                 $paket->update([
                     'status' => '3',
                 ]);
             } else {
+                //TODO: notif wa disini [Paket $paket->nama sampai ke PPK untuk pengisian pengajuan data surat tugas]
                 $paket->update([
                     'status' => '4',
                 ]);
@@ -674,6 +679,7 @@ class PaketController extends Controller
         $paket       = Paket::where('id', $request->paket_id)->first();
         $pokmil      = Pokmil::where('pokmil_id', $request->pokmil_number)->first();
         $uuid_pokmil = $pokmil->id;
+        //TODO: notif wa disini [Paket $paket->nama sampai ke PPK untuk pengisian pengajuan data surat tugas]
         $paket->update([
             'pokmil_id' => $uuid_pokmil,
             'status'    => '4',
@@ -747,6 +753,7 @@ class PaketController extends Controller
         Storage::disk('public')->put($filePath, $pdf->output());
         $pdfUrl = url('storage/'.$filePath);
 
+        //TODO: notif wa disini [Paket $paket->nama telah sampai ke Kepala BPBJ untuk Persetujuan Surat Tugas]
         $paket->update([
             'surat_tugas' => $filePath,
             'status'      => '5',
@@ -845,6 +852,7 @@ class PaketController extends Controller
         Storage::disk('public')->put($filePath, $pdf->output());
         $pdfUrl = url('storage/'.$filePath);
 
+        //TODO: notif wa disini [Paket $paket->nama telah sampai ke Panitia untuk Persetujuan Berita Acara]
         $paket->update([
             'berita_acara_review' => $filePath,
             'status'              => '8',
@@ -870,6 +878,7 @@ class PaketController extends Controller
         $tteSuksesBeritaAcara = TTE::signDocument($beritaAcaraFile, $fileNameBeritaAcara);
 
         if ($tteSuksesSuratTugas && $tteSuksesBeritaAcara) {
+            //TODO: notif wa disini [Surat tugas paket $paket->nama telah disetujui oleh Kepala BPBJ]
             $paket->update([
                 'surat_tugas'         => $tteSuksesSuratTugas,
                 'berita_acara_review' => $tteSuksesBeritaAcara,
@@ -983,6 +992,7 @@ class PaketController extends Controller
     public function progres_berita_acara(Request $request)
     {
         $paket = Paket::where('id', $request->paket_id)->first();
+        //TODO: notif wa disini [Paket $paket->nama telah selesai melewati proses review]
         $paket->update([
             'status' => '7',
         ]);
@@ -1054,6 +1064,7 @@ class PaketController extends Controller
                 $totalPanitiaAcc = $pokmil->panitia()->wherePivot('approve', true)->count();
 
                 if ($totalPanitiaAcc >= $totalPanitia / 2) {
+                    //TODO: notif wa disini [Paket $paket->nama telah sampai ke PPK untuk Persetujuan Berita Acara]
                     $paket->update([
                         'status' => '9',
                     ]);
@@ -1092,6 +1103,7 @@ class PaketController extends Controller
         //TODO: tte disini
         if ($responseCode == 200) { // # jika kirim tte nya berhasil maka ini ----------------- @phpstan-ignore-line
             if ($ppk->ttd) {
+                //TODO: notif wa disini [Paket $paket->nama telah selesai]
                 if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
                     $paket->update([
                         'status' => '0',
@@ -1221,6 +1233,7 @@ class PaketController extends Controller
                 $filename = 'berita_acara_review_'.$paket->id.'.pdf';
                 $file->storeAs('public/pdf', $filename);
 
+                //TODO: notif wa disini [Paket $paket->nama telah sampai ke Panitia untuk Persetujuan Berita Acara]
                 $paket->update([
                     'berita_acara_review' => 'pdf/'.$filename,
                     'status'              => '8',
@@ -1250,6 +1263,7 @@ class PaketController extends Controller
                 $filename = 'berita_acara_penetapan_'.$paket->id.'.pdf';
                 $file->storeAs('public/pdf', $filename);
 
+                //TODO: notif wa disini [Berita acara penetapan paket $paket->nama telah tersedia]
                 $paket->update([
                     'berita_acara_penetapan' => 'pdf/'.$filename,
                 ]);
@@ -1278,6 +1292,7 @@ class PaketController extends Controller
                 $filename = 'berita_acara_pengumuman_'.$paket->id.'.pdf';
                 $file->storeAs('public/pdf', $filename);
 
+                //TODO: notif wa disini [Berita acara pengumuman paket $paket->nama telah tersedia]
                 $paket->update([
                     'berita_acara_pengumuman' => 'pdf/'.$filename,
                     'status'                  => '0',
