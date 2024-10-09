@@ -858,6 +858,8 @@ class PaketController extends Controller
     {
         $paket = Paket::where('id', $request->paket_id)->first();
 
+        //TODO: tte disini ------------- @phpstan-ignore-line
+
         $suratTugasFile  = Storage::disk('public')->get($paket->surat_tugas);
         $beritaAcaraFile = Storage::disk('public')->get($paket->berita_acara_review);
 
@@ -1000,7 +1002,8 @@ class PaketController extends Controller
 
         $responseCode = 0;
 
-        if ($responseCode == 200) { // # jika kirim tte nya berhasil maka ini ----------------------------------- @phpstan-ignore-line
+        //TODO: tte disini
+        if ($responseCode == 200) { // # jika kirim tte nya berhasil maka ini ------------- @phpstan-ignore-line
             if ($check->ttd) {
                 $paket  = Paket::where('id', $request->paket_id)->first();
                 $pokmil = $paket->pokmil;
@@ -1086,7 +1089,8 @@ class PaketController extends Controller
 
         $responseCode = 0;
 
-        if ($responseCode == 200) { // # jika kirim tte nya berhasil maka ini ----------------------------------- @phpstan-ignore-line
+        //TODO: tte disini
+        if ($responseCode == 200) { // # jika kirim tte nya berhasil maka ini ----------------- @phpstan-ignore-line
             if ($ppk->ttd) {
                 if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
                     $paket->update([
