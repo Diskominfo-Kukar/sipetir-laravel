@@ -8,11 +8,25 @@ use App\Models\Notifikasi as NotifikasiModel;
 
 class Notifikasi
 {
-    public static function sendTo(string $tipe, string $to, int $userId, string $moduleClass, int $moduleId, string $targetUrl, string $message = 'Ini adalah Notifikasi')
+    /**
+     * Mengirimkan notifikasi ke user melalui whatsapp atau email.
+     *
+     * @param string $tipe Tipe notifikasi yang akan dikirimkan, harus berupa 'wa' untuk whatsapp atau 'email' untuk email
+     * @param string $to Nomor whatsapp atau email yang akan dikirimi notifikasi
+     * @param int $userId Id user yang akan dikirimi notifikasi
+     * @param string $moduleClass Nama class dari module yang mengirimkan notifikasi
+     * @param string $moduleId Id dari module yang mengirimkan notifikasi
+     * @param string $targetUrl Alamat url yang akan diklik oleh user setelah menerima notifikasi
+     * @param string $message Isi notifikasi yang akan dikirimkan, default adalah 'Ini adalah Notifikasi'
+     * @return string Berisi pesan apakah notifikasi berhasil dikirimkan atau tidak
+     */
+    public static function sendTo(string $tipe, string $to, int $userId, string $moduleClass, string $moduleId, string $targetUrl, string $message = 'Ini adalah Notifikasi')
     {
-        dispatch(new KirimNotifikasiJob($userId, $moduleClass, $moduleId, $targetUrl, $message));
+        //TODO aktifkan jika task TTE & WA aman
+        // dispatch(new KirimNotifikasiJob($userId, $moduleClass, $moduleId, $targetUrl, $message));
 
-        $messageContent = $message.' &#13; Silahkan cek pada alamat ini: &#13; '.$targetUrl;
+        $messageContent = $message;
+        // $messageContent = $message.' &#13; Silahkan cek pada alamat ini: &#13; '.$targetUrl;
 
         switch ($tipe) {
             case 'wa':
@@ -28,7 +42,11 @@ class Notifikasi
     {
         dispatch(function () use ($phoneNumber, $message) {
             $wappin = new Wappin();
-            $wappin->sendMessage($phoneNumber, $message);
+            if (config('app.env') == 'local') {
+                $wappin->sendMessage(config('wappin.phone_test_number'), $message);
+            } else {
+                $wappin->sendMessage($phoneNumber, $message);
+            }
         });
 
         return true;

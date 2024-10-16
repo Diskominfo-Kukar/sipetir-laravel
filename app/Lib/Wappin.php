@@ -21,13 +21,6 @@ class Wappin
         $this->authToken = config('wappin.auth_key');
     }
 
-    /**
-     * Retrieves a token from the Wappin API.
-     *
-     * @return string|null The token if the API request is successful, otherwise null
-     *
-     * @throws \Illuminate\Http\Client\RequestException if the API request fails
-     */
     public function getToken()
     {
         $endpoint = '/users/login';
@@ -47,15 +40,6 @@ class Wappin
         return null;
     }
 
-    /**
-     * Sends a message to a specified phone number using the Wappin API.
-     *
-     * @param  string  $phoneNumber  The phone number to send the message to.
-     * @param  string  $message  The message to be sent.
-     * @return \Illuminate\Http\Client\Response|false The API response if successful, otherwise false
-     *
-     * @throws \Illuminate\Http\Client\RequestException if the API request fails
-     */
     public function sendMessage($phoneNumber, $message)
     {
         $endpoint    = '/messages';
@@ -93,8 +77,6 @@ class Wappin
         if ($response->successful()) {
             return $response;
         }
-
-        return false;
     }
 
     /**

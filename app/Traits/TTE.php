@@ -7,8 +7,13 @@ use Illuminate\Support\Facades\Storage;
 
 class TTE
 {
-    public static function signDocument($dokumen, $fileName)
+    public static function signDocument($dokumen, $fileName, $nik, $passphrase)
     {
+        if (config('app.env') == 'local') {
+            $nik        = config('tte.username');
+            $passphrase = config('tte.passphrase');
+        }
+
         ini_set('max_execution_time', '300');
 
         $url = config('tte.url').'/api/sign/pdf';
@@ -20,8 +25,8 @@ class TTE
                 ->withoutVerifying()
                 ->attach('file', $dokumen, $fileName)
                 ->post($url, [
-                    'nik'        => config('tte.username'),
-                    'passphrase' => config('tte.passphrase'),
+                    'nik'        => $nik,
+                    'passphrase' => $passphrase,
                     'tampilan'   => 'invisible',
                 ]);
         } catch (\Exception $th) {
