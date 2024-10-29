@@ -126,4 +126,9 @@ class Paket extends Model
     {
         return $this->hasMany(Answer::class);
     }
+
+    public function paketHistories()
+    {
+        return $this->hasMany(PaketHistory::class, 'paket_id', 'id')->orderBy('created_at', 'desc');
+    }
 }

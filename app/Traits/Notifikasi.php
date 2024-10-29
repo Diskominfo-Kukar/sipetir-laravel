@@ -11,13 +11,13 @@ class Notifikasi
     /**
      * Mengirimkan notifikasi ke user melalui whatsapp atau email.
      *
-     * @param string $tipe Tipe notifikasi yang akan dikirimkan, harus berupa 'wa' untuk whatsapp atau 'email' untuk email
-     * @param string $to Nomor whatsapp atau email yang akan dikirimi notifikasi
-     * @param int $userId Id user yang akan dikirimi notifikasi
-     * @param string $moduleClass Nama class dari module yang mengirimkan notifikasi
-     * @param string $moduleId Id dari module yang mengirimkan notifikasi
-     * @param string $targetUrl Alamat url yang akan diklik oleh user setelah menerima notifikasi
-     * @param string $message Isi notifikasi yang akan dikirimkan, default adalah 'Ini adalah Notifikasi'
+     * @param  string  $tipe  Tipe notifikasi yang akan dikirimkan, harus berupa 'wa' untuk whatsapp atau 'email' untuk email
+     * @param  string  $to  Nomor whatsapp atau email yang akan dikirimi notifikasi
+     * @param  int  $userId  Id user yang akan dikirimi notifikasi
+     * @param  string  $moduleClass  Nama class dari module yang mengirimkan notifikasi
+     * @param  string  $moduleId  Id dari module yang mengirimkan notifikasi
+     * @param  string  $targetUrl  Alamat url yang akan diklik oleh user setelah menerima notifikasi
+     * @param  string  $message  Isi notifikasi yang akan dikirimkan, default adalah 'Ini adalah Notifikasi'
      * @return string Berisi pesan apakah notifikasi berhasil dikirimkan atau tidak
      */
     public static function sendTo(string $tipe, string $to, int $userId, string $moduleClass, string $moduleId, string $targetUrl, string $message = 'Ini adalah Notifikasi')
@@ -42,6 +42,7 @@ class Notifikasi
     {
         dispatch(function () use ($phoneNumber, $message) {
             $wappin = new Wappin();
+
             if (config('app.env') == 'local') {
                 $wappin->sendMessage(config('wappin.phone_test_number'), $message);
             } else {

@@ -18,6 +18,7 @@ use App\Models\Paket\BeritaAcara;
 use App\Models\Paket\Komen;
 use App\Models\Paket\Paket;
 use App\Models\Paket\PaketDokumen;
+use App\Models\Paket\PaketHistory;
 use App\Models\Paket\SuratTugas;
 use App\Traits\Notifikasi;
 use App\Traits\TTE;
@@ -889,6 +890,7 @@ class PaketController extends Controller
         $paket = Paket::where('id', $request->paket_id)->first();
 
         $tteSuksesSuratTugas = $this->signDokumen($paket->surat_tugas, $request->nip, $request->passphrase);
+
         if ($tteSuksesSuratTugas) {
             $message = "Surat tugas paket $paket->nama telah disetujui oleh Kepala BPBJ";
             $this->kirimNotifikasi($paket, $message);
@@ -1367,6 +1369,8 @@ class PaketController extends Controller
 
     private function kirimNotifikasi($paket, $message)
     {
+        $this->addHistory($paket, $message);
+
         Notifikasi::sendTo(
             'wa',
             $paket->ppk->panitia->telepon,
@@ -1398,5 +1402,13 @@ class PaketController extends Controller
         $fileName   = basename($file);
 
         return TTE::signDocument($fileToSign, $fileName, $nik, $passphrase);
+    }
+
+    private function addHistory($paket, $message)
+    {
+        PaketHistory::create([
+            'paket_id' => $paket->id,
+            'message'  => $message,
+        ]);
     }
 }

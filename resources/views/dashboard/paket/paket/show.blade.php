@@ -21,9 +21,9 @@
 
         <div class="row justify-content-evenly">
             <div class="col-md-3">
+
                 <div class="overflow-hidden border-0 shadow-sm card">
                     <div class="card-body" style="background-color: #dad9d8">
-
                         <div class="mt-4 text-center">
                             <h4 class="mb-1">Kode Paket : {{$paket->kode}}</h4>
                             <p class="mb-0 text-secondary">
@@ -80,6 +80,7 @@
                         </li>
                     </ul>
                 </div>
+
                 <div class="overflow-hidden border-0 shadow-sm card">
                     <div class="card-body detail-bgc" style="background-color: orange">
                         <div class="text-start">
@@ -121,6 +122,7 @@
                         </!--li-->
                     </ul>
                 </div>
+
                 <div class="overflow-hidden border-0 shadow-sm card">
                     <div class="card-body" style="background-color: #14d3dd">
                         <div class="text-start">
@@ -161,6 +163,27 @@
                         @endforeach
                     </ul>
                 </div>
+
+                <div class="overflow-hidden border-0 shadow-sm card mt-3">
+                    <div class="card-body" style="background-color: #b9a8eb">
+                        <div class="text-start">
+                            <h5>Aktifitas Paket</h5>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @forelse ($paket->paketHistories as $history)
+                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                            <label class="form-label small"><i class="bi bi-clock-history"></i>&nbsp;{{ $history->message }}</label>
+                            <span class="text-muted small">{{ $history->created_at->format('d-m-Y H:i:s') }}</span>
+                        </li>
+                        @empty
+                        <div class="col-md-12 mt-3">
+                            <p class="text-center fw-bold small">Tidak ada riwayat</p>
+                        </div>
+                        @endforelse
+                    </ul>
+                </div>
+
             </div>
 
             <div class="col-md-8">
