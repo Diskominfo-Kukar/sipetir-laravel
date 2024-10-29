@@ -1058,12 +1058,14 @@ class PaketController extends Controller
                     'kategoris'    => $kategoris,
                     'panitia'      => $panitia,
                 ];
-                $pdf             = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
-                $filePath        = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
-                $fileBeritaAcara = Storage::disk('public')->put($filePath, $pdf->output());
+                $pdf      = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
+                $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
+                Storage::disk('public')->put($filePath, $pdf->output());
+
+                $getFileBeritaAcara = Storage::disk('public')->get($filePath);
 
                 //TODO cek output $fileBeritaAcara (Storage::get())
-                $tteSuksesBeritaAcara = $this->signDokumen($fileBeritaAcara, $request->nip, $request->passphrase);
+                $tteSuksesBeritaAcara = $this->signDokumen($getFileBeritaAcara, $request->nip, $request->passphrase);
 
                 if ($tteSuksesBeritaAcara) {
                     $paket->update([
@@ -1135,12 +1137,14 @@ class PaketController extends Controller
                 'panitia'      => $panitia,
                 'ppk'          => $ppk,
             ];
-            $pdf             = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
-            $filePath        = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
-            $fileBeritaAcara = Storage::disk('public')->put($filePath, $pdf->output());
+            $pdf      = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
+            $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
+            Storage::disk('public')->put($filePath, $pdf->output());
+
+            $getFileBeritaAcara = Storage::disk('public')->get($filePath);
 
             //TODO cek output $fileBeritaAcara (Storage::get())
-            $tteSuksesBeritaAcara = $this->signDokumen($fileBeritaAcara, $request->nip, $request->passphrase);
+            $tteSuksesBeritaAcara = $this->signDokumen($getFileBeritaAcara, $request->nip, $request->passphrase);
 
             if ($tteSuksesBeritaAcara) {
                 if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
