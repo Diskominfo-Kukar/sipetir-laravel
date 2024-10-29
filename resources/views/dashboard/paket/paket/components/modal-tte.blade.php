@@ -2,7 +2,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <!-- Navigation Tabs -->
-            <ul class="nav nav-tabs" id="tteTab" role="tablist">
+            <!--ul class="nav nav-tabs" id="tteTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="tab-tte-1" data-bs-toggle="tab" href="#tte-1" role="tab" aria-controls="tte-1" aria-selected="true">
                         Verifikasi Tandatangan
@@ -13,7 +13,7 @@
                         Upload Tandatangan
                     </a>
                 </li>
-            </ul>
+            <ul-->
 
             <div class="tab-content" id="tteTabContent">
                 <!-- Form Tanda Tangan -->
@@ -91,7 +91,7 @@
                 </div>
 
                 <!-- Form Upload -->
-                <div class="tab-pane fade" id="tte-2" role="tabpanel" aria-labelledby="tab-tte-2">
+                <!--div class="tab-pane fade" id="tte-2" role="tabpanel" aria-labelledby="tab-tte-2">
                     <form  enctype="multipart/form-data" method="POST" action="{{ route('paket.uploadTtd') }}">
                         @csrf
                         <div class="modal-header">
@@ -119,7 +119,7 @@
                             <button type="submit" class="input-group-text bg-warning border-0">Upload</button>
                         </div>
                     </form>
-                </div>
+                <div-->
             </div>
         </div>
     </div>

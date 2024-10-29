@@ -34,15 +34,17 @@ class TTE
         }
 
         if ($response->successful()) {
-            $dokumenId     = $response->header('id_dokumen');
+            //$dokumenId     = $response->header('id_dokumen');
             $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
 
             $signedFilePathStore = 'documents/signed/';
-            $signedFileName      = $signedFilePathStore.$dokumenId.'-'.pathinfo($fileName, PATHINFO_FILENAME).'_signed.'.$fileExtension;
+            //$signedFileName      = $signedFilePathStore.$dokumenId.'-'.pathinfo($fileName, PATHINFO_FILENAME).'_signed.'.$fileExtension;
+            $signedFileName = $signedFilePathStore.pathinfo($fileName, PATHINFO_FILENAME).'_signed.'.$fileExtension;
 
             Storage::disk('public')->put($signedFileName, $response->body());
 
-            return Storage::disk('local')->url($signedFileName);
+            //return Storage::disk('local')->url($signedFileName);
+            return $signedFileName;
         }
 
         return null;

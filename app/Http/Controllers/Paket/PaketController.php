@@ -253,8 +253,8 @@ class PaketController extends Controller
             $panitia->nama = $panitia->nama ?? 'Superadmin';
         }
 
-        $surat_tugas    = $paket->surat_tugas;
-        $berita_acara_1 = $paket->berita_acara_review;
+        $surat_tugas    = str_starts_with($paket->surat_tugas, 'documents/signed/') ? $paket->surat_tugas : null;
+        $berita_acara_1 = str_starts_with($paket->berita_acara_review, 'documents/signed/') ? $paket->berita_acara_review : null;
         $berita_acara_2 = $paket->berita_acara_penetapan;
         $berita_acara_3 = $paket->berita_acara_pengumuman;
 
@@ -1027,81 +1027,81 @@ class PaketController extends Controller
         }
         $check = Panitia::where('id', $request->panitia_id)->first();
 
-        if ($check->ttd) {
-            $paket           = Paket::where('id', $request->paket_id)->first();
-            $pokmil          = $paket->pokmil;
-            $panitiaSudahAcc = $pokmil->panitia()
-                ->wherePivot('panitia_id', $request->panitia_id)
-                ->wherePivot('approve', 1)
-                ->exists();
+        //if ($check->ttd) {
+        $paket           = Paket::where('id', $request->paket_id)->first();
+        $pokmil          = $paket->pokmil;
+        $panitiaSudahAcc = $pokmil->panitia()
+            ->wherePivot('panitia_id', $request->panitia_id)
+            ->wherePivot('approve', 1)
+            ->exists();
 
-            if ($panitiaSudahAcc) {
-                session()->flash('success', 'Anda sudah menyetujui berita acara');
-
-                return redirect()->back();
-            } else {
-                $pokmil->panitia()->updateExistingPivot($request->panitia_id, ['approve' => 1]);
-                $panitia      = $pokmil->panitia;
-                $berita_acara = BeritaAcara::where('paket_id', $paket->id)->first();
-                $tgl          = $berita_acara->created_at;
-                $tanggal      = $tgl->locale('id')->translatedFormat('j F Y');
-                $tglkop       = $tgl->format('m/Y');
-                $paketId      = $berita_acara->paket_id;
-                $kategoris    = KategoriReview::with(['questions' => function ($query) use ($paketId) { // @phpstan-ignore-line
-                    $query->with(['answers' => function ($query) use ($paketId) {
-                        $query->where('paket_id', $paketId);
-                    }]);
-                }])->get();
-                $data = [
-                    'tanggal'      => $tanggal,
-                    'tglkop'       => $tglkop,
-                    'paket'        => $paket,
-                    'berita_acara' => $berita_acara,
-                    'kategoris'    => $kategoris,
-                    'panitia'      => $panitia,
-                ];
-                $pdf      = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
-                $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
-                Storage::disk('public')->put($filePath, $pdf->output());
-
-                $getFileBeritaAcara = Storage::disk('public')->get($filePath);
-
-                //TODO cek output $fileBeritaAcara (Storage::get())
-                $tteSuksesBeritaAcara = $this->signDokumen($getFileBeritaAcara, $request->nip, $request->passphrase);
-
-                if ($tteSuksesBeritaAcara) {
-                    $paket->update([
-                        'berita_acara_review' => $tteSuksesBeritaAcara,
-                    ]);
-                }
-            }
-
-            $totalPanitia = $pokmil->panitia()->count();
-
-            //TODO Pivot ada 2, approve dan signed (TTD)
-            // Total pokmil 5, yang approve ada 3
-            $totalPanitiaAcc = $pokmil->panitia()->wherePivot('approve', true)->count();
-            // $totalPanitiaSignedTtd = $pokmil->panitia()->wherePivot('signed', true)->count();
-
-            if ($totalPanitiaAcc >= $totalPanitia / 2) {
-                // if (($totalPanitiaAcc >= $totalPanitia / 2) && ($totalPanitiaSignedTtd == $totalPanitia)) {
-                $message = "Paket $paket->nama telah sampai ke PPK untuk Persetujuan Berita Acara";
-                $this->kirimNotifikasi($paket, $message);
-
-                $paket->update([
-                    'status' => '9',
-                ]);
-                session()->flash('success', 'Berhasil menyetujui berita acara dan paket diserahkan ke PPK');
-            } else {
-                session()->flash('success', 'Berhasil menyetujui berita acara');
-            }
+        if ($panitiaSudahAcc) {
+            session()->flash('success', 'Anda sudah menyetujui berita acara');
 
             return redirect()->back();
         } else {
-            session()->flash('info', 'Upload Ttd terlebih dahulu');
+            $pokmil->panitia()->updateExistingPivot($request->panitia_id, ['approve' => 1]);
+            /*
+            $panitia      = $pokmil->panitia;
+            $berita_acara = BeritaAcara::where('paket_id', $paket->id)->first();
+            $tgl          = $berita_acara->created_at;
+            $tanggal      = $tgl->locale('id')->translatedFormat('j F Y');
+            $tglkop       = $tgl->format('m/Y');
+            $paketId      = $berita_acara->paket_id;
+            $kategoris    = KategoriReview::with(['questions' => function ($query) use ($paketId) { // @phpstan-ignore-line
+                $query->with(['answers' => function ($query) use ($paketId) {
+                    $query->where('paket_id', $paketId);
+                }]);
+            }])->get();
+            $data = [
+                'tanggal'      => $tanggal,
+                'tglkop'       => $tglkop,
+                'paket'        => $paket,
+                'berita_acara' => $berita_acara,
+                'kategoris'    => $kategoris,
+                'panitia'      => $panitia,
+            ];
+            $pdf      = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
+            $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
+            Storage::disk('public')->put($filePath, $pdf->output());
+            */
 
-            return redirect()->back();
+            //TODO cek output $fileBeritaAcara (Storage::get())
+            $tteSuksesBeritaAcara = $this->signDokumen($paket->berita_acara_review, $request->nip, $request->passphrase);
+
+            if ($tteSuksesBeritaAcara) {
+                $paket->update([
+                    'berita_acara_review' => $tteSuksesBeritaAcara,
+                ]);
+            }
         }
+
+        $totalPanitia = $pokmil->panitia()->count();
+
+        //TODO Pivot ada 2, approve dan signed (TTD)
+        // Total pokmil 5, yang approve ada 3
+        $totalPanitiaAcc = $pokmil->panitia()->wherePivot('approve', true)->count();
+        // $totalPanitiaSignedTtd = $pokmil->panitia()->wherePivot('signed', true)->count();
+
+        if ($totalPanitiaAcc >= $totalPanitia / 2) {
+            // if (($totalPanitiaAcc >= $totalPanitia / 2) && ($totalPanitiaSignedTtd == $totalPanitia)) {
+            $message = "Paket $paket->nama telah sampai ke PPK untuk Persetujuan Berita Acara";
+            $this->kirimNotifikasi($paket, $message);
+
+            $paket->update([
+                'status' => '9',
+            ]);
+            session()->flash('success', 'Berhasil menyetujui berita acara dan paket diserahkan ke PPK');
+        } else {
+            session()->flash('success', 'Berhasil menyetujui berita acara');
+        }
+
+        return redirect()->back();
+        //} else {
+        //    session()->flash('info', 'Upload Ttd terlebih dahulu');
+
+        //    return redirect()->back();
+        //}
     }
 
     public function berita_acara_TTE_ppk(Request $request)
@@ -1116,65 +1116,65 @@ class PaketController extends Controller
         $ppk   = $paket->ppk;
         $ppk   = Panitia::find($ppk->panitia_id);
 
-        if ($ppk->ttd) {
-            $pokmil       = $paket->pokmil;
-            $panitia      = $pokmil->panitia;
-            $berita_acara = BeritaAcara::where('paket_id', $paket->id)->first();
-            $tgl          = $berita_acara->created_at;
-            $tanggal      = $tgl->locale('id')->translatedFormat('j F Y');
-            $tglkop       = $tgl->format('m/Y');
-            $paketId      = $berita_acara->paket_id;
-            $kategoris    = KategoriReview::with(['questions' => function ($query) use ($paketId) { // @phpstan-ignore-line
-                $query->with(['answers' => function ($query) use ($paketId) {
-                    $query->where('paket_id', $paketId);
-                }]);
-            }])->get();
+        //if ($ppk->ttd) {
+        /*
+        $pokmil       = $paket->pokmil;
+        $panitia      = $pokmil->panitia;
+        $berita_acara = BeritaAcara::where('paket_id', $paket->id)->first();
+        $tgl          = $berita_acara->created_at;
+        $tanggal      = $tgl->locale('id')->translatedFormat('j F Y');
+        $tglkop       = $tgl->format('m/Y');
+        $paketId      = $berita_acara->paket_id;
+        $kategoris    = KategoriReview::with(['questions' => function ($query) use ($paketId) { // @phpstan-ignore-line
+            $query->with(['answers' => function ($query) use ($paketId) {
+                $query->where('paket_id', $paketId);
+            }]);
+        }])->get();
 
-            $data = [
-                'tanggal'      => $tanggal,
-                'tglkop'       => $tglkop,
-                'paket'        => $paket,
-                'berita_acara' => $berita_acara,
-                'kategoris'    => $kategoris,
-                'panitia'      => $panitia,
-                'ppk'          => $ppk,
-            ];
-            $pdf      = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
-            $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
-            Storage::disk('public')->put($filePath, $pdf->output());
+        $data = [
+            'tanggal'      => $tanggal,
+            'tglkop'       => $tglkop,
+            'paket'        => $paket,
+            'berita_acara' => $berita_acara,
+            'kategoris'    => $kategoris,
+            'panitia'      => $panitia,
+            'ppk'          => $ppk,
+        ];
+        $pdf      = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
+        $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
+        Storage::disk('public')->put($filePath, $pdf->output());
+        */
 
-            $getFileBeritaAcara = Storage::disk('public')->get($filePath);
+        //TODO cek output $fileBeritaAcara (Storage::get())
+        $tteSuksesBeritaAcara = $this->signDokumen($paket->berita_acara_review, $request->nip, $request->passphrase);
 
-            //TODO cek output $fileBeritaAcara (Storage::get())
-            $tteSuksesBeritaAcara = $this->signDokumen($getFileBeritaAcara, $request->nip, $request->passphrase);
-
-            if ($tteSuksesBeritaAcara) {
-                if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
-                    $paket->update([
-                        'status' => '0',
-                    ]);
-                } else {
-                    $paket->update([
-                        'status' => '10',
-                    ]);
-                }
-
-                $message = "Paket $paket->nama telah selesai";
-                $this->kirimNotifikasi($paket, $message);
-
-                session()->flash('success', 'Paket Selesai');
-
-                return redirect()->back();
+        if ($tteSuksesBeritaAcara) {
+            if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
+                $paket->update([
+                    'status' => '0',
+                ]);
             } else {
-                session()->flash('error', 'Paket gagal di TTE');
-
-                return redirect()->back();
+                $paket->update([
+                    'status' => '10',
+                ]);
             }
+
+            $message = "Paket $paket->nama telah selesai";
+            $this->kirimNotifikasi($paket, $message);
+
+            session()->flash('success', 'Paket Selesai');
+
+            return redirect()->back();
         } else {
-            session()->flash('info', 'Upload Ttd terlebih dahulu');
+            session()->flash('error', 'Paket gagal di TTE');
 
             return redirect()->back();
         }
+        //} else {
+        //    session()->flash('info', 'Upload Ttd terlebih dahulu');
+
+        //    return redirect()->back();
+        //}
     }
 
     public static function getProses($status)
@@ -1371,16 +1371,17 @@ class PaketController extends Controller
     {
         $this->addHistory($paket, $message);
 
-        Notifikasi::sendTo(
-            'wa',
-            $paket->ppk->panitia->telepon,
-            123456, // ID User Penerima Notifikasi
-            Paket::class,
-            $paket->id,
-            route('paket.uploadAllBerkas'),
-            $message
-        );
-
+        /*
+                Notifikasi::sendTo(
+                    'wa',
+                    $paket->ppk->panitia->telepon,
+                    123456, // ID User Penerima Notifikasi
+                    Paket::class,
+                    $paket->id,
+                    route('paket.uploadAllBerkas'),
+                    $message
+                );
+        */
         if (config('app.env') == 'production') {
             foreach ($paket->pokmil->panitia as $panitia) {
                 Notifikasi::sendTo(

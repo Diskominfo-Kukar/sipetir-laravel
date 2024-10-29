@@ -428,7 +428,7 @@
             Disusun di : <strong>{{ $berita_acara->lokasi_ba }}</strong> Tanggal: <strong>{{ $tanggal }}</strong>
         </p>
 
-        <table class="table-border" style="width:100%">
+        <!--table class="table-border" style="width:100%">
             <thead>
                 <tr>
                     <th style="padding: 8px; vertical-align: top;">No.</th>
@@ -461,7 +461,7 @@
                 </tr>
                 @endforeach
             </tbody>
-        </table>
+        <table-->
     </div>
 
     <footer>
