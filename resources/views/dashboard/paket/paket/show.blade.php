@@ -295,6 +295,8 @@
                                                             <td>{{$dokumen->status}}</td>
                                                             @if(isset($file_dokumen[$dokumen->id]))
                                                                 <td><a href="{{ asset('storage/' . $file_dokumen[$dokumen->id]) }}" class="input-group-text bg-success" target="_blank">View</a></td>
+                                                            @else
+                                                                <td>Belum upload dokumen</td>
                                                             @endif
                                                             <td>
                                                                 <form action="{{ route('paket.uploadBerkas') }}" method="POST" enctype="multipart/form-data">
