@@ -138,6 +138,11 @@ class JenisDokumenController extends Controller
      */
     public function destroy(JenisDokumen $jenis_dokuman)
     {
+        $paketDokumen = PaketDokumen::where('jenis_dokumen_id', $jenis_dokuman->id)->get();
+
+        foreach ($paketDokumen as $dokumen) {
+            $dokumen->delete();
+        }
         $delete = $jenis_dokuman->delete();
 
         // check data deleted or not
