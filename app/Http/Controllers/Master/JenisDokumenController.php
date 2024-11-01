@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Requests\Master\JenisDokumenRequest;
 use App\Models\Master\JenisDokumen;
+use App\Models\Paket\PaketDokumen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
@@ -66,6 +67,36 @@ class JenisDokumenController extends Controller
         session()->flash('success', $this->title.' Berhasil Ditambahkan');
 
         return redirect()->route($this->route.'.index');
+    }
+
+    public function tambahOpsional(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+        ], [
+            'nama.required' => 'Nama dokumen harus diisi.',
+            'nama.max'      => 'Nama dokumen tidak boleh lebih dari 255 karakter.',
+        ]);
+
+        $dokumenOpsionalPaket           = new JenisDokumen();
+        $dokumenOpsionalPaket->nama     = $request->nama;
+        $dokumenOpsionalPaket->paket_id = $request->paket_id;
+        $dokumenOpsionalPaket->save();
+
+        return back()->with('success', 'Jenis dokumen baru berhasil ditambahkan untuk paket ini.');
+    }
+
+    public function hapusOpsional($id)
+    {
+        $dokumenOpsionalPaket = JenisDokumen::findOrFail($id);
+        $paketDokumen         = PaketDokumen::where('jenis_dokumen_id', $id)->get();
+
+        foreach ($paketDokumen as $dokumen) {
+            $dokumen->delete();
+        }
+        $dokumenOpsionalPaket->delete();
+
+        return redirect()->back()->with('success', 'Jenis dokumen berhasil dihapus.');
     }
 
     /**

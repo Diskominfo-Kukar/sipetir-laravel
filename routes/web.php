@@ -106,6 +106,10 @@ Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Panitia|PPK|Kepa
         Route::post('/tambah-pertanyaan-paket', 'tambahPertanyaanPaket')->name('tambah_pertanyaan_paket');
         Route::post('/question/{id}', 'deleteQuestion')->name('delete_question');
     });
+    Route::controller(JenisDokumenController::class)->name('paket.')->group(function () {
+        Route::post('/tambah-opsional', 'tambahOpsional')->name('tambah_opsional');
+        Route::delete('/jenis-dokumen/{id}', 'hapusOpsional')->name('delete_dokumen');
+    });
 });
 
 require __DIR__.'/auth.php';

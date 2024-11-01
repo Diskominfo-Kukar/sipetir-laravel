@@ -12,8 +12,8 @@ return new class extends Migration {
     {
         Schema::create('paket_dokumen', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('paket_id')->nullable()->references('id')->on('paket');
-            $table->string('jenis_dokumen_id')->nullable()->references('id')->on('jenis_dokumen');
+            $table->string('paket_id')->nullable()->references('id')->on('paket')->onDelete('cascade');
+            $table->string('jenis_dokumen_id')->nullable()->references('id')->on('jenis_dokumen')->onDelete('cascade');
             $table->text('file');
             $table->softDeletes();
             $table->timestamps();

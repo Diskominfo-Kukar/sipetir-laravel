@@ -205,41 +205,57 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="row g-3">
-                                                    @php
-                                                        $completed = true;
-                                                    @endphp
-                                                    @foreach ($jenis_dokumen as $dokumen)
-                                                        <form class="row g-3" enctype="multipart/form-data" method="POST" action="{{ route('paket.uploadBerkas') }}">
-                                                            @csrf
-                                                            <div class="col-12">
-                                                                <label class="form-label">{{$dokumen->nama}}</label>
-                                                                <div class="mb-3 input-group">
-                                                                    <input type="file" class="bg-black form-control" name="dokumen">
-                                                                    <input type="hidden" name="dokumen_id" value="{{ $dokumen->id }}">
-                                                                    <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                                    @if(isset($file_dokumen[$dokumen->id]))
-                                                                        <a href="{{ asset('storage/' . $file_dokumen[$dokumen->id]) }}" class="input-group-text bg-success" target="_blank">View</a>
-                                                                    @else
-                                                                        @php
-                                                                            $completed = false;
-                                                                        @endphp
-                                                                    @endif
-                                                                    <button type="submit" class="input-group-text bg-warning border-0">Upload</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    @endforeach
-                                                </div>
+                                                @php
+                                                    $completed = true;
+                                                @endphp
+                                                @foreach ($jenis_dokumen as $dokumen)
+                                                    <div class="col-12">
+                                                        <label class="form-label">{{$dokumen->nama}}</label>
+                                                        <div class="mb-3 input-group">
+                                                            <form enctype="multipart/form-data" method="POST" action="{{ route('paket.uploadBerkas') }}" class="d-flex align-items-center flex-grow-1">
+                                                                @csrf
+                                                                <input type="file" class="bg-black form-control flex-grow-1" name="dokumen" required>
+                                                                <input type="hidden" name="dokumen_id" value="{{ $dokumen->id }}">
+                                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                                @if(isset($file_dokumen[$dokumen->id]))
+                                                                    <a href="{{ asset('storage/' . $file_dokumen[$dokumen->id]) }}" class="input-group-text bg-success" target="_blank">View</a>
+                                                                @else
+                                                                    @php
+                                                                        $completed = false;
+                                                                    @endphp
+                                                                @endif
+                                                                <button type="submit" class="input-group-text bg-warning border-0">Upload</button>
+                                                            </form>
+
+                                                            @if ($dokumen->paket_id != NULL)
+                                                                <form method="POST" action="{{ route('paket.delete_dokumen', $dokumen->id) }}"  >
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="btn btn-danger">Hapus</button>
+                                                                </form>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                             </div>
                                         </div>
+                                        <div>
+                                            <form method="POST" action="{{ route('paket.tambah_opsional') }}"  class="d-flex flex-column">
+                                                @csrf
+                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                <input type="text" name="nama" class="form-control" placeholder="Tambahkan dokumen khusus untuk paket ini (Jika ada)">
+                                                <button type="submit" class="btn btn-primary mt-2">Tambahkan Dokumen</button>
+                                            </form>
+                                        </div>&nbsp;<br>
                                         <div class="text-start">
-                                            {{--@if($completed)--}}
+                                            @if($completed)
                                                 <form action="{{ route('paket.uploadAllBerkas') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="paket_id" value="{{ $paket->id }}">
                                                     <button type="submit" class="btn btn-primary mx-auto d-block">Kirimkan berkas</button>
                                                 </form>
-                                            {{--@endif--}}
+                                            @endif
                                         </div>
 
                                     </div>

@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->char('nama');
             $table->char('slug');
             $table->enum('status', ['aktif', 'tidak'])->default('aktif');
+            $table->string('paket_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
