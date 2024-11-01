@@ -66,6 +66,15 @@ class IndexController extends Controller
         $user  = Auth::user();
         $query = Paket::query();
 
+        if ($user->hasRole('Panitia') || $user->hasRole('PPK')) {
+            if (! $user->hasRole('Kepala BPBJ')) {
+                $query->where(function ($q) use ($user) {
+                    $q->where('ppk_id', $user->ppk_id)
+                        ->orWhereIn('pokmil_id', $user->pokmil_id);
+                });
+            }
+        }
+
         if ($user->hasRole('Panitia') && $user->hasRole('PPK')) {
             $query->orderByRaw(
                 'case
