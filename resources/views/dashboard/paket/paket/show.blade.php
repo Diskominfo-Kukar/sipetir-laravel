@@ -197,7 +197,7 @@
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
-                                        <h5 class="mb-0">Upload Dokumentasi Paket</h5>
+                                        <h5 class="text-center mb-0">Upload Dokumentasi Paket</h5>
                                         <hr>
                                         <div class="border shadow-none card">
                                             <div class="card-header">
@@ -274,7 +274,7 @@
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
-                                        <h5 class="mb-0">Upload Paket</h5>
+                                        <h5 class="text-center mb-0">Upload Paket</h5>
                                         <hr>
                                         <div class="border shadow-none card">
                                             <div class="card-body">
@@ -344,7 +344,7 @@
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
-                                        <h5 class="mb-0">Verifikasi Berkas</h5>
+                                        <h5 class="text-center mb-0">Verifikasi Berkas</h5>
                                         <hr>
                                         <div class="border shadow-none card">
                                             <div class="card-body">
@@ -414,7 +414,7 @@
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
-                                        <h5 class="mb-0">Pemilihan Pokmil</h5>
+                                        <h5 class="text-center mb-0">Pemilihan Pokmil</h5>
                                         <hr>
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
@@ -442,7 +442,7 @@
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
-                                        <h5 class="mb-0">Permohonan Surat Tugas</h5>
+                                        <h5 class="text-center mb-0">Permohonan Surat Tugas</h5>
                                         <hr>
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
@@ -538,7 +538,7 @@
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
-                                        <h5 class="mb-0">Surat Tugas</h5>
+                                        <h5 class="text-center mb-0">Surat Tugas</h5>
                                         <hr>
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
@@ -572,7 +572,7 @@
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
-                                        <h5 class="mb-0">Review</h5>
+                                        <h5 class="text-center mb-0">Review</h5>
                                         <hr>
                                         <div class="border shadow-none card">
                                             <div class="card-body">
@@ -718,7 +718,7 @@
                                                 </li>
                                             </ul-->
                                             &nbsp;
-                                            <h5 class="text-center mb-0">Buat Berita Acara </h5>
+                                            <h5 class="text-center mb-0">Buat Berita Acara</h5>
                                             <div class="tab-content" id="reviewTabContent">
                                                 <div class="tab-pane show active" id="berita-acara-1" role="tabpanel" aria-labelledby="berita-acara-1-tab">
                                                     <div class="card-body">
@@ -887,7 +887,7 @@
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
-                                        <h5 class="mb-0">Berita Acara</h5>
+                                        <h5 class="text-center mb-0">Berita Acara</h5>
                                         <hr>
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
@@ -924,7 +924,7 @@
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
-                                        <h5 class="mb-0">Berita Acara</h5>
+                                        <h5 class="text-center mb-0">Berita Acara</h5>
                                         <hr>
                                         <div class="border shadow-none card">
                                             <div class="card-body d-flex flex-column justify-content-center align-items-center">
