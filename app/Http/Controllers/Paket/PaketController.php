@@ -259,8 +259,8 @@ class PaketController extends Controller
             $panitia->nama = $panitia->nama ?? 'Superadmin';
         }
 
-        $surat_tugas    = str_starts_with($paket->surat_tugas, 'documents/signed/') ? $paket->surat_tugas : null;
-        $berita_acara_1 = str_starts_with($paket->berita_acara_review, 'documents/signed/') ? $paket->berita_acara_review : null;
+        $surat_tugas    = $paket->surat_tugas;
+        $berita_acara_1 = $paket->berita_acara_review;
         $berita_acara_2 = $paket->berita_acara_penetapan;
         $berita_acara_3 = $paket->berita_acara_pengumuman;
 

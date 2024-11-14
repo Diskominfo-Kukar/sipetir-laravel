@@ -48,7 +48,7 @@
                         </li>
                         <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             Surat Tugas
-                            @if($surat_tugas)
+                            @if(str_starts_with($surat_tugas, 'documents/signed/'))
                                 <span class="badge bg-success rounded-pill">Sudah</span>
                             @else
                                 <span class="badge bg-danger rounded-pill">Belum</span>
@@ -56,7 +56,7 @@
                         </li>
                         <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             Berita Acara Review
-                            @if($berita_acara_1)
+                            @if(str_starts_with($berita_acara_1, 'documents/signed/'))
                                 <span class="badge bg-success rounded-pill">Sudah</span>
                             @else
                                 <span class="badge bg-danger rounded-pill">Belum</span>
