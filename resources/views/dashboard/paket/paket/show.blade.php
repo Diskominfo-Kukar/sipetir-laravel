@@ -705,7 +705,7 @@
                             <div class="col-12">
                                     <div class="border-0 shadow-sm card">
                                         <div class="card-body">
-                                            <ul class="nav nav-tabs" id="reviewTab" role="tablist">
+                                            <!--ul class="nav nav-tabs" id="reviewTab" role="tablist">
                                                 <li class="nav-item" role="presentation">
                                                     <a class="nav-link active" id="berita-acara-1-tab" data-bs-toggle="tab" href="#berita-acara-1" role="tab" aria-controls="berita-acara-1" aria-selected="true">
                                                         Buat Berita Acara Review
@@ -716,8 +716,9 @@
                                                         Upload Berita Acara Review
                                                     </a>
                                                 </li>
-                                            </ul>
+                                            </ul-->
                                             &nbsp;
+                                            <h5 class="text-center mb-0">Buat Berita Acara </h5>
                                             <div class="tab-content" id="reviewTabContent">
                                                 <div class="tab-pane show active" id="berita-acara-1" role="tabpanel" aria-labelledby="berita-acara-1-tab">
                                                     <div class="card-body">

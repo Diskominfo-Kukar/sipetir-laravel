@@ -1047,6 +1047,9 @@ class PaketController extends Controller
             return redirect()->back();
         } else {
             $pokmil->panitia()->updateExistingPivot($request->panitia_id, ['approve' => 1]);
+
+            //TODO:: Tambah ke tabel baru temporary tte
+
             /*
             $panitia      = $pokmil->panitia;
             $berita_acara = BeritaAcara::where('paket_id', $paket->id)->first();
