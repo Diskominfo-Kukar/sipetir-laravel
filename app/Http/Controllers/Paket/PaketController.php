@@ -1158,15 +1158,15 @@ class PaketController extends Controller
         $tteSuksesBeritaAcara = $this->signDokumen($paket->berita_acara_review, $request->nip, $request->passphrase);
 
         if ($tteSuksesBeritaAcara) {
-            if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
-                $paket->update([
-                    'status' => '0',
-                ]);
-            } else {
-                $paket->update([
-                    'status' => '10',
-                ]);
-            }
+            //if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
+            $paket->update([
+                'status' => '0',
+            ]);
+            //} else {
+            //    $paket->update([
+            //       'status' => '10',
+            //    ]);
+            //}
 
             $message = "Paket $paket->nama telah selesai";
             $this->kirimNotifikasi($paket, $message);

@@ -1,6 +1,7 @@
 <x-app-layout :title=$pageTitle :sub-title=$subTitle :icon=$icon :crumbs=$crumbs>
     <div>
-        @if ($paket->status != 0 && $paket->status != 10)
+        {{-- @if ($paket->status != 0 && $paket->status != 10) --}}
+        @if (($paket->status > 0 && $paket->status < 10) || $paket->status == 11)
         <div class="row mb-5">
             <div class="col-md-12">
                 <div class="text-white card-body bg-dark"
@@ -953,6 +954,7 @@
 
                     @endif
 
+                    {{--
                     @if(($paket->status == 10) &&  auth()->user()->hasRole('Panitia'))
                         @if($berita_acara_2==null)
                             @include('dashboard.paket.paket.components.penetapan')
@@ -961,7 +963,8 @@
                         @else
                             @include('dashboard.paket.paket.components.status0')
                         @endif
-                    @elseif(($paket->status == 0 || $paket->status == 10 || $paket->status == null ))
+                    --}}
+                    @if(($paket->status <= 0 || ($paket->status >= 10 && $paket->status != 11) || $paket->status == null ))
                         @include('dashboard.paket.paket.components.status0')
                     @endif
 
