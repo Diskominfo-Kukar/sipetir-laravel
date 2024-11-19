@@ -12,6 +12,7 @@ use App\Http\Controllers\Master\OtpController;
 use App\Http\Controllers\Master\PanitiaController;
 use App\Http\Controllers\Master\PpkController;
 use App\Http\Controllers\Master\QuestionController;
+use App\Http\Controllers\Paket\AktivitasController;
 use App\Http\Controllers\Paket\PaketController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
+//Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('dashboard')->group(function () {
@@ -105,6 +106,9 @@ Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Panitia|PPK|Kepa
         Route::post('/upload-berita_acara_3', 'upload_berita_acara_3')->name('upload_berita_acara_3');
         Route::post('/tambah-pertanyaan-paket', 'tambahPertanyaanPaket')->name('tambah_pertanyaan_paket');
         Route::post('/question/{id}', 'deleteQuestion')->name('delete_question');
+    });
+    Route::controller(AktivitasController::class)->name('paket.')->group(function () {
+        Route::get('/paket/aktivitas/{paket}/', 'show')->name('aktivitas');
     });
     Route::controller(JenisDokumenController::class)->name('paket.')->group(function () {
         Route::post('/tambah-opsional', 'tambahOpsional')->name('tambah_opsional');

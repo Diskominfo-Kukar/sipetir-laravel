@@ -172,11 +172,13 @@
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
-                        @forelse ($paket->paketHistories as $history)
-                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                            <label class="form-label small"><i class="bi bi-clock-history"></i>&nbsp;{{ $history->message }}</label>
-                            <span class="text-muted small">{{ $history->created_at->format('d-m-Y H:i:s') }}</span>
-                        </li>
+                        @forelse ($paket->paketHistories->take(5) as $history)
+                        <a href="{{ route('paket.aktivitas', ['paket' => $paket]) }}" class="text-decoration-none">
+                            <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                                <label class="form-label small"><i class="bi bi-clock-history"></i>&nbsp;{{ $history->message }}</label>
+                                <span class="text-muted small">{{ $history->created_at->format('d-m-Y H:i:s') }}</span>
+                            </li>
+                        </a>
                         @empty
                         <div class="col-md-12 mt-3">
                             <p class="text-center fw-bold small">Tidak ada riwayat</p>
