@@ -29,6 +29,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
+use App\Models\Paket\TTEBeritaAcara;
 
 class PaketController extends Controller
 {
@@ -1064,15 +1065,6 @@ class PaketController extends Controller
             $generatedFileBeritaAcara = $fileBeritaAcara->generate($paket, $panitia, $kredensialTte);
             $paket->berita_acara_review = $generatedFileBeritaAcara;
             $paket->update();
-
-            //TODO cek output $fileBeritaAcara (Storage::get())
-            // $tteSuksesBeritaAcara = $this->signDokumen($paket->berita_acara_review, $request->nip, $request->passphrase);
-
-            // if ($tteSuksesBeritaAcara) {
-            //     $paket->update([
-            //         'berita_acara_review' => $tteSuksesBeritaAcara,
-            //     ]);
-            // }
         }
 
         $totalPanitia = $pokmil->panitia()->count();
@@ -1114,39 +1106,18 @@ class PaketController extends Controller
 
         $paket = Paket::where('id', $request->paket_id)->first();
         $ppk   = $paket->ppk;
-        $ppk   = Panitia::find($ppk->panitia_id);
+        $panitia   = Panitia::find($ppk->panitia_id);
 
-        //if ($ppk->ttd) {
-        /*
-        $pokmil       = $paket->pokmil;
-        $panitia      = $pokmil->panitia;
-        $berita_acara = BeritaAcara::where('paket_id', $paket->id)->first();
-        $tgl          = $berita_acara->created_at;
-        $tanggal      = $tgl->locale('id')->translatedFormat('j F Y');
-        $tglkop       = $tgl->format('m/Y');
-        $paketId      = $berita_acara->paket_id;
-        $kategoris    = KategoriReview::with(['questions' => function ($query) use ($paketId) { // @phpstan-ignore-line
-            $query->with(['answers' => function ($query) use ($paketId) {
-                $query->where('paket_id', $paketId);
-            }]);
-        }])->get();
-
-        $data = [
-            'tanggal'      => $tanggal,
-            'tglkop'       => $tglkop,
-            'paket'        => $paket,
-            'berita_acara' => $berita_acara,
-            'kategoris'    => $kategoris,
-            'panitia'      => $panitia,
-            'ppk'          => $ppk,
+        $kredensialTte = [
+            'nip' => $request->nip,
+            'passphrase' => $request->passphrase
         ];
-        $pdf      = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
-        $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
-        Storage::disk('public')->put($filePath, $pdf->output());
-        */
+        $fileBeritaAcara = new GenerateBeritaAcaraReview();
+        $generatedFileBeritaAcara = $fileBeritaAcara->generate($paket, $panitia, $kredensialTte, true);
+        $paket->berita_acara_review = $generatedFileBeritaAcara;
+        $paket->update();
 
-        //TODO cek output $fileBeritaAcara (Storage::get())
-        $tteSuksesBeritaAcara = $this->signDokumen($paket->berita_acara_review, $request->nip, $request->passphrase);
+        $tteSuksesBeritaAcara = $this->signDokumen($paket->berita_acara_review, $request->nip, $request->passphrase, $paket->id, true);
 
         if ($tteSuksesBeritaAcara) {
             //if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
@@ -1428,12 +1399,24 @@ class PaketController extends Controller
         }
     }
 
-    private function signDokumen($file, $nik, $passphrase)
+    private function signDokumen($file, $nip, $passphrase, $paketId = null, $beritaAcara = false)
     {
         $fileToSign = Storage::disk('public')->get($file);
         $fileName   = basename($file);
 
-        return TTE::signDocument($fileToSign, $fileName, $nik, $passphrase);
+        if (isset($paketId) && $beritaAcara) {
+            $akanTte = TTEBeritaAcara::where('paket_id', $paketId)->get();
+
+            $signedDokumenFinal = null;
+            foreach ($akanTte as $tte) {
+                $signedDokumen = TTE::signDocument($fileToSign, $fileName, $tte->nip, $tte->passphrase);
+                $signedDokumenFinal = $signedDokumen;
+            }
+
+            return $signedDokumenFinal;
+        }
+
+        return TTE::signDocument($fileToSign, $fileName, $nip, $passphrase);
     }
 
     private function addHistory($paket, $message)

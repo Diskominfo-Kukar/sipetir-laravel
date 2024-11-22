@@ -7,6 +7,19 @@ use Illuminate\Support\Facades\Storage;
 
 class TTE
 {
+    /**
+     * Signs the given document using an external API and stores the signed document.
+     *
+     * This function sends the provided document to an external signing service
+     * using specified credentials and retrieves the signed document. The signed
+     * document is then stored locally.
+     *
+     * @param string $dokumen The document content to be signed.
+     * @param string $fileName The name of the file being signed.
+     * @param string $nik The user's unique identifier for signing.
+     * @param string $passphrase The passphrase for signing authentication.
+     * @return string|null The path to the signed document or null if signing fails.
+     */
     public static function signDocument($dokumen, $fileName, $nik, $passphrase)
     {
         if (config('app.env') == 'local') {
@@ -16,11 +29,11 @@ class TTE
 
         ini_set('max_execution_time', '300');
 
-        $url = config('tte.url').'/api/sign/pdf';
+        $url = config('tte.url') . '/api/sign/pdf';
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Basic '.config('tte.key'),
+                'Authorization' => 'Basic ' . config('tte.key'),
             ])
                 ->withoutVerifying()
                 ->attach('file', $dokumen, $fileName)
@@ -39,7 +52,7 @@ class TTE
 
             $signedFilePathStore = 'documents/signed/';
             //$signedFileName      = $signedFilePathStore.$dokumenId.'-'.pathinfo($fileName, PATHINFO_FILENAME).'_signed.'.$fileExtension;
-            $signedFileName = $signedFilePathStore.pathinfo($fileName, PATHINFO_FILENAME).'_signed.'.$fileExtension;
+            $signedFileName = $signedFilePathStore . pathinfo($fileName, PATHINFO_FILENAME) . '_signed.' . $fileExtension;
 
             Storage::disk('public')->put($signedFileName, $response->body());
 
