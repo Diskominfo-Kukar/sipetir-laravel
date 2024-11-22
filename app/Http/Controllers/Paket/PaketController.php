@@ -224,6 +224,10 @@ class PaketController extends Controller
             $paket->update([
                 'status' => '0',
             ]);
+            $signBeritaAcara = TTEBeritaAcara::where('paket_id', $paket->id)->get();
+            if ($signBeritaAcara) {
+                $signedBeritaAcara = $this->signDokumen($paket->berita_acara_review, null, null, $paket->id, true);
+            }
         }
 
         if (! auth()->user()->hasRole('Kepala BPBJ') && ! auth()->user()->hasRole('Admin') && ! auth()->user()->hasRole('superadmin')) {
