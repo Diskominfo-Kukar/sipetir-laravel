@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('question', function (Blueprint $table) {
-            $table->string('parent_id')->after('kategori_id')->references('id')->on('question')->nullable();
+            $table->string('parent_id')->after('kategori_id')->references('id')->on('question')->nullable()->change();
         });
     }
 
