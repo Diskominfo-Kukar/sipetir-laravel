@@ -66,7 +66,7 @@ class Paket extends Model
     public function opd(): Attribute
     {
         return new Attribute(
-            get: fn () => isset($this->hasOpd) ? $this->hasOpd->nama : ''
+            get: fn() => isset($this->hasOpd) ? $this->hasOpd->nama : ''
         );
     }
 
@@ -81,7 +81,7 @@ class Paket extends Model
     public function jenisPengadaan(): Attribute
     {
         return new Attribute(
-            get: fn () => isset($this->hasJenisPengadaan) ? $this->hasJenisPengadaan->nama : ''
+            get: fn() => isset($this->hasJenisPengadaan) ? $this->hasJenisPengadaan->nama : ''
         );
     }
 
@@ -96,14 +96,14 @@ class Paket extends Model
     public function panitia(): Attribute
     {
         return new Attribute(
-            get: fn () => isset($this->hasPanitia) ? $this->hasPanitia->nama : ''
+            get: fn() => isset($this->hasPanitia) ? $this->hasPanitia->nama : ''
         );
     }
 
     public function namaPpk(): Attribute
     {
         return new Attribute(
-            get: fn () => isset($this->ppk) ? $this->ppk->nama : ''
+            get: fn() => isset($this->ppk) ? $this->ppk->nama : ''
         );
     }
 
@@ -130,5 +130,15 @@ class Paket extends Model
     public function paketHistories()
     {
         return $this->hasMany(PaketHistory::class, 'paket_id', 'id')->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Berita acara TTE untuk paket ini
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function BeritaAcaraTte()
+    {
+        return $this->hasMany(TTEBeritaAcara::class, 'paket_id', 'id');
     }
 }
