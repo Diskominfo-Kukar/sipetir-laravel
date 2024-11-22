@@ -1,6 +1,7 @@
 <x-app-layout :title=$pageTitle :sub-title=$subTitle :icon=$icon :crumbs=$crumbs>
     <div>
-        @if ($paket->status != 0 && $paket->status != 10)
+        {{-- @if ($paket->status != 0 && $paket->status != 10) --}}
+        @if (($paket->status > 0 && $paket->status < 10) || $paket->status == 11)
         <div class="row mb-5">
             <div class="col-md-12">
                 <div class="text-white card-body bg-dark"
@@ -171,11 +172,13 @@
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
-                        @forelse ($paket->paketHistories as $history)
-                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                            <label class="form-label small"><i class="bi bi-clock-history"></i>&nbsp;{{ $history->message }}</label>
-                            <span class="text-muted small">{{ $history->created_at->format('d-m-Y H:i:s') }}</span>
-                        </li>
+                        @forelse ($paket->paketHistories->take(5) as $history)
+                        <a href="{{ route('paket.aktivitas', ['paket' => $paket]) }}" class="text-decoration-none">
+                            <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                                <label class="form-label small"><i class="bi bi-clock-history"></i>&nbsp;{{ $history->message }}</label>
+                                <span class="text-muted small">{{ $history->created_at->format('d-m-Y H:i:s') }}</span>
+                            </li>
+                        </a>
                         @empty
                         <div class="col-md-12 mt-3">
                             <p class="text-center fw-bold small">Tidak ada riwayat</p>
@@ -953,6 +956,7 @@
 
                     @endif
 
+                    {{--
                     @if(($paket->status == 10) &&  auth()->user()->hasRole('Panitia'))
                         @if($berita_acara_2==null)
                             @include('dashboard.paket.paket.components.penetapan')
@@ -961,7 +965,8 @@
                         @else
                             @include('dashboard.paket.paket.components.status0')
                         @endif
-                    @elseif(($paket->status == 0 || $paket->status == 10 || $paket->status == null ))
+                    --}}
+                    @if(($paket->status <= 0 || ($paket->status >= 10 && $paket->status != 11) || $paket->status == null ))
                         @include('dashboard.paket.paket.components.status0')
                     @endif
 

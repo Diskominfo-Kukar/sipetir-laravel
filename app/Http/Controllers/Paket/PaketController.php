@@ -217,6 +217,13 @@ class PaketController extends Controller
      */
     public function show(Paket $paket)
     {
+        // TODO: if is_tayang true = paket selesai -> tarik dari lpse
+        if ($paket->is_tayang_kuppbj == 1 && $paket->is_tayang_pokja == 1) {
+            $paket->update([
+                'status' => '0',
+            ]);
+        }
+
         if (! auth()->user()->hasRole('Kepala BPBJ') && ! auth()->user()->hasRole('Admin') && ! auth()->user()->hasRole('superadmin')) {
             if (! $paket->ppk_id == auth()->user()->ppk_id && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id)) {
                 return abort(403);
@@ -1092,7 +1099,8 @@ class PaketController extends Controller
         $totalPanitiaAcc = $pokmil->panitia()->wherePivot('approve', true)->count();
         // $totalPanitiaSignedTtd = $pokmil->panitia()->wherePivot('signed', true)->count();
 
-        if ($totalPanitiaAcc >= $totalPanitia / 2) {
+        // if ($totalPanitiaAcc >= $totalPanitia / 2)
+        if ($totalPanitiaAcc >= $totalPanitia) {
             // if (($totalPanitiaAcc >= $totalPanitia / 2) && ($totalPanitiaSignedTtd == $totalPanitia)) {
             $message = "Paket $paket->nama telah sampai ke PPK untuk Persetujuan Berita Acara";
             $this->kirimNotifikasi($paket, $message);
@@ -1158,15 +1166,15 @@ class PaketController extends Controller
         $tteSuksesBeritaAcara = $this->signDokumen($paket->berita_acara_review, $request->nip, $request->passphrase);
 
         if ($tteSuksesBeritaAcara) {
-            if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
-                $paket->update([
-                    'status' => '0',
-                ]);
-            } else {
-                $paket->update([
-                    'status' => '10',
-                ]);
-            }
+            //if ($paket->is_tayang_kuppbj == 0 && $paket->is_tayang_pokja == 0) {
+            $paket->update([
+                'status' => '0',
+            ]);
+            //} else {
+            //    $paket->update([
+            //       'status' => '10',
+            //    ]);
+            //}
 
             $message = "Paket $paket->nama telah selesai";
             $this->kirimNotifikasi($paket, $message);
