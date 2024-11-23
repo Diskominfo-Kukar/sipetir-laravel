@@ -2,6 +2,7 @@
 
 namespace App\Models\Master;
 
+use App\Models\Paket\TTEBeritaAcara;
 use App\Models\User;
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -69,5 +70,10 @@ class Panitia extends Model
     public function jabatan()
     {
         return $this->belongsTo(Jabatan::class, 'jabatan_id');
+    }
+
+    public function BeritaAcaraTte()
+    {
+        return $this->hasMany(TTEBeritaAcara::class, 'panitia_id', 'id');
     }
 }

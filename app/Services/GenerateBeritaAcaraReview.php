@@ -58,6 +58,21 @@ class GenerateBeritaAcaraReview
 
             $beritaAcara = BeritaAcara::where('paket_id', $paket->id)->first();
 
+            TTEBeritaAcara::updateOrCreate(
+                [
+                    'paket_id'   => $paket->id,
+                    'panitia_id' => $panitia->id,
+                ],
+                [
+                    'nip'        => $kredensialTte['nip'],
+                    'passphrase' => $kredensialTte['passphrase'],
+                ]
+            );
+
+            $paket->load(['pokmil.panitia.beritaAcaraTte' => function ($query) use ($paket) {
+                $query->where('paket_id', $paket->id);
+            }]);
+
             $data = [
                 'tanggal'      => $tanggal,
                 'tglkop'       => $tglkop,
@@ -71,17 +86,6 @@ class GenerateBeritaAcaraReview
 
             $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
             Storage::disk('public')->put($filePath, $pdf->output());
-
-            TTEBeritaAcara::updateOrCreate(
-                [
-                    'paket_id'   => $paket->id,
-                    'panitia_id' => $panitia->id,
-                ],
-                [
-                    'nip'        => $kredensialTte['nip'],
-                    'passphrase' => $kredensialTte['passphrase'],
-                ]
-            );
 
             //return Storage::url($filePath);
             return $filePath;

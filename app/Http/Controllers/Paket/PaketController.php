@@ -1079,7 +1079,7 @@ class PaketController extends Controller
         // $totalPanitiaSignedTtd = $pokmil->panitia()->wherePivot('signed', true)->count();
 
         // if ($totalPanitiaAcc >= $totalPanitia / 2)
-        if ($totalPanitiaAcc >= $totalPanitia) {
+        if ($totalPanitiaAcc < $totalPanitia) {
             // if (($totalPanitiaAcc >= $totalPanitia / 2) && ($totalPanitiaSignedTtd == $totalPanitia)) {
             $message = "Paket $paket->nama telah sampai ke PPK untuk Persetujuan Berita Acara";
             $this->kirimNotifikasi($paket, $message);

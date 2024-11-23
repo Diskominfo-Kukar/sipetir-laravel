@@ -428,7 +428,7 @@
             Disusun di : <strong>{{ $berita_acara->lokasi_ba }}</strong> Tanggal: <strong>{{ $tanggal }}</strong>
         </p>
 
-        <!--table class="table-border" style="width:100%">
+        <table class="table-border" style="width:100%">
             <thead>
                 <tr>
                     <th style="padding: 8px; vertical-align: top;">No.</th>
@@ -443,8 +443,13 @@
                     <td style="padding: 16px; font-size: 16px;">{{ $paket->ppk->nama }}</td>
                     <td style="padding: 16px; font-size: 16px; vertical-align: top;">PPK</td>
                     <td style="padding: 16px; font-size: 16px; vertical-align: top;">
+                        {{--
                         @if (isset($ppk))
                             <img src="{{ asset('storage/'.$ppk->ttd) }}" alt="Tanda Tangan" width="100" height="100">
+                        @endif
+                        --}}
+                        @if ($paket->ppk->panitia->beritaAcaraTte->isNotEmpty())
+                            Sudah TTE
                         @endif
                     </td>
                 </tr>
@@ -454,14 +459,20 @@
                     <td style="padding: 16px; font-size: 16px;">{{ $p->nama }}</td>
                     <td style="padding: 16px; font-size: 16px; vertical-align: top;">{{ $paket->pokmil->nama }}</td>
                     <td style="padding: 16px; font-size: 16px; vertical-align: top;">
+                        {{--
                         @if ($p->pivot->approve == 1)
-                            <img src="{{ asset('storage/'.$p->ttd) }}" alt="Tanda Tangan" width="100" height="100">
+                            <!--img src="{{ asset('storage/'.$p->ttd) }}" alt="Tanda Tangan" width="100" height="100"-->
+                            Sudah TTE
+                        @endif
+                        --}}
+                        @if ($p->beritaAcaraTte->isNotEmpty())
+                            Sudah TTE
                         @endif
                     </td>
                 </tr>
                 @endforeach
             </tbody>
-        <table-->
+        <table>
     </div>
 
     <footer>
