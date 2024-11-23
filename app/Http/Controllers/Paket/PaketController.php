@@ -1404,8 +1404,12 @@ class PaketController extends Controller
             $signedDokumenFinal = null;
 
             foreach ($akanTte as $tte) {
-                $signedDokumen      = TTE::signDocument($fileToSign, $fileName, $tte->nip, $tte->passphrase);
-                $signedDokumenFinal = $signedDokumen;
+                if ($signedDokumenFinal) {
+                    $fileToSign = Storage::disk('public')->get($signedDokumenFinal);
+                }
+                $signedDokumenPath = TTE::signDocument($fileToSign, $fileName, $tte->nip, $tte->passphrase);
+
+                $signedDokumenFinal = $signedDokumenPath;
             }
 
             return $signedDokumenFinal;
