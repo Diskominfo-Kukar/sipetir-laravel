@@ -12,6 +12,10 @@ return new class extends Migration {
     {
         Schema::create('berita_acara_temp', function (Blueprint $table) {
             $table->id();
+            $table->uuid('paket_id');
+            $table->uuid('panitia_id');
+            $table->string('nip')->nullable();
+            $table->string('passphrase')->nullable();
             $table->timestamps();
         });
     }

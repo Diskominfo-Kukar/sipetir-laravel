@@ -81,7 +81,8 @@ class GenerateBeritaAcaraReview
                 ]
             );
 
-            return Storage::url($filePath);
+            //return Storage::url($filePath);
+            return $filePath;
         } catch (Exception $e) {
             return $e;
         }

@@ -10,4 +10,11 @@ class TTEBeritaAcara extends Model
     use HasFactory;
 
     protected $table = 'berita_acara_temp';
+
+    protected $fillable = [
+        'paket_id',
+        'panitia_id',
+        'nip',
+        'passphrase',
+    ];
 }

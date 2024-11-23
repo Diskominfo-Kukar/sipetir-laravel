@@ -1074,7 +1074,6 @@ class PaketController extends Controller
 
         $totalPanitia = $pokmil->panitia()->count();
 
-        //TODO Pivot ada 2, approve dan signed (TTD)
         // Total pokmil 5, yang approve ada 3
         $totalPanitiaAcc = $pokmil->panitia()->wherePivot('approve', true)->count();
         // $totalPanitiaSignedTtd = $pokmil->panitia()->wherePivot('signed', true)->count();
