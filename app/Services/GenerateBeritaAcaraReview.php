@@ -72,10 +72,12 @@ class GenerateBeritaAcaraReview
             $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
             Storage::disk('public')->put($filePath, $pdf->output());
 
-            TTEBeritaAcara::create(
+            TTEBeritaAcara::updateOrCreate(
                 [
                     'paket_id'   => $paket->id,
                     'panitia_id' => $panitia->id,
+                ],
+                [
                     'nip'        => $kredensialTte['nip'],
                     'passphrase' => $kredensialTte['passphrase'],
                 ]
