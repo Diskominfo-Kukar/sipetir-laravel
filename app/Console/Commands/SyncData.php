@@ -47,7 +47,7 @@ class SyncData extends Command
         $totalRecords = $paketExternal->count();
         $bar          = $this->output->createProgressBar($totalRecords);
 
-        $this->info('Memulai Sinkronisasi Data Paket (Jumlah Data: ' . $totalRecords . ' Paket)');
+        $this->info('Memulai Sinkronisasi Data Paket (Jumlah Data: '.$totalRecords.' Paket)');
         $bar->start();
 
         foreach ($paketExternal->get() as $external) {

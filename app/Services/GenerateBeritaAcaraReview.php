@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Master\KategoriReview;
+use App\Models\Master\Panitia;
 use App\Models\Master\Pokmil;
 use App\Models\Paket\BeritaAcara;
 use App\Models\Paket\Paket;
@@ -29,9 +30,9 @@ class GenerateBeritaAcaraReview
     /**
      * Generate a PDF of the review letter.
      *
-     * @param Paket $paket
-     * @param Panitia $panitia
-     * @param array $kredensialTte
+     * @param  Paket  $paket
+     * @param  Panitia  $panitia
+     * @param  array  $kredensialTte
      * @return string
      */
     public function generate($paket, $panitia, $kredensialTte)
@@ -40,9 +41,9 @@ class GenerateBeritaAcaraReview
             $tanggal = $this->tanggal->locale('id')->translatedFormat('j F Y');
             $tglkop  = $this->tanggal->format('m/Y');
 
-            $kategoris = KategoriReview::query()
+            $kategoris = KategoriReview::query() // @phpstan-ignore-line
                 ->with([
-                    'questions' => function ($query) use ($paket) { // @phpstan-ignore-line
+                    'questions' => function ($query) use ($paket) {
                         $query->with(['answers' => function ($query) use ($paket) {
                             $query->where('paket_id', $paket->id);
                         }]);
@@ -53,7 +54,7 @@ class GenerateBeritaAcaraReview
                 ])
                 ->get();
 
-            $pokmil  = Pokmil::find($paket->pokmil_id);
+            $pokmil = Pokmil::find($paket->pokmil_id);
 
             $beritaAcara = BeritaAcara::where('paket_id', $paket->id)->first();
 
@@ -68,14 +69,14 @@ class GenerateBeritaAcaraReview
 
             $pdf = Pdf::loadView('dashboard.paket.paket.surat.surat_berita_acara', $data);
 
-            $filePath = 'pdf/berita_acara_review_' . $paket->id . '.pdf';
+            $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
             Storage::disk('public')->put($filePath, $pdf->output());
 
             TTEBeritaAcara::create(
                 [
-                    'paket_id' => $paket->id,
+                    'paket_id'   => $paket->id,
                     'panitia_id' => $panitia->id,
-                    'nip' => $kredensialTte['nip'],
+                    'nip'        => $kredensialTte['nip'],
                     'passphrase' => $kredensialTte['passphrase'],
                 ]
             );

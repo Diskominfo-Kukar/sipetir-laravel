@@ -20,6 +20,7 @@ use App\Models\Paket\Paket;
 use App\Models\Paket\PaketDokumen;
 use App\Models\Paket\PaketHistory;
 use App\Models\Paket\SuratTugas;
+use App\Models\Paket\TTEBeritaAcara;
 use App\Services\GenerateBeritaAcaraReview;
 use App\Traits\Notifikasi;
 use App\Traits\TTE;
@@ -29,7 +30,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
-use App\Models\Paket\TTEBeritaAcara;
 
 class PaketController extends Controller
 {
@@ -59,7 +59,7 @@ class PaketController extends Controller
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', '%' . $search . '%')
+                $q->where('nama', 'like', '%'.$search.'%')
                     ->orWhereRaw('YEAR(tgl_buat) = ?', [$search]);
             });
         }
@@ -177,7 +177,7 @@ class PaketController extends Controller
             'pakets'    => $pakets,
         ];
 
-        return view('dashboard.paket.' . $this->route . '.index', $data);
+        return view('dashboard.paket.'.$this->route.'.index', $data);
     }
 
     /**
@@ -211,7 +211,7 @@ class PaketController extends Controller
             'jenis_dokumen' => $jenis_dokuman,
         ];
 
-        return view('dashboard.paket.' . $this->route . '.edit', $data);
+        return view('dashboard.paket.'.$this->route.'.edit', $data);
     }
 
     /**
@@ -225,6 +225,7 @@ class PaketController extends Controller
                 'status' => '0',
             ]);
             $signBeritaAcara = TTEBeritaAcara::where('paket_id', $paket->id)->get();
+
             if ($signBeritaAcara) {
                 $signedBeritaAcara = $this->signDokumen($paket->berita_acara_review, null, null, $paket->id, true);
             }
@@ -354,7 +355,7 @@ class PaketController extends Controller
             'all_done'         => $all_done_review,
         ];
 
-        return view('dashboard.paket.' . $this->route . '.show', $data);
+        return view('dashboard.paket.'.$this->route.'.show', $data);
     }
 
     public static function getKodeSurat($type)
@@ -540,8 +541,8 @@ class PaketController extends Controller
 
                     $actionBtn = '
                         <div class="btn-group btn-sm">
-                            <a title="' . ($buttonText) . '" href="' . route($this->route . '.show', $row->id) . '" class="btn ' . $buttonClass . ' btn-sm">
-                                <i class="bx bx-' . ($buttonText == 'Proses' ? 'edit' : 'info-circle') . '"></i> ' . $buttonText . '
+                            <a title="'.($buttonText).'" href="'.route($this->route.'.show', $row->id).'" class="btn '.$buttonClass.' btn-sm">
+                                <i class="bx bx-'.($buttonText == 'Proses' ? 'edit' : 'info-circle').'"></i> '.$buttonText.'
                             </a>
                         </div>
                     ';
@@ -568,11 +569,11 @@ class PaketController extends Controller
         $check = Panitia::where('id', $request->panitia_id)->first();
 
         if ($file && $file->isValid()) {
-            $filename = 'ttd_' . $request->panitia_id . '.png';
+            $filename = 'ttd_'.$request->panitia_id.'.png';
             $file->storeAs('public/ttd', $filename);
-            Storage::delete('public/' . $check->file);
+            Storage::delete('public/'.$check->file);
             $check->update([
-                'ttd' => 'ttd/' . $filename,
+                'ttd' => 'ttd/'.$filename,
             ]);
             session()->flash('success', 'Ttd Berhasil diubah');
 
@@ -593,7 +594,7 @@ class PaketController extends Controller
             ->first();
 
         if ($file && $file->isValid()) {
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time().'_'.$file->getClientOriginalName();
             $file->storeAs('public/uploads', $filename);
 
             //Tambah berkas
@@ -601,7 +602,7 @@ class PaketController extends Controller
                 PaketDokumen::create([
                     'paket_id'         => $request->paket_id,
                     'jenis_dokumen_id' => $dokumenId,
-                    'file'             => 'uploads/' . $filename,
+                    'file'             => 'uploads/'.$filename,
                 ]);
                 session()->flash('success', 'Dokumen Berhasil di-upload');
 
@@ -609,9 +610,9 @@ class PaketController extends Controller
             }
             //Edit berkas
             elseif ($check) {
-                Storage::delete('public/' . $check->file);
+                Storage::delete('public/'.$check->file);
                 $check->update([
-                    'file' => 'uploads/' . $filename,
+                    'file' => 'uploads/'.$filename,
                 ]);
                 session()->flash('success', 'Dokumen Berhasil diubah');
 
@@ -653,7 +654,7 @@ class PaketController extends Controller
             $catatan       = [];
 
             foreach ($paket_dokumen as $dokumen) {
-                $catatan[$dokumen->id] = $request->input('catatan_' . $dokumen->jenis_dokumen_id);
+                $catatan[$dokumen->id] = $request->input('catatan_'.$dokumen->jenis_dokumen_id);
 
                 if ($catatan[$dokumen->id] !== null) {
                     $komen = Komen::create([
@@ -785,11 +786,11 @@ class PaketController extends Controller
             'panitia'     => $panitia,
         ];
 
-        $pdf = Pdf::loadView('dashboard.paket.' . $this->route . '.surat.surat_tugas', $data);
+        $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_tugas', $data);
 
-        $filePath = 'pdf/surat_tugas_' . $paket->id . '.pdf';
+        $filePath = 'pdf/surat_tugas_'.$paket->id.'.pdf';
         Storage::disk('public')->put($filePath, $pdf->output());
-        $pdfUrl = url('storage/' . $filePath);
+        $pdfUrl = url('storage/'.$filePath);
 
         $message = "Paket $paket->nama telah sampai ke Kepala BPBJ untuk Persetujuan Surat Tugas";
         $this->kirimNotifikasi($paket, $message);
@@ -886,11 +887,11 @@ class PaketController extends Controller
             'panitia'      => $panitia,
         ];
 
-        $pdf = Pdf::loadView('dashboard.paket.' . $this->route . '.surat.surat_berita_acara', $data);
+        $pdf = Pdf::loadView('dashboard.paket.'.$this->route.'.surat.surat_berita_acara', $data);
 
-        $filePath = 'pdf/berita_acara_review_' . $paket->id . '.pdf';
+        $filePath = 'pdf/berita_acara_review_'.$paket->id.'.pdf';
         Storage::disk('public')->put($filePath, $pdf->output());
-        $pdfUrl = url('storage/' . $filePath);
+        $pdfUrl = url('storage/'.$filePath);
 
         $message = "Paket $paket->nama telah sampai ke Panitia untuk Persetujuan Berita Acara";
         $this->kirimNotifikasi($paket, $message);
@@ -1062,11 +1063,11 @@ class PaketController extends Controller
             $pokmil->panitia()->updateExistingPivot($request->panitia_id, ['approve' => 1]);
 
             $kredensialTte = [
-                'nip' => $request->nip,
-                'passphrase' => $request->passphrase
+                'nip'        => $request->nip,
+                'passphrase' => $request->passphrase,
             ];
-            $fileBeritaAcara = new GenerateBeritaAcaraReview();
-            $generatedFileBeritaAcara = $fileBeritaAcara->generate($paket, $panitia, $kredensialTte);
+            $fileBeritaAcara            = new GenerateBeritaAcaraReview();
+            $generatedFileBeritaAcara   = $fileBeritaAcara->generate($paket, $panitia, $kredensialTte);
             $paket->berita_acara_review = $generatedFileBeritaAcara;
             $paket->update();
         }
@@ -1108,16 +1109,16 @@ class PaketController extends Controller
             return redirect()->back();
         }
 
-        $paket = Paket::where('id', $request->paket_id)->first();
-        $ppk   = $paket->ppk;
-        $panitia   = Panitia::find($ppk->panitia_id);
+        $paket   = Paket::where('id', $request->paket_id)->first();
+        $ppk     = $paket->ppk;
+        $panitia = Panitia::find($ppk->panitia_id);
 
         $kredensialTte = [
-            'nip' => $request->nip,
-            'passphrase' => $request->passphrase
+            'nip'        => $request->nip,
+            'passphrase' => $request->passphrase,
         ];
-        $fileBeritaAcara = new GenerateBeritaAcaraReview();
-        $generatedFileBeritaAcara = $fileBeritaAcara->generate($paket, $panitia, $kredensialTte, true);
+        $fileBeritaAcara            = new GenerateBeritaAcaraReview();
+        $generatedFileBeritaAcara   = $fileBeritaAcara->generate($paket, $panitia, $kredensialTte);
         $paket->berita_acara_review = $generatedFileBeritaAcara;
         $paket->update();
 
@@ -1178,7 +1179,7 @@ class PaketController extends Controller
         }
 
         // Menambahkan angka terakhir
-        $terjemahan .= $angkaTerjemahan[intval($tahunArray[2])] . ' Ribu ' . $angkaTerjemahan[intval($tahunArray[3])];
+        $terjemahan .= $angkaTerjemahan[intval($tahunArray[2])].' Ribu '.$angkaTerjemahan[intval($tahunArray[3])];
 
         return $terjemahan;
     }
@@ -1191,14 +1192,14 @@ class PaketController extends Controller
 
         $tanggalTerjemahan = [
             1  => 'Satu',
-            2 => 'Dua',
-            3 => 'Tiga',
-            4 => 'Empat',
-            5 => 'Lima',
+            2  => 'Dua',
+            3  => 'Tiga',
+            4  => 'Empat',
+            5  => 'Lima',
             6  => 'Enam',
-            7 => 'Tujuh',
-            8 => 'Delapan',
-            9 => 'Sembilan',
+            7  => 'Tujuh',
+            8  => 'Delapan',
+            9  => 'Sembilan',
             10 => 'Sepuluh',
             11 => 'Sebelas',
             12 => 'Dua Belas',
@@ -1247,14 +1248,14 @@ class PaketController extends Controller
 
         if ($file) {
             if ($file->getMimeType() === 'application/pdf') {
-                $filename = 'berita_acara_review_' . $paket->id . '.pdf';
+                $filename = 'berita_acara_review_'.$paket->id.'.pdf';
                 $file->storeAs('public/pdf', $filename);
 
                 $message = "Paket $paket->nama telah sampai ke Panitia untuk Persetujuan Berita Acara";
                 $this->kirimNotifikasi($paket, $message);
 
                 $paket->update([
-                    'berita_acara_review' => 'pdf/' . $filename,
+                    'berita_acara_review' => 'pdf/'.$filename,
                     'status'              => '8',
                 ]);
 
@@ -1279,14 +1280,14 @@ class PaketController extends Controller
 
         if ($file) {
             if ($file->getMimeType() === 'application/pdf') {
-                $filename = 'berita_acara_penetapan_' . $paket->id . '.pdf';
+                $filename = 'berita_acara_penetapan_'.$paket->id.'.pdf';
                 $file->storeAs('public/pdf', $filename);
 
                 $message = "Berita acara penetapan paket $paket->nama telah tersedia";
                 $this->kirimNotifikasi($paket, $message);
 
                 $paket->update([
-                    'berita_acara_penetapan' => 'pdf/' . $filename,
+                    'berita_acara_penetapan' => 'pdf/'.$filename,
                 ]);
 
                 session()->flash('success', 'Dokumen Berhasil di-upload');
@@ -1310,14 +1311,14 @@ class PaketController extends Controller
 
         if ($file) {
             if ($file->getMimeType() === 'application/pdf') {
-                $filename = 'berita_acara_pengumuman_' . $paket->id . '.pdf';
+                $filename = 'berita_acara_pengumuman_'.$paket->id.'.pdf';
                 $file->storeAs('public/pdf', $filename);
 
                 $message = "Berita acara pengumuman paket $paket->nama telah tersedia";
                 $this->kirimNotifikasi($paket, $message);
 
                 $paket->update([
-                    'berita_acara_pengumuman' => 'pdf/' . $filename,
+                    'berita_acara_pengumuman' => 'pdf/'.$filename,
                     'status'                  => '0',
                 ]);
 
@@ -1401,8 +1402,9 @@ class PaketController extends Controller
             $akanTte = TTEBeritaAcara::where('paket_id', $paketId)->get();
 
             $signedDokumenFinal = null;
+
             foreach ($akanTte as $tte) {
-                $signedDokumen = TTE::signDocument($fileToSign, $fileName, $tte->nip, $tte->passphrase);
+                $signedDokumen      = TTE::signDocument($fileToSign, $fileName, $tte->nip, $tte->passphrase);
                 $signedDokumenFinal = $signedDokumen;
             }
 
