@@ -98,14 +98,14 @@
                             <span class="badge bg-primary rounded-pill">{{$paket->pokmil->pokmil_id}}</span>
                         </li>
                         <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                            Tahun
+                            Tahun Anggaran
                             <span class="badge bg-primary rounded-pill">{{ \Carbon\Carbon::parse($paket->tgl_buat)->format('Y') }}</span>
                         </li>
                         @foreach ([
                             'jenis_pekerjaan' => 'Jenis Pekerjaan',
                             'nama_opd' => 'Nama Opd',
                             'sumber_dana' => 'Sumber Dana',
-                            'dpa' => 'DPA',
+                            'dpa' => 'Nomor DPA',
                             'pagu' => 'Pagu',
                             'hps' => 'Hps',
                             'lokasi' => 'Lokasi'
@@ -505,13 +505,13 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-3">
-                                                            <label for="dpa" class="col-sm-3 col-form-label text-right">DPA</label>
+                                                            <label for="dpa" class="col-sm-3 col-form-label text-right">Nomor DPA</label>
                                                             <div class="col-sm-9">
                                                                 <input type="text" name="dpa" class="form-control" required>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-3">
-                                                            <label for="tahun" class="col-sm-3 col-form-label text-right">Tahun</label>
+                                                            <label for="tahun" class="col-sm-3 col-form-label text-right">Tahun Anggaran</label>
                                                             <div class="col-sm-9">
                                                                 <input type="number" name="tahun" class="form-control" required>
                                                             </div>
@@ -794,13 +794,13 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
-                                                                            <label for="dpa" class="col-sm-3 col-form-label text-right">DPA</label>
+                                                                            <label for="dpa" class="col-sm-3 col-form-label text-right">Nomor DPA</label>
                                                                             <div class="col-sm-9">
                                                                                 <input type="text" name="dpa" class="form-control " value="{{ old('dpa', $new_data->dpa) }}" required>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
-                                                                            <label for="tahun" class="col-sm-3 col-form-label text-right">Tahun</label>
+                                                                            <label for="tahun" class="col-sm-3 col-form-label text-right">Tahun Anggaran</label>
                                                                             <div class="col-sm-9">
                                                                                 <input type="number" name="tahun" class="form-control" value="{{ old('tahun', $new_data->tahun) }}" required>
                                                                             </div>
