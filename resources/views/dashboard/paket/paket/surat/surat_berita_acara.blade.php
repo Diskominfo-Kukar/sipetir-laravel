@@ -166,9 +166,9 @@
         <p class="text-center">
             <strong>BERITA ACARA REVIU DOKUMEN PERSIAPAN PENGADAAN<br>
                 JASA KONSULTAN<br>
-                <u>TAHUN ANGGARAN {{ date('Y', strtotime($tanggal)) }}</u>
+                <u>TAHUN ANGGARAN {{--date('Y', strtotime($tanggal)) --}}{{ $berita_acara->tahun }}</u>
             </strong><br>
-            Nomor: {{ $berita_acara->kode }}/BA.R/25651198/{{ $tglkop }}
+            Nomor: {{ $berita_acara->kode }}/BA.R/{{ $paket->pkt_id }}/{{ $tglkop }}
         </p>&nbsp;
 
         {!! $berita_acara->intro !!}
