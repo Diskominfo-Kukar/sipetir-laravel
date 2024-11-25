@@ -168,7 +168,7 @@
                 JASA KONSULTAN<br>
                 <u>TAHUN ANGGARAN {{--date('Y', strtotime($tanggal)) --}}{{ $berita_acara->tahun }}</u>
             </strong><br>
-            Nomor: {{ $berita_acara->kode }}/BA.R/{{ $paket->pkt_id }}/{{ $tglkop }}
+            Nomor: {{ $berita_acara->kode }}/BA.R/{{ $paket->pkt_id }}/{{-- $tglkop --}}{{ $berita_acara->tahun }}
         </p>&nbsp;
 
         {!! $berita_acara->intro !!}
@@ -238,8 +238,8 @@
             @endforeach
             <tr>
                 <td colspan="2" style="padding: 8px; vertical-align: top;">2.</td>
-                <td style="padding: 8px; vertical-align: top;">Pejabat Pembuat Komitmen Pekerjaan {{ $berita_acara->nama_paket }}
-                    <br>Yang diwakili oleh:
+                <td style="padding: 8px; vertical-align: top;">Pejabat Pembuat Komitmen Pekerjaan:
+                    <br>
                 </td>
             </tr>
             <tr>
