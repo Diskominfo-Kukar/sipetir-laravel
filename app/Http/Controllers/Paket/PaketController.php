@@ -133,14 +133,14 @@ class PaketController extends Controller
             $buttonText  = 'Detail';
             $buttonClass = 'btn-primary';
 
-            if ($user->hasRole('Panitia')) {
+            if ($user->hasRole('Panitia') && in_array($paket->pokmil_id, $user->pokmil_id ?? [])) {
                 if ($status == 6 || $status == 7 || $status == 8) {
                     $buttonText  = 'Proses';
                     $buttonClass = 'btn-warning';
                 }
             }
 
-            if ($user->hasRole('PPK')) {
+            if ($user->hasRole('PPK') && $paket->ppk_id == $user->ppk_id) {
                 if ($status == 1 || $status == 11 || $status == 9) {
                     $buttonText  = 'Proses';
                     $buttonClass = 'btn-warning';
