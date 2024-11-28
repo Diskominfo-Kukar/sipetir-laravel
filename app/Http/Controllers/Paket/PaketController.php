@@ -1127,6 +1127,8 @@ class PaketController extends Controller
             $paket->update([
                 'berita_acara_review' => $tteSuksesBeritaAcara,
                 'status'              => '0',
+                'is_tayang_kuppbj'    => '1',
+                'is_tayang_pokja'     => '1',
             ]);
 
             $message = "Paket $paket->nama telah selesai";
