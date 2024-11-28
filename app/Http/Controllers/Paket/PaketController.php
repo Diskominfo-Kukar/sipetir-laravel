@@ -14,6 +14,7 @@ use App\Models\Master\Pokmil;
 use App\Models\Master\Question;
 use App\Models\Master\Satker;
 use App\Models\Master\SumberDana;
+use App\Models\Master\SumberDanaSub;
 use App\Models\Paket\BeritaAcara;
 use App\Models\Paket\Komen;
 use App\Models\Paket\Paket;
@@ -283,12 +284,14 @@ class PaketController extends Controller
         $kode_sa         = static::getKodeSurat('sa');
         $all_done_review = static::checkAnswer($paket->id);
 
-        $new_data    = SuratTugas::where('paket_id', $paket->id)->first();
-        $new_data2   = BeritaAcara::where('paket_id', $paket->id)->first();
-        $opd         = Opd::all();
-        $sumber_dana = SumberDana::all();
-        $satker      = Satker::all();
-        $data        = $new_data2 ?? $new_data ?? $paket;
+        $new_data           = SuratTugas::where('paket_id', $paket->id)->first();
+        $new_data2          = BeritaAcara::where('paket_id', $paket->id)->first();
+        $opd                = Opd::all();
+        $sumber_dana        = SumberDana::with('sub')->get(); //@phpstan-ignore-line
+        $satker             = Satker::all();
+        $data               = $new_data2 ?? $new_data ?? $paket;
+        $sumber_dana_detail = $sumber_dana->firstWhere('id', old('sumber_dana', $data->sumber_dana));
+        $sub_sumber_dana    = $sumber_dana_detail ? $sumber_dana_detail->sub : [];
 
         $pokmil = $paket->pokmil;
 
@@ -322,36 +325,38 @@ class PaketController extends Controller
         }
 
         $data = [
-            'pageTitle'        => "Paket {$title}",
-            'subTitle'         => "Proses {$title}",
-            'icon'             => 'fa fa-building',
-            'route'            => $this->route,
-            'crumbs'           => $crumbs,
-            'paket'            => $paket,
-            'jenis_dokumen'    => $jenis_dokumen,
-            'paket_dokumen'    => $paket_dokumen,
-            'file_dokumen'     => $file_dokumen,
-            'kategori_reviews' => $kategoriReviews,
-            'timelines'        => collect($timelines),
-            'panitia'          => $panitia,
-            'surat_tugas'      => $surat_tugas,
-            'berita_acara_1'   => $berita_acara_1,
-            'berita_acara_2'   => $berita_acara_2,
-            'berita_acara_3'   => $berita_acara_3,
-            'progres'          => $progres,
-            'status'           => $status,
-            'pokmil_ids'       => $pokmil_ids,
-            'new_data'         => $new_data,
-            'new_data2'        => $new_data2,
-            'opd'              => $opd,
-            'sumber_dana'      => $sumber_dana,
-            'tanggal'          => $tanggal,
-            'panitiaSudahAcc'  => $panitiaSudahAcc,
-            'kode_ba'          => $kode_ba,
-            'kode_sa'          => $kode_sa,
-            'satker'           => $satker,
-            'data'             => $data,
-            'all_done'         => $all_done_review,
+            'pageTitle'          => "Paket {$title}",
+            'subTitle'           => "Proses {$title}",
+            'icon'               => 'fa fa-building',
+            'route'              => $this->route,
+            'crumbs'             => $crumbs,
+            'paket'              => $paket,
+            'jenis_dokumen'      => $jenis_dokumen,
+            'paket_dokumen'      => $paket_dokumen,
+            'file_dokumen'       => $file_dokumen,
+            'kategori_reviews'   => $kategoriReviews,
+            'timelines'          => collect($timelines),
+            'panitia'            => $panitia,
+            'surat_tugas'        => $surat_tugas,
+            'berita_acara_1'     => $berita_acara_1,
+            'berita_acara_2'     => $berita_acara_2,
+            'berita_acara_3'     => $berita_acara_3,
+            'progres'            => $progres,
+            'status'             => $status,
+            'pokmil_ids'         => $pokmil_ids,
+            'new_data'           => $new_data,
+            'new_data2'          => $new_data2,
+            'opd'                => $opd,
+            'sumber_dana'        => $sumber_dana,
+            'tanggal'            => $tanggal,
+            'panitiaSudahAcc'    => $panitiaSudahAcc,
+            'kode_ba'            => $kode_ba,
+            'kode_sa'            => $kode_sa,
+            'satker'             => $satker,
+            'data'               => $data,
+            'all_done'           => $all_done_review,
+            'sumber_dana_detail' => $sumber_dana_detail,
+            'sub_sumber_dana'    => $sub_sumber_dana,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);
@@ -629,6 +634,11 @@ class PaketController extends Controller
         // $request->paket_id = '000a18a6-e283-41c1-a81a-cd958b23b84a';
 
         $surat_tugas = SuratTugas::where('paket_id', $request->paket_id)->first();
+        //$sumber_dana          = SumberDana::find($request->sumber_dana);
+        //$sumber_dana_sub      = SumberDanaSub::find($request->sumber_dana_sub);
+        //$sumber_dana_sub_nama = $sumber_dana_sub ? $sumber_dana_sub->nama : null;
+
+        $sumber_dana_sub = $request->sumber_dana_sub ? $request->sumber_dana_sub : null;
 
         if ($surat_tugas) {
             $surat_tugas->update([
@@ -638,6 +648,7 @@ class PaketController extends Controller
                 'nama_paket'      => $request->nama_paket,
                 'nama_opd'        => $request->nama_opd,
                 'sumber_dana'     => $request->sumber_dana,
+                'sumber_dana_sub' => $sumber_dana_sub,
                 'pagu'            => str_replace('.', '', $request->pagu),
                 'hps'             => str_replace('.', '', $request->hps),
                 'dpa'             => $request->dpa,
@@ -656,6 +667,7 @@ class PaketController extends Controller
                     'nama_paket'      => $request->nama_paket,
                     'nama_opd'        => $request->nama_opd,
                     'sumber_dana'     => $request->sumber_dana,
+                    'sumber_dana_sub' => $sumber_dana_sub,
                     'pagu'            => str_replace('.', '', $request->pagu),
                     'hps'             => str_replace('.', '', $request->hps),
                     'dpa'             => $request->dpa,
@@ -778,7 +790,10 @@ class PaketController extends Controller
         $pokmil  = Pokmil::find($paket->pokmil_id);
         $panitia = $pokmil->panitia;
 
-        $surat_tugas = SuratTugas::where('paket_id', $request->paket_id)->first();
+        //$surat_tugas = SuratTugas::where('paket_id', $request->paket_id)->first();
+        $surat_tugas = SuratTugas::with(['sumberDana', 'sumberDanaSub']) // @phpstan-ignore-line
+            ->where('paket_id', $request->paket_id)
+            ->first();
 
         /*
         if ($surat_tugas) {
@@ -848,9 +863,10 @@ class PaketController extends Controller
 
     public function generate_berita_acara(Request $request)
     {
-        $tgl     = Carbon::now();
-        $tanggal = $tgl->locale('id')->translatedFormat('j F Y');
-        $tglkop  = $tgl->format('m/Y');
+        $sumber_dana_sub = $request->sumber_dana_sub ? $request->sumber_dana_sub : null;
+        $tgl             = Carbon::now();
+        $tanggal         = $tgl->locale('id')->translatedFormat('j F Y');
+        $tglkop          = $tgl->format('m/Y');
 
         $paket     = Paket::find($request->paket_id);
         $paketId   = $request->paket_id;
@@ -868,7 +884,10 @@ class PaketController extends Controller
         $pokmil  = Pokmil::find($paket->pokmil_id);
         $panitia = $pokmil->panitia;
 
-        $berita_acara = BeritaAcara::where('paket_id', $request->paket_id)->first();
+        //$berita_acara = BeritaAcara::where('paket_id', $request->paket_id)->first();
+        $berita_acara = BeritaAcara::with(['sumberDana', 'sumberDanaSub']) // @phpstan-ignore-line
+            ->where('paket_id', $request->paket_id)
+            ->first();
 
         if ($berita_acara) {
             $berita_acara->update([
@@ -878,6 +897,7 @@ class PaketController extends Controller
                 'nama_paket'      => $request->nama_paket,
                 'nama_opd'        => $request->nama_opd,
                 'sumber_dana'     => $request->sumber_dana,
+                'sumber_dana_sub' => $sumber_dana_sub,
                 'pagu'            => str_replace('.', '', $request->pagu),
                 'hps'             => str_replace('.', '', $request->hps),
                 'dpa'             => $request->dpa,
@@ -902,6 +922,7 @@ class PaketController extends Controller
                     'nama_paket'      => $request->nama_paket,
                     'nama_opd'        => $request->nama_opd,
                     'sumber_dana'     => $request->sumber_dana,
+                    'sumber_dana_sub' => $sumber_dana_sub,
                     'pagu'            => str_replace('.', '', $request->pagu),
                     'hps'             => str_replace('.', '', $request->hps),
                     'dpa'             => $request->dpa,
@@ -919,6 +940,10 @@ class PaketController extends Controller
                 return redirect()->back();
             }
         }
+
+        $berita_acara = BeritaAcara::with(['sumberDana', 'sumberDanaSub']) // @phpstan-ignore-line
+            ->where('paket_id', $request->paket_id)
+            ->first();
 
         $data = [
             'tanggal'      => $tanggal,

@@ -115,7 +115,13 @@
                             @if(isset($data->$field))
                                 <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                                     {{ $label }}
-                                    <span class="badge bg-primary rounded-pill">{{ $data->$field }}</span>
+                                    <span class="badge bg-primary rounded-pill">
+                                        @if ($field === 'sumber_dana')
+                                            {{ $sumber_dana_detail->nama ?? 'N/A' }}
+                                        @else
+                                            {{ $data->$field }}
+                                        @endif
+                                    </span>
                                 </li>
                             @endif
                         @endforeach
@@ -298,8 +304,16 @@
                                                                         <select name="sumber_dana" class="form-control select2" required>
                                                                             <option value="" disabled selected></option>
                                                                             @foreach($sumber_dana as $item)
-                                                                                <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                                                             @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-3" id="sub_sumber_dana_div">
+                                                                    <label for="sub_sumber_dana" class="col-sm-3 col-form-label text-right">Sub Sumber Dana</label>
+                                                                    <div class="col-sm-9">
+                                                                        <select name="sumber_dana_sub" class="form-control select2" disabled>
+                                                                            <option value="" disabled selected>-</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -852,12 +866,27 @@
                                                                         <div class="form-group row mb-3">
                                                                             <label for="sumber_dana" class="col-sm-3 col-form-label text-right">Sumber Dana</label>
                                                                             <div class="col-sm-9">
-                                                                                <select name="sumber_dana" class="form-control select2" required>
-                                                                                    <option value="{{ old('sumber_dana', $new_data->sumber_dana) }}">{{ old('sumber_dana', $new_data->sumber_dana) }}</option>
+                                                                                <select id="sumber_dana_1" name="sumber_dana" class="form-control select2" required>
+                                                                                    <option value="" disabled {{ old('sumber_dana', $new_data->sumber_dana) == '' ? 'selected' : '' }}>Pilih Sumber Dana</option>
                                                                                     @foreach($sumber_dana as $item)
-                                                                                        <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                                                        <option value="{{ $item->id }}" {{ old('sumber_dana', $new_data->sumber_dana) == $item->id ? 'selected' : '' }}>
+                                                                                            {{ $item->nama }}
+                                                                                        </option>
                                                                                     @endforeach
                                                                                 </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-3" id="sub_sumber_dana_div">
+                                                                            <label for="sub_sumber_dana" class="col-sm-3 col-form-label text-right">Sub Sumber Dana</label>
+                                                                            <div class="col-sm-9">
+                                                                                <select name="sumber_dana_sub" class="form-control select2" {{ old('sumber_dana') ? '' : 'disabled' }}>
+    <option value="" disabled selected>-</option>
+    @foreach($sub_sumber_dana as $subItem)
+        <option value="{{ $subItem->id }}" {{ old('sumber_dana_sub', $new_data->sumber_dana_sub) == $subItem->id ? 'selected' : '' }}>
+            {{ $subItem->nama }}
+        </option>
+    @endforeach
+</select>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
@@ -1147,7 +1176,47 @@
 
     @push('scripts')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var sumberDana = @json($sumber_dana);
 
+            var selectedSubDanaId = @json(old('sumber_dana_sub', $new_data ? $new_data->sumber_dana_sub : null));
+
+            var sumberDanaSelects = document.querySelectorAll('[name="sumber_dana"]');
+            sumberDanaSelects.forEach(function(sumberDanaSelect) {
+                $(sumberDanaSelect).on('change', function() {
+                    var subSelect = this.closest('.form-group').nextElementSibling.querySelector('[name="sumber_dana_sub"]');
+                    var selectedId = this.value;
+                    var selectedItem = sumberDana.find(item => item.id == selectedId);
+
+                    subSelect.innerHTML = '<option value="" disabled selected>-</option>';
+
+                    if (selectedItem && selectedItem.sub && selectedItem.sub.length > 0) {
+                        subSelect.disabled = false;
+
+                        selectedItem.sub.forEach(function(subItem) {
+                            var option = document.createElement('option');
+                            option.value = subItem.id;
+                            option.textContent = subItem.nama;
+
+                            if (subItem.id == selectedSubDanaId) {
+                                option.selected = true;
+                            }
+                            subSelect.appendChild(option);
+                        });
+                    } else {
+                        subSelect.disabled = true;
+                    }
+                });
+
+                if (sumberDanaSelects.length > 0) {
+                    sumberDanaSelects[0].dispatchEvent(new Event('change'));
+                }
+            });
+        });
+
+
+    </script>
+    <script>
         $('.input-rupiah').on("input", function() {
             let val = formatRupiah(this.value, '');
             $(this).val(val);
@@ -1161,7 +1230,7 @@
 
         </script>
         <script src="https://cdn.tiny.cloud/1/5ps1i1boa3tg20qfzwuk59h75b186ickj43d35pn8x1o4xy7/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-    <script>
+        <script>
         tinymce.init({
             selector: 'textarea[name=intro], textarea[name=outro]',
             height: 300,
@@ -1176,7 +1245,7 @@
                       alignleft aligncenter alignright alignjustify | \
                       bullist numlist outdent indent | removeformat | help'
         });
-    </script>
+        </script>
         <script>
         let isAnimating = false;
         let intervalId;

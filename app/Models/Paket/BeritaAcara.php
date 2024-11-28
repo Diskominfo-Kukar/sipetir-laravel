@@ -2,6 +2,8 @@
 
 namespace App\Models\Paket;
 
+use App\Models\Master\SumberDana;
+use App\Models\Master\SumberDanaSub;
 use App\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +26,7 @@ class BeritaAcara extends Model
         'nama_opd',
         'satker',
         'sumber_dana',
+        'sumber_dana_sub',
         'pagu',
         'hps',
         'dpa',
@@ -34,4 +37,14 @@ class BeritaAcara extends Model
         'intro',
         'jam_berakhir',
     ];
+
+    public function sumberDana()
+    {
+        return $this->belongsTo(SumberDana::class, 'sumber_dana', 'id');
+    }
+
+    public function sumberDanaSub()
+    {
+        return $this->belongsTo(SumberDanaSub::class, 'sumber_dana_sub', 'id');
+    }
 }

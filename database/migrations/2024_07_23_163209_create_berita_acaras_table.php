@@ -10,19 +10,26 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        if (! Schema::hasTable('surat_tugas')) {
-            Schema::create('surat_tugas', function (Blueprint $table) {
+        if (! Schema::hasTable('berita_acara')) {
+            Schema::create('berita_acara', function (Blueprint $table) {
                 $table->uuid('id')->primary();
                 $table->integer('kode')->nullable();
                 $table->string('paket_id')->references('id')->on('paket')->nullable();
                 $table->text('nama_paket')->nullable();
                 $table->text('jenis_pekerjaan')->nullable();
                 $table->text('nama_opd')->nullable();
+                $table->text('satker')->nullable();
                 $table->text('sumber_dana')->nullable();
+                $table->text('sumber_dana_sub')->nullable();
                 $table->decimal('pagu', '25', 2)->default(0);
                 $table->decimal('hps', '25', 2)->default(0);
                 $table->text('dpa')->nullable();
                 $table->integer('tahun')->nullable();
+                $table->text('lokasi')->nullable();
+                $table->text('lokasi_ba')->nullable();
+                $table->text('jam_mulai')->nullable();
+                $table->text('jam_berakhir')->nullable();
+                $table->text('Intro')->nullable();
                 $table->timestamps();
                 $table->unique(['kode', 'tahun']);
             });
@@ -34,6 +41,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('surat_tugas');
+        Schema::dropIfExists('berita_acaras');
     }
 };

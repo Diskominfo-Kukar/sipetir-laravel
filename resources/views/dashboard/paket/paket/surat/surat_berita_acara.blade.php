@@ -201,7 +201,12 @@
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Sumber Dana</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">{{ $berita_acara->sumber_dana }}</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">
+                    {{ $berita_acara->sumberDana->nama ?? 'Tidak ada sumber dana' }}
+                    @if($berita_acara->sumberDanaSub)
+                        &nbsp;({{ $berita_acara->sumberDanaSub->nama }})
+                    @endif
+                </td
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nilai Pagu Anggaran</td>

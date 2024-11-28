@@ -14,4 +14,9 @@ class SumberDana extends Model
     protected $fillable = [
         'nama',
     ];
+
+    public function sub()
+    {
+        return $this->hasMany(SumberDanaSub::class);
+    }
 }

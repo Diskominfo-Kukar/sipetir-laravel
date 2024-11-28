@@ -190,7 +190,18 @@
     <td style="width: 10%;"></td>
     <td style="padding: 0 8px; vertical-align: top; width: 30%;">4. Sumber Dana</td>
     <td style="padding: 0 8px; vertical-align: top; width: 5%;">:</td>
-    <td style="padding: 0 8px; vertical-align: top; width: 55%;">{{ $surat_tugas->sumber_dana }}</td>
+    <!--td style="padding: 0 8px; vertical-align: top; width: 55%;">
+        {{ $surat_tugas->sumber_dana }}
+        @if($surat_tugas->sumber_dana_sub)
+            &nbsp;({{ $surat_tugas->sumber_dana_sub }})
+        @endif
+    </td-->
+    <td style="padding: 0 8px; vertical-align: top; width: 55%;">
+        {{ $surat_tugas->sumberDana->nama ?? 'Tidak ada sumber dana' }}
+        @if($surat_tugas->sumberDanaSub)
+            &nbsp;({{ $surat_tugas->sumberDanaSub->nama }})
+        @endif
+    </td>
     <td style="padding: 0 8px;"></td>
   </tr>
   <tr>
