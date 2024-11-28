@@ -93,10 +93,12 @@
                             PPK
                             <span class="badge bg-primary rounded-pill">{{$paket->nama_ppk}}</span>
                         </li>
+                        @if(isset($paket->pokmil->pokmil_id))
                         <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             Pokmil
                             <span class="badge bg-primary rounded-pill">{{$paket->pokmil->pokmil_id}}</span>
                         </li>
+                        @endif
                         <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             Tahun Anggaran
                             <span class="badge bg-primary rounded-pill">{{ \Carbon\Carbon::parse($paket->tgl_buat)->format('Y') }}</span>
@@ -253,11 +255,88 @@
                                         </div>&nbsp;<br>
                                         <div class="text-start">
                                             @if($completed)
-                                                <form action="{{ route('paket.uploadAllBerkas') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-                                                    <button type="submit" class="btn btn-primary mx-auto d-block">Kirimkan berkas</button>
-                                                </form>
+                                                <hr>
+                                                <h5 class="text-center mb-0">Informasi paket</h5>
+                                                <hr>
+                                                <div class="border shadow-none card">
+                                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                                        <div class="d-flex justify-content-center w-100">
+                                                            <form action="{{ route('paket.uploadAllBerkas') }}" method="POST" class="w-100">
+                                                                @csrf
+                                                                <div class="form-group row mb-3">
+                                                                    <label for="kode" class="col-sm-3 col-form-label text-right">Kode Surat</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="number" name="kode" class="form-control" value="{{ $kode_sa }}" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-3">
+                                                                    <label for="nama_paket" class="col-sm-3 col-form-label text-right">Nama Paket</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" name="nama_paket" class="form-control" value="{{ $paket->nama }}" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-3">
+                                                                    <label for="jenis_pekerjaan" class="col-sm-3 col-form-label text-right">Jenis Pekerjaan</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" name="jenis_pekerjaan" class="form-control" value="{{ $paket->jenis_pekerjaan }}" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-3">
+                                                                    <label for="nama_opd" class="col-sm-3 col-form-label text-right">Nama OPD</label>
+                                                                    <div class="col-sm-9">
+                                                                        <select name="nama_opd" class="form-control select2" required>
+                                                                            <option value="" disabled selected></option>
+                                                                            @foreach($opd as $item)
+                                                                                <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-3">
+                                                                    <label for="sumber_dana" class="col-sm-3 col-form-label text-right">Sumber Dana</label>
+                                                                    <div class="col-sm-9">
+                                                                        <select name="sumber_dana" class="form-control select2" required>
+                                                                            <option value="" disabled selected></option>
+                                                                            @foreach($sumber_dana as $item)
+                                                                                <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-3">
+                                                                    <label for="pagu" class="col-sm-3 col-form-label text-right">Pagu</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" name="pagu" class="form-control input-rupiah" value="{{ formatRupiah($paket->pagu) }}" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-3">
+                                                                    <label for="hps" class="col-sm-3 col-form-label text-right">HPS</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" name="hps" class="form-control input-rupiah" value="{{ formatRupiah($paket->hps) }}" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-3">
+                                                                    <label for="dpa" class="col-sm-3 col-form-label text-right">Nomor DPA</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" name="dpa" class="form-control" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-3">
+                                                                    <label for="tahun" class="col-sm-3 col-form-label text-right">Tahun Anggaran</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="number" name="tahun" class="form-control" required>
+                                                                    </div>
+                                                                </div>
+                                                                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                                <div class="form-group row mt-4">
+                                                                    <div class="col-sm-12 text-center">
+                                                                        <button type="submit" class="btn btn-danger mx-auto d-block">Kirimkan berkas</button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             @endif
                                         </div>
 

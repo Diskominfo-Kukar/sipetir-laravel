@@ -628,6 +628,7 @@ class PaketController extends Controller
     public function uploadAllBerkas(Request $request)
     {
         // $request->paket_id = '000a18a6-e283-41c1-a81a-cd958b23b84a';
+
         $paket = Paket::where('id', $request->paket_id)
             ->with('ppk.panitia', 'pokmil.panitia')
             ->first();
@@ -1369,6 +1370,7 @@ class PaketController extends Controller
     {
         $this->addHistory($paket, $message);
 
+        //TODO: Aktifkan jika ingin menggunakan notif wa (targetUrl untuk apa?)
         /*
                 Notifikasi::sendTo(
                     'wa',
