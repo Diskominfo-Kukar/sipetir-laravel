@@ -83,10 +83,9 @@ class IndexController extends Controller
                     when status = 8 then 3
                     when status = 7 then 4
                     when status = 6 then 5
-                    when status = 4 then 6
-                    when status = 11 then 7
-                    when status = 1 then 8
-                    else 9
+                    when status = 11 then 6
+                    when status = 1 then 7
+                    else 8
                 end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Panitia')) {
@@ -103,10 +102,9 @@ class IndexController extends Controller
             $query->orderByRaw(
                 'case
                     when status = 9 then 1
-                    when status = 4 then 2
-                    when status = 11 then 3
-                    when status = 1 then 4
-                    else 5
+                    when status = 11 then 2
+                    when status = 1 then 3
+                    else 4
                 end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Admin')) {
@@ -120,8 +118,9 @@ class IndexController extends Controller
             $query->orderByRaw(
                 'case
                     when status = 5 then 1
-                    when status = 3 then 2
-                    else 3
+                    when status = 4 then 2
+                    when status = 3 then 3
+                    else 4
                 end'
             )->orderBy('status', 'desc');
         } else {
@@ -144,7 +143,7 @@ class IndexController extends Controller
             }
 
             if ($user->hasRole('PPK')) {
-                if ($status == 1 || $status == 11 || $status == 4 || $status == 9) {
+                if ($status == 1 || $status == 11 || $status == 9) {
                     $buttonText  = 'Proses';
                     $buttonClass = 'btn-warning';
                 }
@@ -158,7 +157,7 @@ class IndexController extends Controller
             }
 
             if ($user->hasRole('Kepala BPBJ')) {
-                if ($status == 3 || $status == 5) {
+                if ($status == 3 || $status == 5 || $status == 4) {
                     $buttonText  = 'Proses';
                     $buttonClass = 'btn-warning';
                 }

@@ -81,10 +81,9 @@ class PaketController extends Controller
                     when status = 8 then 3
                     when status = 7 then 4
                     when status = 6 then 5
-                    when status = 4 then 6
-                    when status = 11 then 7
-                    when status = 1 then 8
-                    else 9
+                    when status = 11 then 6
+                    when status = 1 then 7
+                    else 8
                 end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Panitia')) {
@@ -101,10 +100,9 @@ class PaketController extends Controller
             $query->orderByRaw(
                 'case
                     when status = 9 then 1
-                    when status = 4 then 2
-                    when status = 11 then 3
-                    when status = 1 then 4
-                    else 5
+                    when status = 11 then 2
+                    when status = 1 then 3
+                    else 4
                 end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Admin')) {
@@ -118,8 +116,9 @@ class PaketController extends Controller
             $query->orderByRaw(
                 'case
                     when status = 5 then 1
-                    when status = 3 then 2
-                    else 3
+                    when status = 4 then 2
+                    when status = 3 then 3
+                    else 4
                 end'
             )->orderBy('status', 'desc');
         } else {
@@ -142,7 +141,7 @@ class PaketController extends Controller
             }
 
             if ($user->hasRole('PPK')) {
-                if ($status == 1 || $status == 11 || $status == 4 || $status == 9) {
+                if ($status == 1 || $status == 11 || $status == 9) {
                     $buttonText  = 'Proses';
                     $buttonClass = 'btn-warning';
                 }
@@ -156,7 +155,7 @@ class PaketController extends Controller
             }
 
             if ($user->hasRole('Kepala BPBJ')) {
-                if ($status == 3 || $status == 5) {
+                if ($status == 3 || $status == 5 || $status == 4) {
                     $buttonText  = 'Proses';
                     $buttonClass = 'btn-warning';
                 }
@@ -629,6 +628,46 @@ class PaketController extends Controller
     {
         // $request->paket_id = '000a18a6-e283-41c1-a81a-cd958b23b84a';
 
+        $surat_tugas = SuratTugas::where('paket_id', $request->paket_id)->first();
+
+        if ($surat_tugas) {
+            $surat_tugas->update([
+                'paket_id'        => $request->paket_id,
+                'kode'            => $request->kode,
+                'jenis_pekerjaan' => $request->jenis_pekerjaan,
+                'nama_paket'      => $request->nama_paket,
+                'nama_opd'        => $request->nama_opd,
+                'sumber_dana'     => $request->sumber_dana,
+                'pagu'            => str_replace('.', '', $request->pagu),
+                'hps'             => str_replace('.', '', $request->hps),
+                'dpa'             => $request->dpa,
+                'tahun'           => $request->tahun,
+            ]);
+        } else {
+            $tahun         = Carbon::now()->year;
+            $kode_duplikat = SuratTugas::whereYear('created_at', $tahun)
+                ->where('kode', $request->kode)->first();
+
+            if (! $kode_duplikat) {
+                $surat_tugas = SuratTugas::create([
+                    'paket_id'        => $request->paket_id,
+                    'kode'            => $request->kode,
+                    'jenis_pekerjaan' => $request->jenis_pekerjaan,
+                    'nama_paket'      => $request->nama_paket,
+                    'nama_opd'        => $request->nama_opd,
+                    'sumber_dana'     => $request->sumber_dana,
+                    'pagu'            => str_replace('.', '', $request->pagu),
+                    'hps'             => str_replace('.', '', $request->hps),
+                    'dpa'             => $request->dpa,
+                    'tahun'           => $request->tahun,
+                ]);
+            } else {
+                session()->flash('error', 'Kode surat sudah digunakan');
+
+                return redirect()->back();
+            }
+        }
+
         $paket = Paket::where('id', $request->paket_id)
             ->with('ppk.panitia', 'pokmil.panitia')
             ->first();
@@ -741,6 +780,7 @@ class PaketController extends Controller
 
         $surat_tugas = SuratTugas::where('paket_id', $request->paket_id)->first();
 
+        /*
         if ($surat_tugas) {
             $surat_tugas->update([
                 'paket_id'        => $request->paket_id,
@@ -778,6 +818,7 @@ class PaketController extends Controller
                 return redirect()->back();
             }
         }
+        */
 
         $data = [
             'surat_tugas' => $surat_tugas,

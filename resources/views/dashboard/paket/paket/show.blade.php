@@ -263,12 +263,12 @@
                                                         <div class="d-flex justify-content-center w-100">
                                                             <form action="{{ route('paket.uploadAllBerkas') }}" method="POST" class="w-100">
                                                                 @csrf
-                                                                <div class="form-group row mb-3">
+                                                                <!--div class="form-group row mb-3">
                                                                     <label for="kode" class="col-sm-3 col-form-label text-right">Kode Surat</label>
-                                                                    <div class="col-sm-9">
-                                                                        <input type="number" name="kode" class="form-control" value="{{ $kode_sa }}" required>
-                                                                    </div>
-                                                                </div>
+                                                                    <div class="col-sm-9"-->
+                                                                        <input type="hidden" name="kode" class="form-control" value="{{ $kode_sa }}" required>
+                                                                    <!--/div>
+                                                                <div-->
                                                                 <div class="form-group row mb-3">
                                                                     <label for="nama_paket" class="col-sm-3 col-form-label text-right">Nama Paket</label>
                                                                     <div class="col-sm-9">
@@ -520,7 +520,7 @@
                         @endrole
 
                     @elseif($status=="Surat Tugas")
-                        @role('PPK')
+                        @role('Kepala BPBJ')
                             <div class="col-12">
                                 <div class="border-0 shadow-sm card">
                                     <div class="card-body">
@@ -531,12 +531,12 @@
                                                 <div class="d-flex justify-content-center w-100">
                                                     <form action="{{ route('paket.generate_surat_tugas') }}" method="POST" class="w-100">
                                                         @csrf
-                                                        <div class="form-group row mb-3">
+                                                        <!--div class="form-group row mb-3">
                                                             <label for="kode" class="col-sm-3 col-form-label text-right">Kode Surat</label>
                                                             <div class="col-sm-9">
                                                                 <input type="number" name="kode" class="form-control" value="{{ $kode_sa }}" required>
                                                             </div>
-                                                        </div>
+                                                        <div>
                                                         <div class="form-group row mb-3">
                                                             <label for="nama_paket" class="col-sm-3 col-form-label text-right">Nama Paket</label>
                                                             <div class="col-sm-9">
@@ -589,19 +589,19 @@
                                                                 <input type="text" name="dpa" class="form-control" required>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group row mb-3">
+                                                        <div-- class="form-group row mb-3">
                                                             <label for="tahun" class="col-sm-3 col-form-label text-right">Tahun Anggaran</label>
                                                             <div class="col-sm-9">
                                                                 <input type="number" name="tahun" class="form-control" required>
                                                             </div>
-                                                        </div>
+                                                        </div-->
                                                         <input type="hidden" name="paket_id" value="{{ $paket->id }}">
                                                         <div class="form-group row mt-4">
                                                             <div class="col-sm-12 text-center">
                                                                 <button type="submit" class="btn btn-danger mx-2">
                                                                     <i class="fa fa-file-pdf"></i>
                                                                     Buat Surat Tugas
-                                                                </button>
+                                                                </button><br>&nbsp;
                                                             </div>
                                                         </div>
                                                     </form>

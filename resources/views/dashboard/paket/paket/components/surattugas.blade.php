@@ -5,7 +5,7 @@
             <hr>
             <div class="border shadow-none card">
                 <div class="card-body">
-                    <div class="text-center">PPK sedang membuat pengajuan surat tugas untuk paket ini.</div>
+                    <div class="text-center">Kepala BPBJ sedang membuat surat tugas untuk paket ini.</div>
                 </div>
             </div>
         </div>
