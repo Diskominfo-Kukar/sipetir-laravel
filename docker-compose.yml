@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  # Sipetir Application Server
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sipetir-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - sipetir-network
+      - sync-network
+    depends_on:
+      - mysql
+
+  # Nginx Web Server
+  nginx:
+    image: nginx:alpine
+    container_name: sipetir-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/production.conf:/etc/nginx/conf.d/default.conf
+    #   - ./docker/nginx/ssl:/etc/nginx/ssl
+    networks:
+      - sipetir-network
+    depends_on:
+      - app
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: sipetir-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    env_file:
+      - .env
+    networks:
+      - sipetir-network
+
+  # PostgreSQL Source Database
+  postgres:
+    image: postgres:13
+    container_name: sipetir-source
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_PG_DATABASE}
+      POSTGRES_USER: ${DB_PG_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PG_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+      - sync-network
+
+  # Composer (Optional: Dependency Management)
+#   composer:
+#     image: composer:latest
+#     container_name: laravel-composer
+#     volumes:
+#       - ./:/var/www/html
+#     working_dir: /var/www/html
+#     command: composer install
+#     networks:
+#       - sipetir-network
+
+  # Node.js (Optional: Frontend Asset Compilation)
+  node:
+    image: node:16-alpine
+    container_name: laravel-node
+    volumes:
+      - ./:/var/www/html
+    working_dir: /var/www/html
+    command: sh -c "npm ci && npm run dev"
+    networks:
+      - sipetir-network
+
+# Define networks
+networks:
+  sipetir-network:
+    driver: bridge
+  sync-network:
+    driver: bridge
+
+# Define persistent volumes
+volumes:
+  mysql-data:
+    driver: local
+  postgres-data:
+    driver: local
