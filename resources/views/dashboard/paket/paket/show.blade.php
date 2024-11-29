@@ -880,13 +880,13 @@
                                                                             <label for="sub_sumber_dana" class="col-sm-3 col-form-label text-right">Sub Sumber Dana</label>
                                                                             <div class="col-sm-9">
                                                                                 <select name="sumber_dana_sub" class="form-control select2" {{ old('sumber_dana') ? '' : 'disabled' }}>
-    <option value="" disabled selected>-</option>
-    @foreach($sub_sumber_dana as $subItem)
-        <option value="{{ $subItem->id }}" {{ old('sumber_dana_sub', $new_data->sumber_dana_sub) == $subItem->id ? 'selected' : '' }}>
-            {{ $subItem->nama }}
-        </option>
-    @endforeach
-</select>
+                                                                                    <option value="" disabled selected>-</option>
+                                                                                    @foreach($sub_sumber_dana as $subItem)
+                                                                                        <option value="{{ $subItem->id }}" {{ old('sumber_dana_sub', $new_data->sumber_dana_sub) == $subItem->id ? 'selected' : '' }}>
+                                                                                            {{ $subItem->nama }}
+                                                                                        </option>
+                                                                                    @endforeach
+                                                                                </select>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row mb-3">
@@ -949,7 +949,18 @@
                                                                                 <input type="text" name="jam_berakhir" class="form-control" value="11.30 Wita" required>
                                                                             </div>
                                                                         </div>
-                                                                        <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                                                                        <input type="hidden" id="pktId" name="paket_id" value="{{ $paket->id }}">
+                                                                        <div class="form-group row mb-3">
+                                                                            <label for="nama_tt" class="col-sm-3 col-form-label text-right">Tim Teknis (Opsional)</label>
+                                                                            <div class="col-sm-9">
+                                                                                <div class="input-group">
+                                                                                    <input type="text" id="tt-input" name="nama_tt" class="form-control" value="">
+                                                                                    <div class="input-group-append">
+                                                                                        <button type="button" id="addTT" class="btn btn-primary">Tambahkan</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                         <div class="form-group row mt-4">
                                                                             <div class="col-sm-12 text-center">
                                                                                 <button type="submit" class="btn btn-danger mx-2">
@@ -959,9 +970,35 @@
                                                                             </div>
                                                                         </div>
                                                                     </form>
+
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        @if($timTeknis->isNotEmpty())
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Nama Tim Teknis</th>
+                                                                    <th>Aksi</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($timTeknis as $tt)
+                                                                <tr>
+                                                                    <td>{{ $tt->nama }}</td>
+                                                                    <td>
+                                                                        <!-- Tombol hapus -->
+                                                                        <form action="{{ route('tt.destroy', $tt->id) }}" method="POST" style="display:inline;">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="tab-pane fade" id="berita-acara-2" role="tabpanel" aria-labelledby="berita-acara-2-tab">
@@ -1175,6 +1212,40 @@
     @endpush
 
     @push('scripts')
+    <script>
+        document.getElementById('tt-input').addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                document.getElementById('addTT').click();
+            }
+        });
+
+        document.getElementById('addTT').addEventListener('click', function () {
+            const ttValue = document.getElementById('tt-input').value;
+            const pktIdValue = document.getElementById('pktId').value;
+            const url = '{{ route("tt.store") }}';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ tt: ttValue, pktId: pktIdValue })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan.');
+            });
+        });
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var sumberDana = @json($sumber_dana);

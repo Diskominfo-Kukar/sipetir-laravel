@@ -14,6 +14,7 @@ use App\Http\Controllers\Master\PpkController;
 use App\Http\Controllers\Master\QuestionController;
 use App\Http\Controllers\Paket\AktivitasController;
 use App\Http\Controllers\Paket\PaketController;
+use App\Http\Controllers\Paket\TenagaTeknisController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -106,9 +107,15 @@ Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Panitia|PPK|Kepa
         Route::post('/upload-berita_acara_3', 'upload_berita_acara_3')->name('upload_berita_acara_3');
         Route::post('/tambah-pertanyaan-paket', 'tambahPertanyaanPaket')->name('tambah_pertanyaan_paket');
         Route::post('/question/{id}', 'deleteQuestion')->name('delete_question');
+        Route::post('/tambah-tenaga-teknis', 'addTenagaTeknis')->name('addTenagaTeknis');
+        Route::delete('/tenaga-teknis/{id}', 'deleteTenagaTeknis')->name('deleteTenagaTeknis');
     });
     Route::controller(AktivitasController::class)->name('paket.')->group(function () {
         Route::get('/paket/aktivitas/{paket}/', 'show')->name('aktivitas');
+    });
+    Route::controller(TenagaTeknisController::class)->name('tt.')->group(function () {
+        Route::post('/tambah-tt', 'store')->name('store');
+        Route::delete('/destroy/{id}', 'destroy')->name('destroy');
     });
     Route::controller(JenisDokumenController::class)->name('paket.')->group(function () {
         Route::post('/tambah-opsional', 'tambahOpsional')->name('tambah_opsional');

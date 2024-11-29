@@ -21,6 +21,7 @@ use App\Models\Paket\Paket;
 use App\Models\Paket\PaketDokumen;
 use App\Models\Paket\PaketHistory;
 use App\Models\Paket\SuratTugas;
+use App\Models\Paket\TenagaTeknis;
 use App\Models\Paket\TTEBeritaAcara;
 use App\Services\GenerateBeritaAcaraReview;
 use App\Traits\Notifikasi;
@@ -289,6 +290,7 @@ class PaketController extends Controller
         $opd                = Opd::all();
         $sumber_dana        = SumberDana::with('sub')->get(); //@phpstan-ignore-line
         $satker             = Satker::all();
+        $timTeknis          = TenagaTeknis::where('paket_id', $paket->id)->get();
         $data               = $new_data2 ?? $new_data ?? $paket;
         $sumber_dana_detail = $sumber_dana->firstWhere('id', old('sumber_dana', $data->sumber_dana));
         $sub_sumber_dana    = $sumber_dana_detail ? $sumber_dana_detail->sub : [];
@@ -357,6 +359,7 @@ class PaketController extends Controller
             'all_done'           => $all_done_review,
             'sumber_dana_detail' => $sumber_dana_detail,
             'sub_sumber_dana'    => $sub_sumber_dana,
+            'timTeknis'          => $timTeknis,
         ];
 
         return view('dashboard.paket.'.$this->route.'.show', $data);

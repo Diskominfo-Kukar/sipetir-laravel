@@ -141,4 +141,9 @@ class Paket extends Model
     {
         return $this->hasMany(TTEBeritaAcara::class, 'paket_id', 'id');
     }
+
+    public function TenagaTeknis()
+    {
+        return $this->hasMany(TenagaTeknis::class, 'paket_id', 'id');
+    }
 }
