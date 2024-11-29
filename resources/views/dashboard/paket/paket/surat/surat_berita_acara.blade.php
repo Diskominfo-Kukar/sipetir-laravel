@@ -251,6 +251,18 @@
                 <td colspan="2"></td>
                 <td style="padding: 0 8px;">- {{ $paket->ppk->nama }}</td>
             </tr>
+            <tr>
+                <td colspan="2" style="padding: 8px; vertical-align: top;">3.</td>
+                <td style="padding: 8px; vertical-align: top;">Tim Teknis:
+                    <br>
+                </td>
+            </tr>
+            @foreach($paket->TenagaTeknis as $p)
+            <tr>
+                <td colspan="2"></td>
+                <td style="padding: 0 8px;">- {{ $p->nama }}</td>
+            </tr>
+            @endforeach
         </table>&nbsp;&nbsp;
 
     </div>
