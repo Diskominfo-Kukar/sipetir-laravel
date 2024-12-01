@@ -294,8 +294,18 @@ class PaketController extends Controller
             if ($berita_acara_1) {
                 $signBeritaAcara = TTEBeritaAcara::where('paket_id', $paket->id)->get();
 
-                if ($signBeritaAcara) {
+                if ($signBeritaAcara->isNotEmpty()) {
                     $signedBeritaAcara = $this->signDokumen($paket->berita_acara_review, null, null, $paket->id, true);
+
+                    if ($signedBeritaAcara) {
+                        $paket->update([
+                            'berita_acara_review' => $signedBeritaAcara,
+                        ]);
+                        $berita_acara_1 = $signedBeritaAcara;
+                        session()->flash('success', 'Paket telah selesai karna telah tayang');
+                    } else {
+                        session()->flash('error', 'Paket telah selesai karna telah tayang namun terjadi kegagalan saat memuat berita acara, silahkan dibuka ulang lagi nanti');
+                    }
                 }
             }
         }
@@ -984,6 +994,7 @@ class PaketController extends Controller
     {
         $paket = Paket::where('id', $request->paket_id)->first();
 
+        //TODO: passphrase cek disini
         $tteSuksesSuratTugas = $this->signDokumen($paket->surat_tugas, $request->nip, $request->passphrase);
 
         if ($tteSuksesSuratTugas) {
@@ -996,7 +1007,7 @@ class PaketController extends Controller
             ]);
             session()->flash('success', 'Paket diserahkan kepada panitia untuk di review');
         } else {
-            session()->flash('error', 'Paket gagal di TTE');
+            session()->flash('error', 'Terjadi kegagalan saat TTE, silahkan dicoba kembali');
         }
 
         return redirect()->back();
@@ -1196,6 +1207,7 @@ class PaketController extends Controller
         $paket->berita_acara_review = $generatedFileBeritaAcara;
         $paket->update();
 
+        //TODO: passphrase cek disini
         $tteSuksesBeritaAcara = $this->signDokumen($paket->berita_acara_review, $request->nip, $request->passphrase, $paket->id, true);
 
         if ($tteSuksesBeritaAcara) {
@@ -1213,7 +1225,7 @@ class PaketController extends Controller
 
             return redirect()->back();
         } else {
-            session()->flash('error', 'Paket gagal di TTE');
+            session()->flash('error', 'Terjadi kegagalan saat TTE, silahkan dicoba kembali');
 
             return redirect()->back();
         }
@@ -1475,27 +1487,33 @@ class PaketController extends Controller
 
     private function signDokumen($file, $nip, $passphrase, $paketId = null, $beritaAcara = false)
     {
-        $fileToSign = Storage::disk('public')->get($file);
-        $fileName   = basename($file);
+        try {
+            $fileToSign = Storage::disk('public')->get($file);
+            $fileName   = basename($file);
 
-        if (isset($paketId) && $beritaAcara) {
-            $akanTte = TTEBeritaAcara::where('paket_id', $paketId)->get();
+            if (isset($paketId) && $beritaAcara) {
+                $akanTte = TTEBeritaAcara::where('paket_id', $paketId)->get();
 
-            $signedDokumenFinal = null;
+                $signedDokumenFinal = null;
 
-            foreach ($akanTte as $tte) {
-                if ($signedDokumenFinal) {
-                    $fileToSign = Storage::disk('public')->get($signedDokumenFinal);
+                foreach ($akanTte as $tte) {
+                    if ($signedDokumenFinal) {
+                        $fileToSign = Storage::disk('public')->get($signedDokumenFinal);
+                    }
+                    $signedDokumenPath = TTE::signDocument($fileToSign, $fileName, $tte->nip, $tte->passphrase);
+
+                    $signedDokumenFinal = $signedDokumenPath;
+
+                    TTEBeritaAcara::where('id', $tte->id)->delete();
                 }
-                $signedDokumenPath = TTE::signDocument($fileToSign, $fileName, $tte->nip, $tte->passphrase);
 
-                $signedDokumenFinal = $signedDokumenPath;
+                return $signedDokumenFinal;
             }
 
-            return $signedDokumenFinal;
+            return TTE::signDocument($fileToSign, $fileName, $nip, $passphrase);
+        } catch (\Exception $e) {
+            return false;
         }
-
-        return TTE::signDocument($fileToSign, $fileName, $nip, $passphrase);
     }
 
     private function addHistory($paket, $message)
