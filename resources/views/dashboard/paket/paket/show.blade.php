@@ -378,7 +378,6 @@
                                                     <thead>
                                                         <tr>
                                                             <th scope="col">Nama Dokumen</th>
-                                                            <th scope="col">Status</th>
                                                             <th scope="col">Lihat</th>
                                                             <th scope="col">Jenis Dok</th>
                                                             <th scope="col">Keterangan</th>
@@ -388,7 +387,6 @@
                                                         @foreach ($jenis_dokumen as $dokumen)
                                                         <tr>
                                                             <td>{{$dokumen->nama}}</td>
-                                                            <td>{{$dokumen->status}}</td>
                                                             @if(isset($file_dokumen[$dokumen->id]))
                                                                 <td><a href="{{ asset('storage/' . $file_dokumen[$dokumen->id]) }}" class="input-group-text bg-success" target="_blank">View</a></td>
                                                             @else
