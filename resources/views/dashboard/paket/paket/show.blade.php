@@ -466,7 +466,7 @@
                                                             <div class="accordion-item">
                                                                 <h2 class="accordion-header" id="heading-{{ $dokumen->id }}">
                                                                     <button class="accordion-button collapsed bg-light text-body" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $dokumen->id }}" aria-expanded="true" aria-controls="collapse-{{ $dokumen->id }}">
-                                                                        Riwayat Komen
+                                                                        Riwayat Perbaikan
                                                                     </button>
                                                                 </h2>
                                                                 <div id="collapse-{{ $dokumen->id }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ $dokumen->id }}" data-bs-parent="#accordionExample">
