@@ -63,22 +63,22 @@
                                 <span class="badge bg-danger rounded-pill">Belum</span>
                             @endif
                         </li>
-                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                        <!--li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             Berita Acara Penetapan
                             @if($berita_acara_2)
                                 <span class="badge bg-success rounded-pill">Sudah</span>
                             @else
                                 <span class="badge bg-danger rounded-pill">Belum</span>
                             @endif
-                        </li>
-                        <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                        <li>
+                        <li-- class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             Berita Acara Pengumuman
                             @if($berita_acara_3)
                                 <span class="badge bg-success rounded-pill">Sudah</span>
                             @else
                                 <span class="badge bg-danger rounded-pill">Belum</span>
                             @endif
-                        </li>
+                        </li-->
                     </ul>
                 </div>
 
