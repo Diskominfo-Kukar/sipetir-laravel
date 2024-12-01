@@ -166,7 +166,7 @@
         <p class="text-center">
             <strong>BERITA ACARA REVIU DOKUMEN PERSIAPAN PENGADAAN<br>
                 JASA KONSULTAN<br>
-                <u>TAHUN ANGGARAN {{--date('Y', strtotime($tanggal)) --}}{{ $berita_acara->tahun }}</u>
+                <u>TAHUN ANGGARAN {{-- date('Y', strtotime($tanggal)) --}}{{ $berita_acara->tahun }}</u>
             </strong><br>
             Nomor: {{ $berita_acara->kode }}/BA.R/{{ $paket->pkt_id }}/{{-- $tglkop --}}{{ $berita_acara->tahun }}
         </p>&nbsp;
@@ -203,20 +203,25 @@
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
                 <td style="padding: 0; vertical-align: top; width: 75%;">
                     {{ $berita_acara->sumberDana->nama ?? 'Tidak ada sumber dana' }}
-                    @if($berita_acara->sumberDanaSub)
+                    @if ($berita_acara->sumberDanaSub)
                         &nbsp;({{ $berita_acara->sumberDanaSub->nama }})
                     @endif
-                </td
-            </tr>
+                </td </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nilai Pagu Anggaran</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. {{ formatRupiah($berita_acara->pagu) }},00 ({{ terbilang($berita_acara->pagu) }} rupiah)</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">Rp.
+                    {{ App\Helpers\Format::rupiah($berita_acara->pagu) }},00
+                    ({{ App\Helpers\Format::terbilang($berita_acara->pagu) }}
+                    rupiah)</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Nilai HPS</td>
                 <td style="padding: 0 0 0 8px; vertical-align: top; width: 5%;">:</td>
-                <td style="padding: 0; vertical-align: top; width: 75%;">Rp. {{ formatRupiah($berita_acara->hps) }},00 ({{ terbilang($berita_acara->pagu) }} rupiah)</td>
+                <td style="padding: 0; vertical-align: top; width: 75%;">Rp.
+                    {{ App\Helpers\Format::rupiah($berita_acara->hps) }},00
+                    ({{ App\Helpers\Format::terbilang($berita_acara->pagu) }}
+                    rupiah)</td>
             </tr>
             <tr>
                 <td style="padding: 0 8px; vertical-align: top; width: 35%;">Jenis Pengadaan
@@ -235,11 +240,11 @@
                 <td colspan="2" style="padding: 8px; vertical-align: top;">1.</td>
                 <td style="padding: 8px; vertical-align: top;">{{ $paket->pokmil->nama }}</td>
             </tr>
-            @foreach($panitia as $p)
-            <tr>
-                <td colspan="2"></td>
-                <td style="padding: 0 8px;">- {{ $p->nama }}</td>
-            </tr>
+            @foreach ($panitia as $p)
+                <tr>
+                    <td colspan="2"></td>
+                    <td style="padding: 0 8px;">- {{ $p->nama }}</td>
+                </tr>
             @endforeach
             <tr>
                 <td colspan="2" style="padding: 8px; vertical-align: top;">2.</td>
@@ -257,11 +262,11 @@
                     <br>
                 </td>
             </tr>
-            @foreach($paket->TenagaTeknis as $p)
-            <tr>
-                <td colspan="2"></td>
-                <td style="padding: 0 8px;">- {{ $p->nama }}</td>
-            </tr>
+            @foreach ($paket->TenagaTeknis as $p)
+                <tr>
+                    <td colspan="2"></td>
+                    <td style="padding: 0 8px;">- {{ $p->nama }}</td>
+                </tr>
             @endforeach
         </table>&nbsp;&nbsp;
 
@@ -317,7 +322,8 @@
 
                                 @foreach ($kategori->questions as $question)
                                     <tr>
-                                        <td style="vertical-align: top;" class="text-center">{{ $loop->iteration }}</td>
+                                        <td style="vertical-align: top;" class="text-center">{{ $loop->iteration }}
+                                        </td>
                                         <td style="padding:0 8px;">{{ $question->nama }}</td>
                                         <td>
                                             @foreach ($question->answers as $answer)
@@ -329,7 +335,8 @@
                             </table>
                         </div>
                         <div>
-                            <p style="padding:16px 8px 8px 8px;"><b>Reviu klarifikasi tambahan dari Pokja Pemilihan terkalt
+                            <p style="padding:16px 8px 8px 8px;"><b>Reviu klarifikasi tambahan dari Pokja Pemilihan
+                                    terkalt
                                     Spesifikasi
                                     Teknis</b></p>
 
@@ -440,7 +447,8 @@
         {{-- /end bagian 1 --}}
 
         <p style="margin-top: 10px; margin-left: 10px; margin-bottom: 10px;">
-            Reviu ditutup Pada Pukul {{ $berita_acara->jam_berakhir }}. Dan Berita Acara ini merupakan bagian yang tidak terpisahkan dari Proses Pemilihan
+            Reviu ditutup Pada Pukul {{ $berita_acara->jam_berakhir }}. Dan Berita Acara ini merupakan bagian yang
+            tidak terpisahkan dari Proses Pemilihan
             <br>&nbsp;<br>
             Disusun di : <strong>{{ $berita_acara->lokasi_ba }}</strong> Tanggal: <strong>{{ $tanggal }}</strong>
         </p>
@@ -470,26 +478,27 @@
                         @endif
                     </td>
                 </tr>
-                @foreach($panitia as $p)
-                <tr style="height: 50px;">
-                    <td style="padding: 16px; font-size: 16px;">{{ $loop->index + 2 }}.</td>
-                    <td style="padding: 16px; font-size: 16px;">{{ $p->nama }}</td>
-                    <td style="padding: 16px; font-size: 16px; vertical-align: top;">{{ $paket->pokmil->nama }}</td>
-                    <td style="padding: 16px; font-size: 16px; vertical-align: top;">
-                        {{--
+                @foreach ($panitia as $p)
+                    <tr style="height: 50px;">
+                        <td style="padding: 16px; font-size: 16px;">{{ $loop->index + 2 }}.</td>
+                        <td style="padding: 16px; font-size: 16px;">{{ $p->nama }}</td>
+                        <td style="padding: 16px; font-size: 16px; vertical-align: top;">{{ $paket->pokmil->nama }}
+                        </td>
+                        <td style="padding: 16px; font-size: 16px; vertical-align: top;">
+                            {{--
                         @if ($p->pivot->approve == 1)
                             <!--img src="{{ asset('storage/'.$p->ttd) }}" alt="Tanda Tangan" width="100" height="100"-->
                             Sudah TTE
                         @endif
                         --}}
-                        @if ($p->beritaAcaraTte->isNotEmpty())
-                            Sudah TTE
-                        @endif
-                    </td>
-                </tr>
+                            @if ($p->beritaAcaraTte->isNotEmpty())
+                                Sudah TTE
+                            @endif
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
-        <table>
+            <table>
     </div>
 
     <footer>
