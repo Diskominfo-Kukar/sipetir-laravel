@@ -639,6 +639,10 @@ class PaketController extends Controller
     {
         // $request->paket_id = '000a18a6-e283-41c1-a81a-cd958b23b84a';
 
+        $paket = Paket::where('id', $request->paket_id)
+            ->with('ppk.panitia', 'pokmil.panitia')
+            ->first();
+
         $surat_tugas = SuratTugas::where('paket_id', $request->paket_id)->first();
         //$sumber_dana          = SumberDana::find($request->sumber_dana);
         //$sumber_dana_sub      = SumberDanaSub::find($request->sumber_dana_sub);
@@ -646,27 +650,9 @@ class PaketController extends Controller
 
         $sumber_dana_sub = $request->sumber_dana_sub ? $request->sumber_dana_sub : null;
 
-        if ($surat_tugas) {
-            $surat_tugas->update([
-                'paket_id'        => $request->paket_id,
-                'kode'            => $request->kode,
-                'jenis_pekerjaan' => $request->jenis_pekerjaan,
-                'nama_paket'      => $request->nama_paket,
-                'nama_opd'        => $request->nama_opd,
-                'sumber_dana'     => $request->sumber_dana,
-                'sumber_dana_sub' => $sumber_dana_sub,
-                'pagu'            => str_replace('.', '', $request->pagu),
-                'hps'             => str_replace('.', '', $request->hps),
-                'dpa'             => $request->dpa,
-                'tahun'           => $request->tahun,
-            ]);
-        } else {
-            $tahun         = Carbon::now()->year;
-            $kode_duplikat = SuratTugas::whereYear('created_at', $tahun)
-                ->where('kode', $request->kode)->first();
-
-            if (! $kode_duplikat) {
-                $surat_tugas = SuratTugas::create([
+        if ($paket->status == 1) {
+            if ($surat_tugas) {
+                $surat_tugas->update([
                     'paket_id'        => $request->paket_id,
                     'kode'            => $request->kode,
                     'jenis_pekerjaan' => $request->jenis_pekerjaan,
@@ -680,15 +666,31 @@ class PaketController extends Controller
                     'tahun'           => $request->tahun,
                 ]);
             } else {
-                session()->flash('error', 'Kode surat sudah digunakan');
+                $tahun         = Carbon::now()->year;
+                $kode_duplikat = SuratTugas::whereYear('created_at', $tahun)
+                    ->where('kode', $request->kode)->first();
 
-                return redirect()->back();
+                if (! $kode_duplikat) {
+                    $surat_tugas = SuratTugas::create([
+                        'paket_id'        => $request->paket_id,
+                        'kode'            => $request->kode,
+                        'jenis_pekerjaan' => $request->jenis_pekerjaan,
+                        'nama_paket'      => $request->nama_paket,
+                        'nama_opd'        => $request->nama_opd,
+                        'sumber_dana'     => $request->sumber_dana,
+                        'sumber_dana_sub' => $sumber_dana_sub,
+                        'pagu'            => str_replace('.', '', $request->pagu),
+                        'hps'             => str_replace('.', '', $request->hps),
+                        'dpa'             => $request->dpa,
+                        'tahun'           => $request->tahun,
+                    ]);
+                } else {
+                    session()->flash('error', 'Kode surat sudah digunakan');
+
+                    return redirect()->back();
+                }
             }
         }
-
-        $paket = Paket::where('id', $request->paket_id)
-            ->with('ppk.panitia', 'pokmil.panitia')
-            ->first();
 
         $message = "Berkas untuk paket $paket->nama telah dikirim ke Admin";
         $this->kirimNotifikasi($paket, $message);
