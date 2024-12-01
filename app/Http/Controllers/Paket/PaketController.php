@@ -220,8 +220,6 @@ class PaketController extends Controller
      */
     public function show(Paket $paket)
     {
-
-
         if (! auth()->user()->hasRole('Kepala BPBJ') && ! auth()->user()->hasRole('Admin') && ! auth()->user()->hasRole('superadmin')) {
             if (! $paket->ppk_id == auth()->user()->ppk_id && ! in_array($paket->pokmil_id, auth()->user()->pokmil_id)) {
                 return abort(403);
@@ -293,7 +291,7 @@ class PaketController extends Controller
                 'status' => '0',
             ]);
 
-            if($berita_acara_1){
+            if ($berita_acara_1) {
                 $signBeritaAcara = TTEBeritaAcara::where('paket_id', $paket->id)->get();
 
                 if ($signBeritaAcara) {
@@ -1221,7 +1219,9 @@ class PaketController extends Controller
 
     public static function getProses($status)
     {
-        if ($status != 0) {
+        if ($status == 11) {
+            $proses = 10;
+        } elseif ($status != 0) {
             $proses = ($status / 10) * 100;
         } else {
             $proses = 100;
