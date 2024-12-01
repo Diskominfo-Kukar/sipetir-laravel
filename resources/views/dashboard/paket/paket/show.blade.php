@@ -972,31 +972,28 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        @if($timTeknis->isNotEmpty())
-                                                        <table class="table table-striped">
+                                                        <table class="table table-striped" id="timTeknisTable">
                                                             <thead>
                                                                 <tr>
                                                                     <th>Nama Tim Teknis</th>
                                                                     <th>Aksi</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
+                                                            <tbody id="timTeknisTableBody">
                                                                 @foreach ($timTeknis as $tt)
-                                                                <tr>
-                                                                    <td>{{ $tt->nama }}</td>
-                                                                    <td>
-                                                                        <!-- Tombol hapus -->
-                                                                        <form action="{{ route('tt.destroy', $tt->id) }}" method="POST" style="display:inline;">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                                                                        </form>
-                                                                    </td>
-                                                                </tr>
+                                                                    <tr id="tt-row-{{ $tt->id }}">
+                                                                        <td>{{ $tt->nama }}</td>
+                                                                        <td>
+                                                                            <form action="{{ route('tt.destroy', $tt->id) }}" method="POST" style="display:inline;" class="delete-form">
+                                                                                @csrf
+                                                                                @method('DELETE')
+                                                                                <button type="submit" class="btn btn-danger btn-sm" data-delete-url="{{ route('tt.destroy', $tt->id) }}">Hapus</button>
+                                                                            </form>
+                                                                        </td>
+                                                                    </tr>
                                                                 @endforeach
                                                             </tbody>
                                                         </table>
-                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="tab-pane fade" id="berita-acara-2" role="tabpanel" aria-labelledby="berita-acara-2-tab">
@@ -1217,8 +1214,15 @@
                 document.getElementById('addTT').click();
             }
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            const tableBody = document.querySelector('#timTeknisTableBody');
+            const tableHeader = document.querySelector('#timTeknisTable thead');
 
-        document.getElementById('addTT').addEventListener('click', function () {
+            if (tableBody.children.length === 0) {
+                tableHeader.style.display = 'none';
+            }
+
+            document.getElementById('addTT').addEventListener('click', function () {
             const ttValue = document.getElementById('tt-input').value;
             const pktIdValue = document.getElementById('pktId').value;
             const url = '{{ route("tt.store") }}';
@@ -1234,12 +1238,59 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    window.location.reload();
+                    document.getElementById('tt-input').value = '';
+
+                    const tableBody = document.querySelector('table tbody');
+                    const newRow = document.createElement('tr');
+
+                    newRow.innerHTML = `
+                        <td>${data.tt.nama}</td>
+                        <td>
+                            <form action="${window.location.origin}/destroy/${data.tt.id}" method="POST" style="display:inline;" class="delete-form">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                                <button type="submit" class="btn btn-danger btn-sm" data-delete-url="${window.location.origin}/destroy/${data.tt.id}">Hapus</button>
+                            </form>
+                        </td>
+                    `;
+
+                    tableBody.appendChild(newRow);
+                    tableHeader.style.display = 'table-header-group';
+
+                    newRow.querySelector('.delete-form button').addEventListener('click', function (e) {
+                        e.preventDefault();
+
+                        const deleteUrl = this.getAttribute('data-delete-url');
+
+                        fetch(deleteUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ _method: 'DELETE' })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                this.closest('tr').remove();
+                                if (tableBody.children.length === 0) {
+                                    tableHeader.style.display = 'none';
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            //alert('Terjadi kesalahan saat menghapus data.');
+                            window.location.reload();
+                        });
+                    });
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan.');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan.');
+                });
             });
         });
     </script>

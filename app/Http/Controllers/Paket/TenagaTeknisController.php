@@ -32,7 +32,7 @@ class TenagaTeknisController extends Controller
         $paketId = $request->input('pktId');
         $nama    = $request->input('tt');
 
-        TenagaTeknis::create([
+        $tt = TenagaTeknis::create([
             'paket_id' => $paketId,
             'nama'     => $nama,
         ]);
@@ -41,7 +41,8 @@ class TenagaTeknisController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Berhasil menambahkan tim teknis untuk paket ini.',
+            //'message' => 'Berhasil menambahkan tim teknis untuk paket ini.',
+            'tt' => $tt,
         ]);
     }
 
@@ -77,7 +78,9 @@ class TenagaTeknisController extends Controller
         $tenagaTeknis = TenagaTeknis::findOrFail($id);
         $tenagaTeknis->delete();
 
-        return redirect()->back()->with('success', 'Berhasil menghapus tim teknis');
+        //return redirect()->back()->with('success', 'Berhasil menghapus tim teknis');
+        return redirect()->back();
+        //return response()->json(['success' => true]);
     }
 
     public function addTenagaTeknis(Request $request)
