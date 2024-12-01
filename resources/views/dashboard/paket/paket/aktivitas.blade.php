@@ -93,10 +93,12 @@
                             PPK
                             <span class="badge bg-primary rounded-pill">{{$paket->nama_ppk}}</span>
                         </li>
+                        @if(isset($paket->pokmil->pokmil_id))
                         <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             Pokmil
                             <span class="badge bg-primary rounded-pill">{{$paket->pokmil->pokmil_id}}</span>
                         </li>
+                        @endif
                         <li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             Tahun
                             <span class="badge bg-primary rounded-pill">{{ \Carbon\Carbon::parse($paket->tgl_buat)->format('Y') }}</span>
