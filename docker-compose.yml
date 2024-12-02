@@ -16,7 +16,7 @@ services:
       - sipetir-network
       - sync-network
     depends_on:
-      - mysql
+      - mysql_server
 
   # Nginx Web Server
   nginx:
