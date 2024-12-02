@@ -36,7 +36,7 @@ services:
       - app
 
   # MySQL Database
-  mysql:
+  mysql_server:
     image: mysql:8.0
     container_name: sipetir-mysql
     restart: unless-stopped
@@ -55,7 +55,7 @@ services:
       - sipetir-network
 
   # PostgreSQL Source Database
-  postgres:
+  postgres_server:
     image: postgres:13
     container_name: sipetir-source
     restart: unless-stopped
