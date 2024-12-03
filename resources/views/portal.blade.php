@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Portal Kutai Kartanegara - www.kukarkab.go.id</title>
+    <title>Portal SiPETIR - UKPBJ Kab. Kukar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <link rel="shortcut icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/portal.css') }}" />
