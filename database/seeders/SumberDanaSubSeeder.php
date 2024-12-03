@@ -13,7 +13,7 @@ class SumberDanaSubSeeder extends Seeder
      */
     public function run(): void
     {
-        $sumberDana = SumberDana::where('nama', 'APBD')->first();
+        $sumberDana = SumberDana::where('nama', 'APBD')->firstOrCreate();
         SumberDanaSub::insert([
             [
                 'sumber_dana_id' => $sumberDana->id,
