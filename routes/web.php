@@ -28,7 +28,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('home.login');
+Route::get('/', function () {
+    return view('portal');
+})->name('portal');
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('dashboard')->group(function () {
@@ -123,4 +125,4 @@ Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Panitia|PPK|Kepa
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
