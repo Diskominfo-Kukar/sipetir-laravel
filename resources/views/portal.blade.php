@@ -23,7 +23,12 @@
     <!-- Main container -->
     <div class="container">
         <div class="header-content">
-            <img class="main-logo" src="{{ asset('images/kukar-logo.png') }}" alt="logo-kukarkab" />
+            <div class="logo-wrapper">
+                <img class="main-logo" src="{{ asset('images/kukar-logo.png') }}" alt="logo-kukarkab" />
+                <img class="main-logo" style="width: 250px; height: auto;" src="{{ asset('images/ukpbj-only.png') }}"
+                    alt="logo-ukpbj" />
+            </div>
+
             <div class="title-wrapper">
                 <p class="intro-text">
                     Portal Resmi <br />
@@ -38,7 +43,7 @@
             <div class="main-content-wrapper">
                 <a class="menu-item-wrapper" href="{{ route('login') }}" target="__blank">
                     <img class="menu-logo" src="{{ asset('images/sipetir.png') }}" alt="" />
-                    <p class="menu-title fw-bold">Login Sipetir</p>
+                    <p class="menu-title fw-bold">Login SIPETIR</p>
                 </a>
             </div>
         </div>
@@ -47,7 +52,7 @@
         <!-- footer -->
         <div class="footer-content">
             <p>
-                © 2024 Layanan Pengadaan Secara Elektronik (LPSE) Kukar - Dikembangkan oleh
+                © 2024 Unit Kerja Pengadaan Barang dan Jasa - Dikembangkan oleh
                 Diskominfo Kukar
             </p>
         </div>
