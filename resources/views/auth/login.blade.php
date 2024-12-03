@@ -13,6 +13,10 @@
                             <div class="col-lg-6">
                                 <div class="p-4 card-body p-sm-5">
                                     <h5 class="text-center card-title">
+                                        <div class="logo-wrapper d-flex justify-content-center align-items-center mb-3">
+                                            <img class="main-logo me-2" style="width: 80px; height: auto;" src="{{ asset('images/kukar-logo.png') }}" alt="logo-kukarkab" />
+                                            <img class="main-logo" style="width: 230px; height: auto;" src="{{ asset('images/ukpbj-only.png') }}" alt="logo-ukpbj" />
+                                        </div>
                                         <a href="https://sipetir.kukarkab.go.id/"><b>SIPETIR</b> BPBJ</a>
                                     </h5>
 
