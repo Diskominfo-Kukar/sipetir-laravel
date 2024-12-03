@@ -1470,19 +1470,20 @@ class PaketController extends Controller
                     $message
                 );
         */
-        if (config('app.env') == 'production') {
-            foreach ($paket->pokmil->panitia as $panitia) {
-                Notifikasi::sendTo(
-                    'wa',
-                    $panitia->telepon,
-                    123456, // ID User Penerima Notifikasi
-                    Paket::class,
-                    $paket->id,
-                    route('paket.uploadAllBerkas'),
-                    $message
-                );
-            }
-        }
+        /*
+         if (config('app.env') == 'production') {
+             foreach ($paket->pokmil->panitia as $panitia) {
+                 Notifikasi::sendTo(
+                     'wa',
+                     $panitia->telepon,
+                     123456, // ID User Penerima Notifikasi
+                     Paket::class,
+                     $paket->id,
+                     route('paket.uploadAllBerkas'),
+                     $message
+                 );
+             }
+         */
     }
 
     private function signDokumen($file, $nip, $passphrase, $paketId = null, $beritaAcara = false)
