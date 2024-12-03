@@ -41,7 +41,7 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/formatRupiah.php"
+            "app/Helpers/Format.php"
         ]
     },
     "autoload-dev": {
