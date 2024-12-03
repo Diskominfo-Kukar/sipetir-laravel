@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DataOpdSeedeer::class);
         $this->call(DataKategoriSeedeer::class);
         $this->call(JenisDokumenSeeder::class);
-        $this->call(SumberDanaSubSeeder::class);
+        // $this->call(SumberDanaSubSeeder::class);
 
         // Artisan::call('sipetir:sync');
     }
