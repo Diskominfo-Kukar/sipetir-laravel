@@ -52,7 +52,7 @@
                 </div>
                 <div class="top-navbar-right ms-3">
                     <ul class="navbar-nav align-items-center">
-                        @include('layouts.notification')
+                        {{-- @include('layouts.notification') --}}
                         <li class="nav-item dropdown dropdown-large">
                             <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#"
                                 data-bs-toggle="dropdown">
@@ -295,8 +295,8 @@
             }
 
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
-        }
+            return prefix == undefined ? rupiah : (rupiah ? rupiah : '');
+        }
     </script>
 
     @stack('scripts')
