@@ -1600,17 +1600,17 @@
                     }
                 });
             });
-        </script>
-        <script>
-            $('.input-rupiah').on("input", function() {
-                let val = App\ Helpers\ Format::rupiah(this.value, '');
-                $(this).val(val);
-            });
 
             $(document).ready(function() {
                 $('.select2').select2({
                     theme: 'bootstrap-5',
                 });
+            });
+        </script>
+        <script>
+            $('.input-rupiah').on("input", function() {
+                let val = App\ Helpers\ Format::rupiah(this.value, '');
+                $(this).val(val);
             });
         </script>
         <script src="https://cdn.tiny.cloud/1/5ps1i1boa3tg20qfzwuk59h75b186ickj43d35pn8x1o4xy7/tinymce/6/tinymce.min.js"
