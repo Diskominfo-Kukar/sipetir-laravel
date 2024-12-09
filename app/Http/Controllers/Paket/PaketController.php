@@ -102,9 +102,10 @@ class PaketController extends Controller
             $query->orderByRaw(
                 'case
                     when status = 9 then 1
-                    when status = 11 then 2
-                    when status = 1 then 3
-                    else 4
+                    when status = 6 then 2
+                    when status = 11 then 3
+                    when status = 1 then 4
+                    else 5
                 end'
             )->orderBy('status', 'desc');
         } elseif ($user->hasRole('Admin')) {
@@ -143,7 +144,7 @@ class PaketController extends Controller
             }
 
             if ($user->hasRole('PPK') && $paket->ppk_id == $user->ppk_id) {
-                if ($status == 1 || $status == 11 || $status == 9) {
+                if ($status == 1 || $status == 11 || $status == 9 || $status == 6) {
                     $buttonText  = 'Proses';
                     $buttonClass = 'btn-warning';
                 }
