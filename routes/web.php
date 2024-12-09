@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dashboard\AkunController;
 use App\Http\Controllers\Dashboard\IndexController;
 use App\Http\Controllers\Dashboard\UserController;
@@ -125,4 +124,4 @@ Route::middleware(['auth', 'role_or_permission:Admin|superadmin|Panitia|PPK|Kepa
     });
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

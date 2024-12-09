@@ -764,8 +764,8 @@
                 @include('dashboard.paket.paket.components.surattugasTTE')
             @endrole
         @elseif($status == 'Review')
-            @role('Panitia')
-                @if (!auth()->user()->hasRole(['Kepala BPBJ', 'Superadmin']) && !in_array($paket->pokmil_id, auth()->user()->pokmil_id))
+            @hasanyrole(['Panitia','PPK'])
+                @if (!auth()->user()->hasRole(['Kepala BPBJ', 'Superadmin']) && !in_array($paket->pokmil_id, auth()->user()->pokmil_id) && !$paket->ppk_id == auth()->user()->ppk_id)
                     @include('dashboard.paket.paket.components.review')
                 @else
                     <div class="col-12">
