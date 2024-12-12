@@ -68,19 +68,19 @@
                     <!--li class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
                             Berita Acara Penetapan
                             @if ($berita_acara_2)
-<span class="badge bg-success rounded-pill">Sudah</span>
-@else
-<span class="badge bg-danger rounded-pill">Belum</span>
-@endif
-                        <li>
-                        <li-- class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
-                            Berita Acara Pengumuman
-                            @if ($berita_acara_3)
-<span class="badge bg-success rounded-pill">Sudah</span>
-@else
-<span class="badge bg-danger rounded-pill">Belum</span>
-@endif
-                        </li-->
+                            <span class="badge bg-success rounded-pill">Sudah</span>
+                            @else
+                            <span class="badge bg-danger rounded-pill">Belum</span>
+                            @endif
+                    </!li>
+                    <li-- class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                        Berita Acara Pengumuman
+                        @if ($berita_acara_3)
+                        <span class="badge bg-success rounded-pill">Sudah</span>
+                        @else
+                        <span class="badge bg-danger rounded-pill">Belum</span>
+                        @endif
+                    </li-->
                 </ul>
             </div>
 
@@ -649,69 +649,69 @@
                                             class="w-100">
                                             @csrf
                                             <!--div class="form-group row mb-3">
-                                                                        <label for="kode" class="col-sm-3 col-form-label text-right">Kode Surat</label>
-                                                                        <div class="col-sm-9">
-                                                                            <input type="number" name="kode" class="form-control" value="{{ $kode_sa }}" required>
-                                                                        </div>
-                                                                    <div>
-                                                                    <div class="form-group row mb-3">
-                                                                        <label for="nama_paket" class="col-sm-3 col-form-label text-right">Nama Paket</label>
-                                                                        <div class="col-sm-9">
-                                                                            <input type="text" name="nama_paket" class="form-control" value="{{ $paket->nama }}" required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row mb-3">
-                                                                        <label for="jenis_pekerjaan" class="col-sm-3 col-form-label text-right">Jenis Pekerjaan</label>
-                                                                        <div class="col-sm-9">
-                                                                            <input type="text" name="jenis_pekerjaan" class="form-control" value="{{ $paket->jenis_pekerjaan }}" required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row mb-3">
-                                                                        <label for="nama_opd" class="col-sm-3 col-form-label text-right">Nama OPD</label>
-                                                                        <div class="col-sm-9">
-                                                                            <select name="nama_opd" class="form-control select2" required>
-                                                                                <option value="" disabled selected></option>
-                                                                                @foreach ($opd as $item)
-    <option value="{{ $item->nama }}">{{ $item->nama }}</option>
-    @endforeach
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row mb-3">
-                                                                        <label for="sumber_dana" class="col-sm-3 col-form-label text-right">Sumber Dana</label>
-                                                                        <div class="col-sm-9">
-                                                                            <select name="sumber_dana" class="form-control select2" required>
-                                                                                <option value="" disabled selected></option>
-                                                                                @foreach ($sumber_dana as $item)
-    <option value="{{ $item->nama }}">{{ $item->nama }}</option>
-    @endforeach
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row mb-3">
-                                                                        <label for="pagu" class="col-sm-3 col-form-label text-right">Pagu</label>
-                                                                        <div class="col-sm-9">
-                                                                            <input type="text" name="pagu" class="form-control input-rupiah" value="{{ App\Helpers\Format::rupiah($paket->pagu) }}" required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row mb-3">
-                                                                        <label for="hps" class="col-sm-3 col-form-label text-right">HPS</label>
-                                                                        <div class="col-sm-9">
-                                                                            <input type="text" name="hps" class="form-control input-rupiah" value="{{ App\Helpers\Format::rupiah($paket->hps) }}" required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row mb-3">
-                                                                        <label for="dpa" class="col-sm-3 col-form-label text-right">Nomor DPA</label>
-                                                                        <div class="col-sm-9">
-                                                                            <input type="text" name="dpa" class="form-control" required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div-- class="form-group row mb-3">
-                                                                        <label for="tahun" class="col-sm-3 col-form-label text-right">Tahun Anggaran</label>
-                                                                        <div class="col-sm-9">
-                                                                            <input type="number" name="tahun" class="form-control" required>
-                                                                        </div>
-                                                                    </div-->
+                                                <label for="kode" class="col-sm-3 col-form-label text-right">Kode Surat</label>
+                                                <div class="col-sm-9">
+                                                    <input type="number" name="kode" class="form-control" value="{{ $kode_sa }}" required>
+                                                </div>
+                                            <div>
+                                            <div class="form-group row mb-3">
+                                                <label for="nama_paket" class="col-sm-3 col-form-label text-right">Nama Paket</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="nama_paket" class="form-control" value="{{ $paket->nama }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3">
+                                                <label for="jenis_pekerjaan" class="col-sm-3 col-form-label text-right">Jenis Pekerjaan</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="jenis_pekerjaan" class="form-control" value="{{ $paket->jenis_pekerjaan }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3">
+                                                <label for="nama_opd" class="col-sm-3 col-form-label text-right">Nama OPD</label>
+                                                <div class="col-sm-9">
+                                                    <select name="nama_opd" class="form-control select2" required>
+                                                        <option value="" disabled selected></option>
+                                                        @foreach ($opd as $item)
+                                                        <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3">
+                                                <label for="sumber_dana" class="col-sm-3 col-form-label text-right">Sumber Dana</label>
+                                                <div class="col-sm-9">
+                                                    <select name="sumber_dana" class="form-control select2" required>
+                                                        <option value="" disabled selected></option>
+                                                        @foreach ($sumber_dana as $item)
+                                                        <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3">
+                                                <label for="pagu" class="col-sm-3 col-form-label text-right">Pagu</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="pagu" class="form-control input-rupiah" value="{{ App\Helpers\Format::rupiah($paket->pagu) }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3">
+                                                <label for="hps" class="col-sm-3 col-form-label text-right">HPS</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="hps" class="form-control input-rupiah" value="{{ App\Helpers\Format::rupiah($paket->hps) }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-3">
+                                                <label for="dpa" class="col-sm-3 col-form-label text-right">Nomor DPA</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="dpa" class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div-- class="form-group row mb-3">
+                                                <label for="tahun" class="col-sm-3 col-form-label text-right">Tahun Anggaran</label>
+                                                <div class="col-sm-9">
+                                                    <input type="number" name="tahun" class="form-control" required>
+                                                </div>
+                                            </div-->
                                             <input type="hidden" name="paket_id" value="{{ $paket->id }}">
                                             <div class="form-group row mt-4">
                                                 <div class="col-sm-12 text-center">
@@ -953,17 +953,17 @@
                         <div class="border-0 shadow-sm card">
                             <div class="card-body">
                                 <!--ul class="nav nav-tabs" id="reviewTab" role="tablist">
-                                                            <li class="nav-item" role="presentation">
-                                                                <a class="nav-link active" id="berita-acara-1-tab" data-bs-toggle="tab" href="#berita-acara-1" role="tab" aria-controls="berita-acara-1" aria-selected="true">
-                                                                    Buat Berita Acara Review
-                                                                </a>
-                                                            </li>
-                                                            <li class="nav-item" role="presentation">
-                                                                <a class="nav-link" id="berita-acara-2-tab" data-bs-toggle="tab" href="#berita-acara-2" role="tab" aria-controls="berita-acara-2" aria-selected="false">
-                                                                    Upload Berita Acara Review
-                                                                </a>
-                                                            </li>
-                                                        </ul-->
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active" id="berita-acara-1-tab" data-bs-toggle="tab" href="#berita-acara-1" role="tab" aria-controls="berita-acara-1" aria-selected="true">
+                                            Buat Berita Acara Review
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="berita-acara-2-tab" data-bs-toggle="tab" href="#berita-acara-2" role="tab" aria-controls="berita-acara-2" aria-selected="false">
+                                            Upload Berita Acara Review
+                                        </a>
+                                    </li>
+                                </ul-->
                                 &nbsp;
                                 <h5 class="text-center mb-0">Buat Berita Acara</h5>
                                 <div class="tab-content" id="reviewTabContent">
@@ -1139,12 +1139,12 @@
                                                                     Pembuka</label>
                                                                 <div class="col-sm-9">
                                                                     <textarea name="intro" class="form-control" rows="5" required>
-                                                                                    <p style="padding: 8px; text-align: justify;">Pada hari ini <b>{{ $tanggal['hari'] }}</b> tanggal <b>{{ $tanggal['tanggal'] }}</b> bulan
-                                                                                        <b>{{ $tanggal['bulan'] }}</b> tahun
-                                                                                        <b>{{ $tanggal['tahun'] }}</b>, bertempat di <b>Kantor Bagian Pengadaan Barang dan Jasa Sekertariat Daerah Kabupaten
-                                                                                            Kartanegara</b> telah dilaksanakan kegiatan Reviu Dokumen Persiapan Pengadaan untuk:
-                                                                                    </p>
-                                                                                </textarea>
+                                                                        <p style="padding: 8px; text-align: justify;">Pada hari ini <b>{{ $tanggal['hari'] }}</b> tanggal <b>{{ $tanggal['tanggal'] }}</b> bulan
+                                                                            <b>{{ $tanggal['bulan'] }}</b> tahun
+                                                                            <b>{{ $tanggal['tahun'] }}</b>, bertempat di <b>Kantor Bagian Pengadaan Barang dan Jasa Sekertariat Daerah Kabupaten
+                                                                                Kartanegara</b> telah dilaksanakan kegiatan Reviu Dokumen Persiapan Pengadaan untuk:
+                                                                        </p>
+                                                                    </textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-3">
@@ -1341,15 +1341,15 @@
             @endif
 
             {{--
-                    @if ($paket->status == 10 && auth()->user()->hasRole('Panitia'))
-                        @if ($berita_acara_2 == null)
-                            @include('dashboard.paket.paket.components.penetapan')
-                        @elseif ($berita_acara_3==null)
-                            @include('dashboard.paket.paket.components.pengumuman')
-                        @else
-                            @include('dashboard.paket.paket.components.status0')
-                        @endif
-                    --}}
+            @if ($paket->status == 10 && auth()->user()->hasRole('Panitia'))
+                @if ($berita_acara_2 == null)
+                    @include('dashboard.paket.paket.components.penetapan')
+                @elseif ($berita_acara_3==null)
+                    @include('dashboard.paket.paket.components.pengumuman')
+                @else
+                    @include('dashboard.paket.paket.components.status0')
+                @endif
+            --}}
             @if ($paket->status <= 0 || ($paket->status >= 10 && $paket->status != 11) || $paket->status == null)
                 @include('dashboard.paket.paket.components.status0')
             @endif

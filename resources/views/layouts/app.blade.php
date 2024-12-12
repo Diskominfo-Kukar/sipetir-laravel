@@ -265,6 +265,7 @@
 
         let notificationCount = 1;
 
+        /*
         document.addEventListener("DOMContentLoaded", function() {
             const badge = document.querySelector(".badge.bg-danger");
             if (notificationCount >= 1) {
@@ -273,12 +274,14 @@
             }
         });
 
+
         document.getElementById("markAsRead").addEventListener("click", function(event) {
             event.preventDefault();
             notificationCount = 0;
             const badge = document.querySelector(".badge.bg-danger");
             badge.style.display = "none";
         });
+        */
 
         /* Fungsi formatRupiah */
         function formatRupiah(angka, prefix) {
