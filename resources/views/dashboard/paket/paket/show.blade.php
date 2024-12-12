@@ -864,6 +864,7 @@
                                                                 </li>
                                                             @endif
                                                         @endforeach
+                                                        @if(in_array($paket->pokmil_id, auth()->user()->pokmil_id) && !$paket->ppk_id == auth()->user()->ppk_id)
                                                         <div>&nbsp;
                                                             <hr>
                                                             <form method="POST"
@@ -912,6 +913,7 @@
                                                                     Catatan Hasil Review</button>
                                                             </form>
                                                         </div>
+                                                        @endif
                                                     </ul>
                                                 </div>
                                             @endforeach
@@ -925,6 +927,7 @@
                                         review sebelum melanjutkan.
                                     </div>
                                 @endif
+                                @if(in_array($paket->pokmil_id, auth()->user()->pokmil_id) && !$paket->ppk_id == auth()->user()->ppk_id)
                                 <div class="d-flex justify-content-center mt-3">
                                     <form action="{{ route('paket.progres_berita_acara') }}" method="POST">
                                         @csrf
@@ -933,6 +936,7 @@
                                             {{ $all_done ? '' : 'disabled' }}>Selesai Review</button>
                                     </form>
                                 </div><br>
+                                @endif
                             </div>
                         </div>
                     </div>
