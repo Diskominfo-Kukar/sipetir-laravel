@@ -1,4 +1,3 @@
-# Use PHP 8.3-FPM image
 FROM php:8.2-fpm
 
 # Install system dependencies
@@ -45,7 +44,8 @@ RUN php artisan config:cache \
     && php artisan view:cache
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expose port 9000
 EXPOSE 9000
