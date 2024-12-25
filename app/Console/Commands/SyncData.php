@@ -52,15 +52,16 @@ class SyncData extends Command
 
         foreach ($paketExternal->get() as $external) {
             $findPokmil = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
-            $findPpk = PPKInternal::where('ppk_id', $external->ppk_id)
-                ->firstOr(function () use ($external) {
-                    $usernamePpkInternal = User::where('username', $external->audituser)->first();
-                    if ($usernamePpkInternal) {
-                        return $usernamePpkInternal;
-                    }
+            $findPpk = PPKInternal::where('ppk_id', $external->ppk_id)->first();
+            if (is_null($findPpk)) {
+                $user = User::with('panitia.ppk')->where('username', $external->audituser)->first();
 
-                    return $this->ppkBaru($external->ppk_id);
-                });
+                if ($user) {
+                    $findPpk = PPKInternal::where('id', $user->panitia->ppk->id)->first();
+                } else {
+                    $findPpk = $this->ppkBaru($external->ppk_id);
+                }
+            }
             $findSatuanKerja = SatkerInternal::where('stk_id', $external->stk_id)->first();
 
             $statusPaket = null;
