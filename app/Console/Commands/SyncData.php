@@ -47,18 +47,20 @@ class SyncData extends Command
         $totalRecords = $paketExternal->count();
         $bar          = $this->output->createProgressBar($totalRecords);
 
-        $this->info('Memulai Sinkronisasi Data Paket (Jumlah Data: ' . $totalRecords . ' Paket)');
+        $this->info('Memulai Sinkronisasi Data Paket (Jumlah Data: '.$totalRecords.' Paket)');
         $bar->start();
 
         foreach ($paketExternal->get() as $external) {
             $findPokmil = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
-            $findPpk = PPKInternal::where('ppk_id', $external->ppk_id)->first();
+            $findPpk    = PPKInternal::where('ppk_id', $external->ppk_id)->first();
             if (is_null($findPpk)) {
                 $user = User::with('panitia.ppk')->where('username', $external->audituser)->first();
 
-                if ($user) {
+                if ($user && $user->panitia && $user->panitia->ppk) {
                     $findPpk = PPKInternal::where('id', $user->panitia->ppk->id)->first();
-                } else {
+                }
+
+                if (is_null($findPpk)) {
                     $findPpk = $this->ppkBaru($external->ppk_id);
                 }
             }
