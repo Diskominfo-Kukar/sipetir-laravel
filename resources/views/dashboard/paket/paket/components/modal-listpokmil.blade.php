@@ -20,8 +20,20 @@
                         @foreach ($paket->pokmil->panitia as $panitia)
                             <tr>
                                 <td style="padding: 8px;">{{ $panitia->nama }}</td>
-                                <td style="padding: 8px;">{{ $panitia->jabatan->nama }}</td>
-                                <td style="padding: 8px;">{{ $panitia->telepon }}</td>
+                                <td style="padding: 8px;">
+                                    @if(strlen($panitia->jabatan->nama) > 0)
+                                        {{ $panitia->jabatan->nama }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td style="padding: 8px;">
+                                    @if(strlen($panitia->telepon) >= 10 && strlen($panitia->telepon) <= 15)
+                                        {{ $panitia->telepon }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
