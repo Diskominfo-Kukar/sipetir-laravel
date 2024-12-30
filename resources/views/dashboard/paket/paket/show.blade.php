@@ -98,10 +98,12 @@
                     </li>
                     @if (isset($paket->pokmil->pokmil_id))
                         <li
-                            class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
+                            class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top"
+                            @if(Auth::user()->hasRole('Admin')) data-bs-toggle="modal" data-bs-target="#pokmilModal" @endif>
                             Pokmil
                             <span class="badge bg-primary rounded-pill">{{ $paket->pokmil->pokmil_id }}</span>
                         </li>
+
                     @endif
                     <li
                         class="bg-transparent list-group-item d-flex justify-content-between align-items-center border-top">
@@ -1361,6 +1363,7 @@
 
     <!-- Modal -->
     @include('dashboard.paket.paket.components.modal-tte')
+    @include('dashboard.paket.paket.components.modal-listpokmil')
 
     <!--end row-->
     @push('styles')
