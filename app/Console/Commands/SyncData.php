@@ -53,6 +53,7 @@ class SyncData extends Command
         foreach ($paketExternal->get() as $external) {
             $findPokmil = PokmilInternal::where('pokmil_id', $external->pnt_id)->first();
             $findPpk    = PPKInternal::where('ppk_id', $external->ppk_id)->first();
+
             if (is_null($findPpk)) {
                 $user = User::with('panitia.ppk')->where('username', $external->audituser)->first();
 

@@ -58,15 +58,15 @@
                                                 </div>
                                             </div>
                                             <div class="col-12">
-                                                <label for="inputChoosePassword" class="form-label">Enter
-                                                    Password</label>
+                                                <label for="inputChoosePassword" class="form-label">Enter Password</label>
                                                 <div class="ms-auto position-relative">
-                                                    <div
-                                                        class="px-3 position-absolute top-50 translate-middle-y search-icon">
+                                                    <div class="px-3 position-absolute top-50 translate-middle-y search-icon">
                                                         <i class="bi bi-lock-fill" id="passwordShow"></i>
                                                     </div>
-                                                    <input name="password" type="password" id="password" placeholder="Password.."
-                                                        class="form-control radius-30 ps-5 " required />
+                                                    <input name="password" type="password" id="password" placeholder="Password.." class="form-control rounded-pill ps-5" required />
+                                                    <button type="button" id="togglePassword" class="no-border rounded-pill btn btn-outline-secondary btn-sm position-absolute end-0 top-50 translate-middle-y me-3">
+                                                        <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                                    </button>
                                                 </div>
                                             </div>
                                             <div class="col-6">
@@ -119,6 +119,26 @@
                 $("#password").attr('type', 'password');
             }
         });
+
+        document.getElementById('togglePassword').addEventListener('click', function (e) {
+            const passwordInput = document.getElementById('password');
+            const passwordIcon = document.getElementById('togglePasswordIcon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.classList.remove('bi-eye');
+                passwordIcon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.classList.remove('bi-eye-slash');
+                passwordIcon.classList.add('bi-eye');
+            }
+        });
     </script>
+
+    <style>
+        .no-border {
+            border: none;
+        }
+    </style>
     @endpush
 </x-auth-layout>
