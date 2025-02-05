@@ -71,16 +71,24 @@
                                 type="text"
                                 readonly
                             />
-                            <x-ui.input
-                                label="Passphrase"
-                                id="passphrase"
-                                name="passphrase"
-                                required
-                                placeholder="Passphrase Anda.."
-                                type="password"
-                                autocomplete="false"
-                            />
-                        </div>
+                            <label for="passphrase" class="form-label">Passphrase</label>
+                            <div class="position-relative">
+                                <div class="px-3 position-absolute top-50 translate-middle-y search-icon">
+                                    <i class="bi bi-lock-fill" id="passwordShow"></i>
+                                </div>
+                                <input
+                                    id="passphrase"
+                                    name="passphrase"
+                                    required
+                                    placeholder="Passphrase Anda.."
+                                    type="password"
+                                    autocomplete="false"
+                                    class="form-control ps-5"
+                                />
+                                <button type="button" id="togglePassphrase" class="no-border btn btn-outline-secondary btn-sm position-absolute end-0 top-50 translate-middle-y me-3">
+                                    <i class="bi bi-eye" id="togglePassphraseIcon"></i>
+                                </button>
+                            </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                             <input type="hidden" name="paket_id" value="{{ $paket->id }}">
@@ -124,3 +132,25 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+    document.getElementById('togglePassphrase').addEventListener('click', function (e) {
+        const passphraseInput = document.getElementById('passphrase');
+        const passphraseIcon = document.getElementById('togglePassphraseIcon');
+        if (passphraseInput.type === 'password') {
+            passphraseInput.type = 'text';
+            passphraseIcon.classList.remove('bi-eye');
+            passphraseIcon.classList.add('bi-eye-slash');
+        } else {
+            passphraseInput.type = 'password';
+            passphraseIcon.classList.remove('bi-eye-slash');
+            passphraseIcon.classList.add('bi-eye');
+        }
+    });
+</script>
+<style>
+    .no-border {
+        border: none;
+    }
+</style>
+@endpush
