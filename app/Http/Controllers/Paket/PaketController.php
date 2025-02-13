@@ -776,7 +776,7 @@ class PaketController extends Controller
 
     public function roll()
     {
-        $id = Pokmil::pluck('pokmil_id');
+        $id = Pokmil::where('is_active', 1)->pluck('pokmil_id');
 
         return response()->json($id);
     }
