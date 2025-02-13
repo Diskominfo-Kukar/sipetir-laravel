@@ -270,8 +270,8 @@ class PaketController extends Controller
 
         $progres         = static::getProses($paket->status);
         $tanggal         = static::getTanggal();
-        $kode_ba         = static::getKodeSurat('ba');
-        $kode_sa         = static::getKodeSurat('sa');
+        $kode_ba         = static::getKodeSurat('ba', false);
+        $kode_sa         = static::getKodeSurat('sa', false);
         $all_done_review = static::checkAnswer($paket->id);
 
         $new_data           = SuratTugas::where('paket_id', $paket->id)->first();
@@ -379,18 +379,23 @@ class PaketController extends Controller
         return view('dashboard.paket.'.$this->route.'.show', $data);
     }
 
-    public static function getKodeSurat($type)
+    public static function getKodeSurat($type, $manual)
     {
-        $tahun = Carbon::now()->year;
-        $kode  = 1;
+        if ($manual !== null) {
+            $tahun = $manual;
+        } else {
+            $tahun = Carbon::now()->year;
+        }
+
+        $kode = 1;
 
         if ($type === 'ba') {
-            $kodeList = BeritaAcara::whereYear('created_at', $tahun)
+            $kodeList = BeritaAcara::where('tahun', $tahun)
                 ->orderBy('kode', 'asc')
                 ->pluck('kode')
                 ->toArray();
         } elseif ($type === 'sa') {
-            $kodeList = SuratTugas::whereYear('created_at', $tahun)
+            $kodeList = SuratTugas::where('tahun', $tahun)
                 ->orderBy('kode', 'asc')
                 ->pluck('kode')
                 ->toArray();
@@ -677,14 +682,19 @@ class PaketController extends Controller
                     'tahun'           => $request->tahun,
                 ]);
             } else {
-                $tahun         = Carbon::now()->year;
-                $kode_duplikat = SuratTugas::whereYear('created_at', $tahun)
-                    ->where('kode', $request->kode)->first();
+                $tahun = Carbon::now()->year;
+                $kode  = $request->kode;
+
+                if ($tahun != $request->tahun) {
+                    $kode = static::getKodeSurat('sa', $request->tahun);
+                }
+                $kode_duplikat = SuratTugas::where('tahun', $tahun)
+                    ->where('kode', $kode)->first();
 
                 if (! $kode_duplikat) {
                     $surat_tugas = SuratTugas::create([
                         'paket_id'        => $request->paket_id,
-                        'kode'            => $request->kode,
+                        'kode'            => $kode,
                         'jenis_pekerjaan' => $request->jenis_pekerjaan,
                         'nama_paket'      => $request->nama_paket,
                         'nama_opd'        => $request->nama_opd,
@@ -929,14 +939,19 @@ class PaketController extends Controller
                 'satker'          => $request->satker,
             ]);
         } else {
-            $tahun         = Carbon::now()->year;
-            $kode_duplikat = BeritaAcara::whereYear('created_at', $tahun)
-                ->where('kode', $request->kode)->first();
+            $tahun = Carbon::now()->year;
+            $kode  = $request->kode;
+
+            if ($tahun != $request->tahun) {
+                $kode = static::getKodeSurat('ba', $request->tahun);
+            }
+            $kode_duplikat = BeritaAcara::where('tahun', $tahun)
+                ->where('kode', $kode)->first();
 
             if (! $kode_duplikat) {
                 $berita_acara = BeritaAcara::create([
                     'paket_id'        => $request->paket_id,
-                    'kode'            => $request->kode,
+                    'kode'            => $kode,
                     'jenis_pekerjaan' => $request->jenis_pekerjaan,
                     'nama_paket'      => $request->nama_paket,
                     'nama_opd'        => $request->nama_opd,
