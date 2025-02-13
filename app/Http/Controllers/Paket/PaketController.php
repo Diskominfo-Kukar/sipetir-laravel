@@ -381,12 +381,11 @@ class PaketController extends Controller
 
     public static function getKodeSurat($type, $manual)
     {
-        if ($manual !== null) {
+        if ($manual !== false) {
             $tahun = $manual;
         } else {
             $tahun = Carbon::now()->year;
         }
-
         $kode = 1;
 
         if ($type === 'ba') {
@@ -688,7 +687,7 @@ class PaketController extends Controller
                 if ($tahun != $request->tahun) {
                     $kode = static::getKodeSurat('sa', $request->tahun);
                 }
-                $kode_duplikat = SuratTugas::where('tahun', $tahun)
+                $kode_duplikat = SuratTugas::where('tahun', $request->tahun)
                     ->where('kode', $kode)->first();
 
                 if (! $kode_duplikat) {
@@ -945,7 +944,7 @@ class PaketController extends Controller
             if ($tahun != $request->tahun) {
                 $kode = static::getKodeSurat('ba', $request->tahun);
             }
-            $kode_duplikat = BeritaAcara::where('tahun', $tahun)
+            $kode_duplikat = BeritaAcara::where('tahun', $request->tahun)
                 ->where('kode', $kode)->first();
 
             if (! $kode_duplikat) {
